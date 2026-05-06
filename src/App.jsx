@@ -143,8 +143,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
-  const [reviewsLoading, setReviewsLoading] = useState(true);
-  const [reviewAuthor, setReviewAuthor] = useState("");
+    const [reviewAuthor, setReviewAuthor] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
