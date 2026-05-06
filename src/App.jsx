@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const T = {
   bg:"#fdf6ee",        // warm cream
@@ -637,6 +637,11 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
 
+  // Auto-search when filters change (if zip already entered)
+  useEffect(() => {
+    if (zip && zip.length === 5 && hasSearched) { doSearch(); }
+  }, [category, ageRange, actType]);
+
   const doSearch = useCallback(async () => {
     const z = zip.trim();
     if (z.length < 5) { setError("Please enter a valid 5-digit ZIP code."); return; }
@@ -653,6 +658,12 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     }
     setLoading(false); setLoadingMsg("");
   }, [zip, radius, category, search]);
+
+  const hasSearchedRef = useRef(false);
+  useEffect(() => {
+    if (hasSearchedRef.current && zip.length === 5) { doSearch(); }
+  }, [category]);
+  useEffect(() => { hasSearchedRef.current = hasSearched; }, [hasSearched]);
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
@@ -701,7 +712,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
           ))}
         </div>
         <div style={{ display:"flex", background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"8px", overflow:"hidden" }}>
-          {[{m:"grid",i:"⊞"},{m:"list",i:"☰"}].map(({m,i}) => (
+          {[{m:"grid",i:"⊞"},{m:"map",i:"🗺"},{m:"list",i:"☰"}].map(({m,i}) => (
             <button key={m} onClick={() => setViewMode(m)}
               style={{ background:viewMode===m?T.bgCard:"transparent", border:"none", color:viewMode===m?T.accent:T.textMuted, padding:"0.3rem 0.65rem", cursor:"pointer", fontFamily:"inherit", fontSize:"0.9rem" }}>{i}</button>
           ))}
@@ -732,6 +743,18 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
             </div>
+            {viewMode === "map" && (
+              <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
+                <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
+                  <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {results.length} locations</span>
+                  <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to open in Google Maps</span>
+                </div>
+                <iframe title="Activity Map" width="100%" height="420" style={{ border:0, display:"block" }} loading="lazy" allowFullScreen src={"https://www.google.com/maps/embed/v1/search?key=AIzaSyDBNrlLOqcrWw3pYXDJQxCNSO3tifBXR68&q=" + encodeURIComponent((category || "kids activities") + " near " + zip) + "&zoom=12"}/>
+                <div style={{ padding:"0.75rem 1.25rem", borderTop:"1px solid "+T.border, background:T.bgDeep, display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+                  {results.slice(0,8).map(p => { const cat = getCatMeta(p.category); return <a key={p.id} href={p.bookingUrl} target="_blank" rel="noreferrer" style={{ background:cat.bg, border:"1px solid "+cat.color+"44", borderRadius:"99px", padding:"0.3rem 0.75rem", fontSize:"0.73rem", color:cat.color, fontWeight:600, textDecoration:"none" }}>{cat.icon} {p.name}</a>; })}
+                </div>
+              </div>
+            )}
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
                 {results.map(p => {
