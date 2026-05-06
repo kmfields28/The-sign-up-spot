@@ -149,6 +149,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
     const [reviewDone, setReviewDone] = useState(false);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
 
   function handleSubmitReview() {
