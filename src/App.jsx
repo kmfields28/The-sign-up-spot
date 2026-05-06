@@ -637,10 +637,8 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
 
-  // Auto-search when filters change (if zip already entered)
-  useEffect(() => {
-    if (zip && zip.length === 5 && hasSearched) { doSearch(); }
-  }, [category]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (zip && zip.length === 5 && hasSearched) { doSearch(); } }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
@@ -660,10 +658,8 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   }, [zip, radius, category, search]);
 
   const hasSearchedRef = useRef(false);
-  useEffect(() => {
-    if (hasSearchedRef.current && zip.length === 5) { doSearch(); }
-  }, [category]);
-  useEffect(() => { hasSearchedRef.current = hasSearched; }, [hasSearched]);
+  useEffect(() => { if (hasSearchedRef.current && zip.length === 5) { doSearch(); } }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { hasSearchedRef.current = hasSearched; }, [hasSearched]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
