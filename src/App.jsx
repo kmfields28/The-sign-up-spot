@@ -75,26 +75,6 @@ async function sbPost(path, body) {
   return res.status === 204 ? null : res.json();
 }
 
-function normalizeActivity(row) {
-  return {
-    id: row.id,
-    name: row.name,
-    category: row.category,
-    address: row.address || "",
-    phone: row.phone || "",
-    website: row.website || "",
-    rating: parseFloat(row.rating) || 0,
-    reviewCount: row.review_count || 0,
-    price: row.price || "$$",
-    description: row.description || "",
-    hours: row.hours || "",
-    ageRange: row.age_range || "",
-    tags: row.tags || [],
-    activityType: row.activity_type || "recreational",
-    featured: row.featured || false,
-    featuredTier: row.featured_tier || null,
-  };
-}
 
 const GOOGLE_API_KEY = "AIzaSyDBNrlLOqcrWw3pYXDJQxCNSO3tifBXR68";
 
