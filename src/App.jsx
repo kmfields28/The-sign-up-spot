@@ -153,24 +153,11 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
 
-  useEffect(() => {
 
-      setReviews(rows || []);
-      setReviewsLoading(false);
-    }).catch(() => setReviewsLoading(false));
-  }, [place.id]);
-
-  async function handleSubmitReview() {
+  function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
-    setReviewSubmitting(true);
-    try {
-
-      setReviewDone(true);
-      setReviews(prev => [{ author: reviewAuthor, rating: reviewRating, text: reviewText, created_at: new Date().toISOString() }, ...prev]);
-    } catch(e) {
-      alert("Could not submit review: " + e.message);
-    }
-    setReviewSubmitting(false);
+    setReviewDone(true);
+    setReviews(prev => [{ author: reviewAuthor, rating: reviewRating, text: reviewText, created_at: new Date().toISOString() }, ...prev]);
   }
   return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.50)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem", backdropFilter:"blur(6px)" }}>
