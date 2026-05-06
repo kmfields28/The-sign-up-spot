@@ -1221,7 +1221,6 @@ export default function TheSignUpSpot() {
     setKids(prev => prev.map(k => k.id === id ? {...k, name} : k));
   }
 
-  const activeKidMap = kidSaves[activeKidId] || new Map();
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
