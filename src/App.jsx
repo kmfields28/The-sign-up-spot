@@ -96,16 +96,86 @@ function normalizeActivity(row) {
   };
 }
 
-async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
-  let path = "activities?select=*&order=rating.desc";
-  if (category) path += "&category=eq." + encodeURIComponent(category);
-  if (keyword && keyword.trim()) {
-    path += "&or=(name.ilike.*" + encodeURIComponent(keyword.trim()) + "*,description.ilike.*" + encodeURIComponent(keyword.trim()) + "*)";
+const GOOGLE_API_KEY = "AIzaSyDBNrlLOqcrWw3pYXDJQxCNSO3tifBXR68";
+
+const CATEGORY_KEYWORDS = {
+  "Sports":     ["youth sports","kids soccer","youth gymnastics","swim lessons kids","martial arts kids","youth baseball","kids tennis"],
+  "Arts":       ["art class kids","art studio children","pottery class kids","painting class children"],
+  "Music":      ["music school","music lessons kids","piano lessons children","guitar lessons kids"],
+  "Dance":      ["dance studio kids","ballet school children","dance class kids"],
+  "STEM":       ["stem camp kids","robotics for kids","coding class children","science camp kids"],
+  "Outdoors":   ["summer camp kids","outdoor camp","nature camp children","adventure camp kids"],
+  "Theater":    ["theater camp kids","drama class children","acting class kids","musical theater kids"],
+  "Tutoring":   ["tutoring center","learning center kids","academic enrichment"],
+  "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup"],
+};
+
+async function geocodeZip(zip) {
+  const url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(zip + " USA") + "&key=" + GOOGLE_API_KEY;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.status === "OK" && data.results && data.results[0]) {
+    return { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng };
   }
-  const rows = await sbGet(path);
-  if (!rows || rows.length === 0) throw new Error("No activities found. Try a different category or keyword.");
-  return rows.map(normalizeActivity);
+  throw new Error("ZIP code not found. Please try another ZIP.");
 }
+
+async function searchNearby(location, keyword, radius) {
+  const url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.lat + "," + location.lng + "&radius=" + Math.min(radius * 1609, 50000) + "&keyword=" + encodeURIComponent(keyword) + "&key=" + GOOGLE_API_KEY;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.results || [];
+}
+
+function placeToActivity(place, category) {
+  const priceMap = { 0:"$", 1:"$", 2:"$$", 3:"$$$", 4:"$$$" };
+  return {
+    id: place.place_id,
+    placeId: place.place_id,
+    name: place.name,
+    category: category,
+    address: place.vicinity || "",
+    phone: "",
+    website: "",
+    rating: place.rating || 0,
+    reviewCount: place.user_ratings_total || 0,
+    price: priceMap[place.price_level] || "$$",
+    description: place.name + " — " + category + " activity near you. Tap View on Maps for hours, directions, and contact info.",
+    hours: "",
+    ageRange: "",
+    tags: [category.toLowerCase()],
+    activityType: "recreational",
+    photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
+    bookingUrl: "https://www.google.com/maps/place/?q=place_id:" + place.place_id,
+  };
+}
+
+async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
+  const location = await geocodeZip(zip);
+  const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
+  const terms = keyword && keyword.trim()
+    ? [keyword.trim()]
+    : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
+  const unique = [...new Set(terms)].slice(0, 8);
+
+  const allResults = await Promise.all(
+    unique.map(async kw => {
+      const cat = category || Object.keys(CATEGORY_KEYWORDS).find(c => CATEGORY_KEYWORDS[c].includes(kw)) || "Sports";
+      const places = await searchNearby(location, kw, radiusMiles);
+      return places.map(p => placeToActivity(p, cat));
+    })
+  );
+
+  const seen = new Set();
+  const deduped = allResults.flat().filter(p => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id); return true;
+  });
+  deduped.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  if (deduped.length === 0) throw new Error("No activities found near " + zip + ". Try a larger radius.");
+  return deduped;
+}
+
 
 async function getReviews(activityId) {
   return sbGet("reviews?activity_id=eq." + activityId + "&order=created_at.desc");
