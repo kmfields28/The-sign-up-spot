@@ -91,18 +91,16 @@ const CATEGORY_KEYWORDS = {
 };
 
 async function geocodeZip(zip) {
-  const url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(zip + " USA") + "&key=" + GOOGLE_API_KEY;
-  const res = await fetch(url);
+  const res = await fetch("/api/places?endpoint=geocode&address=" + encodeURIComponent(zip + " USA"));
   const data = await res.json();
   if (data.status === "OK" && data.results && data.results[0]) {
     return { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng };
   }
-  throw new Error("ZIP code not found. Please try another ZIP.");
+  throw new Error("ZIP code not found: " + data.status + ". Please try another ZIP.");
 }
 
 async function searchNearby(location, keyword, radius) {
-  const url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location.lat + "," + location.lng + "&radius=" + Math.min(radius * 1609, 50000) + "&keyword=" + encodeURIComponent(keyword) + "&key=" + GOOGLE_API_KEY;
-  const res = await fetch(url);
+  const res = await fetch("/api/places?endpoint=place/nearbysearch&location=" + location.lat + "," + location.lng + "&radius=" + Math.min(radius * 1609, 50000) + "&keyword=" + encodeURIComponent(keyword));
   const data = await res.json();
   return data.results || [];
 }
