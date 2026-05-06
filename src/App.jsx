@@ -109,19 +109,14 @@ function Stars({ rating, size }) {
 
 function PriceBadge({ price }) {
   return (
-    <span style={{ background:T.bgDeep, color:T.textMid, fontSize:"0.68rem", fontWeight:700,
-      padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.borderMid,
-      fontFamily:"Georgia,serif", letterSpacing:"1px" }}>{price}</span>
+    <span style={{ background:T.bgDeep, color:T.textMid, fontSize:"0.68rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.borderMid, fontFamily:"Georgia,serif", letterSpacing:"1px" }}>{price}</span>
   );
 }
 
 function Spinner({ message }) {
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center",
-      justifyContent:"center", padding:"4rem 1rem", gap:"1rem" }}>
-      <div style={{ width:"42px", height:"42px", border:"3px solid "+T.border,
-        borderTop:"3px solid "+T.accent, borderRadius:"50%",
-        animation:"spin 0.8s linear infinite" }}/>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"4rem 1rem", gap:"1rem" }}>
+      <div style={{ width:"42px", height:"42px", border:"3px solid "+T.border, borderTop:"3px solid "+T.accent, borderRadius:"50%", animation:"spin 0.8s linear infinite" }}/>
       <p style={{ color:T.textSoft, fontSize:"0.87rem", textAlign:"center" }}>{message || "Searching…"}</p>
       <style>{"@keyframes spin{to{transform:rotate(360deg)}}"}</style>
     </div>
@@ -130,8 +125,7 @@ function Spinner({ message }) {
 
 function ErrorBox({ message, onDismiss }) {
   return (
-    <div style={{ background:"#fdf5f3", border:"1px solid "+T.accentSoft, borderRadius:"12px",
-      padding:"1rem 1.25rem", marginBottom:"1rem", display:"flex", gap:"0.75rem" }}>
+    <div style={{ background:"#fdf5f3", border:"1px solid "+T.accentSoft, borderRadius:"12px", padding:"1rem 1.25rem", marginBottom:"1rem", display:"flex", gap:"0.75rem" }}>
       <span style={{ fontSize:"1.2rem", flexShrink:0 }}>⚠️</span>
       <div style={{ flex:1 }}>
         <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.85rem", marginBottom:"0.2rem" }}>
@@ -140,8 +134,7 @@ function ErrorBox({ message, onDismiss }) {
         <div style={{ color:T.textSoft, fontSize:"0.82rem", lineHeight:1.6 }}>{message}</div>
       </div>
       {onDismiss && (
-        <button onClick={onDismiss} style={{ background:"none", border:"none",
-          color:T.textMuted, cursor:"pointer", fontSize:"1rem" }}>✕</button>
+        <button onClick={onDismiss} style={{ background:"none", border:"none", color:T.textMuted, cursor:"pointer", fontSize:"1rem" }}>✕</button>
       )}
     </div>
   );
@@ -180,34 +173,22 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
     setReviewSubmitting(false);
   }
   return (
-    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.50)",
-      zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center",
-      padding:"1rem", backdropFilter:"blur(6px)" }}>
+    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.50)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem", backdropFilter:"blur(6px)" }}>
       <div onClick={e => e.stopPropagation()}
-        style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"22px",
-          maxWidth:"560px", width:"100%", maxHeight:"90vh", overflowY:"auto",
-          position:"relative", boxShadow:"0 28px 56px "+T.shadow }}>
+        style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"22px", maxWidth:"560px", width:"100%", maxHeight:"90vh", overflowY:"auto", position:"relative", boxShadow:"0 28px 56px "+T.shadow }}>
 
         {/* Header */}
-        <div style={{ background:cat.bg, padding:"2rem 1.5rem 1.25rem",
-          borderRadius:"22px 22px 0 0", textAlign:"center" }}>
+        <div style={{ background:cat.bg, padding:"2rem 1.5rem 1.25rem", borderRadius:"22px 22px 0 0", textAlign:"center" }}>
           <span style={{ fontSize:"3rem" }}>{cat.icon}</span>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem",
-            marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
-          <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem",
-            fontWeight:700, padding:"2px 10px", borderRadius:"99px",
-            border:"1px solid "+cat.color+"44" }}>{cat.icon} {place.category}</span>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem", marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
+          <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 10px", borderRadius:"99px", border:"1px solid "+cat.color+"44" }}>{cat.icon} {place.category}</span>
         </div>
 
-        <button onClick={onClose} style={{ position:"absolute", top:"0.9rem", right:"0.9rem",
-          background:T.bgCard, border:"1px solid "+T.border, color:T.textSoft,
-          width:"32px", height:"32px", borderRadius:"50%", cursor:"pointer",
-          fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+        <button onClick={onClose} style={{ position:"absolute", top:"0.9rem", right:"0.9rem", background:T.bgCard, border:"1px solid "+T.border, color:T.textSoft, width:"32px", height:"32px", borderRadius:"50%", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
 
         <div style={{ padding:"1.5rem" }}>
           {/* Rating */}
-          <div style={{ display:"flex", alignItems:"center", gap:"0.5rem",
-            marginBottom:"1rem", flexWrap:"wrap" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:"0.5rem", marginBottom:"1rem", flexWrap:"wrap" }}>
             <Stars rating={place.rating} size="lg"/>
             <span style={{ color:T.gold, fontWeight:700 }}>
               {place.rating ? place.rating.toFixed(1) : "—"}
@@ -217,21 +198,17 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             </span>
             {place.price && <PriceBadge price={place.price}/>}
             {place.ageRange && (
-              <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.72rem",
-                padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>
+              <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.72rem", padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>
                 Ages {place.ageRange}
               </span>
             )}
           </div>
 
           {/* Description */}
-          <p style={{ color:T.textSoft, fontSize:"0.85rem", lineHeight:1.7,
-            marginBottom:"1.25rem" }}>{place.description}</p>
+          <p style={{ color:T.textSoft, fontSize:"0.85rem", lineHeight:1.7, marginBottom:"1.25rem" }}>{place.description}</p>
 
           {/* Details */}
-          <div style={{ background:T.bgDeep, borderRadius:"12px", padding:"1rem",
-            marginBottom:"1rem", border:"1px solid "+T.border, display:"flex",
-            flexDirection:"column", gap:"0.5rem" }}>
+          <div style={{ background:T.bgDeep, borderRadius:"12px", padding:"1rem", marginBottom:"1rem", border:"1px solid "+T.border, display:"flex", flexDirection:"column", gap:"0.5rem" }}>
             {place.address && (
               <div style={{ display:"flex", gap:"0.5rem" }}>
                 <span>📍</span>
@@ -267,9 +244,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
           {place.tags && place.tags.length > 0 && (
             <div style={{ display:"flex", gap:"0.35rem", flexWrap:"wrap", marginBottom:"1.25rem" }}>
               {place.tags.map(t => (
-                <span key={t} style={{ background:cat.bg, color:cat.color, fontSize:"0.68rem",
-                  fontWeight:600, padding:"2px 8px", borderRadius:"99px",
-                  border:"1px solid "+cat.color+"33" }}>{t}</span>
+                <span key={t} style={{ background:cat.bg, color:cat.color, fontSize:"0.68rem", fontWeight:600, padding:"2px 8px", borderRadius:"99px", border:"1px solid "+cat.color+"33" }}>{t}</span>
               ))}
             </div>
           )}
@@ -277,27 +252,18 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
           {/* Actions */}
           <div style={{ display:"flex", gap:"0.5rem", marginBottom:"1.5rem" }}>
             <button onClick={() => onToggleFav(place.id, place)}
-              style={{ background: isFav ? T.goldBg : T.bgDeep,
-                border:"1px solid "+(isFav ? T.gold : T.border),
-                color: isFav ? T.gold : T.textSoft, borderRadius:"99px",
-                padding:"0.65rem 1rem", fontSize:"0.85rem", fontWeight:600,
-                cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ background: isFav ? T.goldBg : T.bgDeep, border:"1px solid "+(isFav ? T.gold : T.border), color: isFav ? T.gold : T.textSoft, borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
               {isFav ? "♥ Saved" : "♡ Save"}
             </button>
             {place.website ? (
               <a href={place.website} target="_blank" rel="noreferrer"
-                style={{ flex:1, background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-                  color:"#fff", borderRadius:"99px", padding:"0.65rem 1rem",
-                  fontSize:"0.85rem", textDecoration:"none", fontWeight:700,
-                  textAlign:"center", display:"block" }}>
+                style={{ flex:1, background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", textDecoration:"none", fontWeight:700, textAlign:"center", display:"block" }}>
                 Visit Website →
               </a>
             ) : (
               <a href={"https://www.google.com/search?q="+encodeURIComponent(place.name+" "+place.address)}
                 target="_blank" rel="noreferrer"
-                style={{ flex:1,                   color:"#2e1a08", borderRadius:"99px", padding:"0.65rem 1rem",
-                  fontSize:"0.85rem", textDecoration:"none", fontWeight:800,
-                  textAlign:"center", display:"block", background:"#f5e8d5"}}>
+                style={{ flex:1,                   color:"#2e1a08", borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", textDecoration:"none", fontWeight:800, textAlign:"center", display:"block", background:"#f5e8d5"}}>
                 Search on Google →
               </a>
             )}
@@ -316,8 +282,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             )}
 
             {reviews.map((r, i) => (
-              <div key={i} style={{ background:T.bgDeep, borderRadius:"12px", padding:"0.9rem",
-                marginBottom:"0.6rem", border:"1px solid "+T.border }}>
+              <div key={i} style={{ background:T.bgDeep, borderRadius:"12px", padding:"0.9rem", marginBottom:"0.6rem", border:"1px solid "+T.border }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"0.3rem" }}>
                   <span style={{ color:T.accent, fontWeight:700, fontSize:"0.83rem" }}>{r.author}</span>
                   <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>
@@ -335,39 +300,27 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
                 <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.82rem", marginBottom:"0.75rem" }}>Write a Review</div>
                 <input value={reviewAuthor} onChange={e => setReviewAuthor(e.target.value)}
                   placeholder="Your name"
-                  style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border,
-                    borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem",
-                    color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.6rem", display:"block" }}/>
+                  style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.6rem", display:"block" }}/>
                 <div style={{ marginBottom:"0.6rem" }}>
                   {[1,2,3,4,5].map(i => (
                     <span key={i}
                       onMouseEnter={() => setReviewHover(i)}
                       onMouseLeave={() => setReviewHover(0)}
                       onClick={() => setReviewRating(i)}
-                      style={{ fontSize:"1.5rem", cursor:"pointer",
-                        color: i <= (reviewHover || reviewRating) ? T.gold : T.border,
-                        transition:"color 0.1s" }}>★</span>
+                      style={{ fontSize:"1.5rem", cursor:"pointer", color: i <= (reviewHover || reviewRating) ? T.gold : T.border, transition:"color 0.1s" }}>★</span>
                   ))}
                 </div>
                 <textarea value={reviewText} onChange={e => setReviewText(e.target.value)}
                   placeholder="Share your experience…" rows={3}
-                  style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border,
-                    borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem",
-                    color:T.text, resize:"vertical", boxSizing:"border-box",
-                    fontFamily:"inherit", marginBottom:"0.75rem", display:"block" }}/>
+                  style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem", color:T.text, resize:"vertical", boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.75rem", display:"block" }}/>
                 <button onClick={handleSubmitReview}
                   disabled={!reviewAuthor.trim() || !reviewRating || !reviewText.trim() || reviewSubmitting}
-                  style={{ background: reviewAuthor.trim() && reviewRating && reviewText.trim()
-                    ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep,
-                    color: reviewAuthor.trim() && reviewRating && reviewText.trim() ? "#fff" : T.textMuted,
-                    border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem",
-                    fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+                  style={{ background: reviewAuthor.trim() && reviewRating && reviewText.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: reviewAuthor.trim() && reviewRating && reviewText.trim() ? "#fff" : T.textMuted, border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
                   {reviewSubmitting ? "Submitting…" : "Submit Review"}
                 </button>
               </div>
             ) : (
-              <div style={{ background:T.accentBg, borderRadius:"12px", padding:"1rem",
-                textAlign:"center", border:"1px solid "+T.accentSoft }}>
+              <div style={{ background:T.accentBg, borderRadius:"12px", padding:"1rem", textAlign:"center", border:"1px solid "+T.accentSoft }}>
                 <div style={{ fontSize:"1.75rem", marginBottom:"0.3rem" }}>🎉</div>
                 <p style={{ color:T.accent, fontWeight:700, fontSize:"0.88rem" }}>Thank you for your review!</p>
               </div>
@@ -385,27 +338,19 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
   const isFav = favorites.has(place.id);
   return (
     <div onClick={() => onSelect(place)}
-      style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px",
-        overflow:"hidden", transition:"transform 0.2s,box-shadow 0.2s",
-        position:"relative", boxShadow:"0 2px 12px "+T.shadow, cursor:"pointer" }}
+      style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", transition:"transform 0.2s,box-shadow 0.2s", position:"relative", boxShadow:"0 2px 12px "+T.shadow, cursor:"pointer" }}
       onMouseEnter={e => { e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 18px 36px "+T.shadow; }}
       onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+T.shadow; }}>
 
       {/* Color header band */}
-      <div style={{ width:"100%", height:"70px", background:cat.bg,
-        display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.5rem" }}>
+      <div style={{ width:"100%", height:"70px", background:cat.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.5rem" }}>
         {cat.icon}
       </div>
 
       {/* Per-kid save dropdown */}
       <div style={{ position:"absolute", top:"0.55rem", right:"0.55rem", display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"0.25rem" }}>
         <button onClick={e => { e.stopPropagation(); onToggleFav(place.id, place); }}
-          style={{ background: isFav ? T.goldBg : T.bgCard+"dd",
-            border:"1px solid "+(isFav ? T.gold : T.border),
-            color: isFav ? T.gold : T.borderMid,
-            borderRadius:"50%", width:"28px", height:"28px", cursor:"pointer",
-            fontSize:"0.9rem", display:"flex", alignItems:"center",
-            justifyContent:"center", backdropFilter:"blur(4px)" }}>
+          style={{ background: isFav ? T.goldBg : T.bgCard+"dd", border:"1px solid "+(isFav ? T.gold : T.border), color: isFav ? T.gold : T.borderMid, borderRadius:"50%", width:"28px", height:"28px", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)" }}>
           {isFav ? "♥" : "♡"}
         </button>
         {kids && kids.length > 0 && (
@@ -416,11 +361,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               return (
                 <button key={kid.id} onClick={e => { e.stopPropagation(); onToggleKidFav && onToggleKidFav(kid.id, place.id, place); }}
                   title={"Save for "+kid.name}
-                  style={{ background: kidHas ? kid.color+"22" : T.bgCard+"cc",
-                    border:"1px solid "+(kidHas?kid.color:T.border),
-                    borderRadius:"99px", padding:"1px 6px", cursor:"pointer",
-                    fontSize:"0.6rem", fontWeight:700, color: kidHas?kid.color:T.textMuted,
-                    backdropFilter:"blur(4px)", whiteSpace:"nowrap" }}>
+                  style={{ background: kidHas ? kid.color+"22" : T.bgCard+"cc", border:"1px solid "+(kidHas?kid.color:T.border), borderRadius:"99px", padding:"1px 6px", cursor:"pointer", fontSize:"0.6rem", fontWeight:700, color: kidHas?kid.color:T.textMuted, backdropFilter:"blur(4px)", whiteSpace:"nowrap" }}>
                   {kidHas?"✓ ":""}{kid.name.charAt(0)}
                 </button>
               );
@@ -430,28 +371,22 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
       </div>
 
       <div style={{ padding:"1rem" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start",
-          gap:"0.5rem", marginBottom:"0.25rem" }}>
-          <div style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700,
-            fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:"0.5rem", marginBottom:"0.25rem" }}>
+          <div style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
           {place.price && <PriceBadge price={place.price}/>}
         </div>
 
-        <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700,
-          textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>
+        <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>
           {cat.icon} {place.category}{place.ageRange ? " · Ages "+place.ageRange : ""}
         </div>
 
         {place.address && (
-          <div style={{ color:T.textSoft, fontSize:"0.74rem", marginBottom:"0.5rem",
-            whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+          <div style={{ color:T.textSoft, fontSize:"0.74rem", marginBottom:"0.5rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
             📍 {place.address}
           </div>
         )}
 
-        <p style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.5, marginBottom:"0.65rem",
-          display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical",
-          overflow:"hidden" }}>{place.description}</p>
+        <p style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.5, marginBottom:"0.65rem", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>{place.description}</p>
 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
@@ -523,34 +458,21 @@ function AuthModal({ onClose, onSignIn }) {
     borderRadius:"10px", padding:"0.68rem 0.95rem", fontSize:"0.88rem", color:T.text,
     boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.85rem", display:"block" };
   return (
-    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.45)",
-      zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center",
-      padding:"1rem", backdropFilter:"blur(6px)" }}>
+    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.45)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem", backdropFilter:"blur(6px)" }}>
       <div onClick={e => e.stopPropagation()}
-        style={{ background:T.bgCard, borderRadius:"24px", padding:"2.25rem",
-          maxWidth:"420px", width:"100%", boxShadow:"0 32px 64px "+T.shadow,
-          border:"1px solid "+T.border, position:"relative", maxHeight:"92vh", overflowY:"auto" }}>
-        <button onClick={onClose} style={{ position:"absolute", top:"1.1rem", right:"1.1rem",
-          background:T.bgDeep, border:"1px solid "+T.border, color:T.textSoft,
-          width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer",
-          fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+        style={{ background:T.bgCard, borderRadius:"24px", padding:"2.25rem", maxWidth:"420px", width:"100%", boxShadow:"0 32px 64px "+T.shadow, border:"1px solid "+T.border, position:"relative", maxHeight:"92vh", overflowY:"auto" }}>
+        <button onClick={onClose} style={{ position:"absolute", top:"1.1rem", right:"1.1rem", background:T.bgDeep, border:"1px solid "+T.border, color:T.textSoft, width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
         <div style={{ textAlign:"center", marginBottom:"1.75rem" }}>
-          <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontSize:"1.4rem",
-            fontWeight:900, marginBottom:"0.2rem" }}>The Sign Up Spot</div>
+          <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontSize:"1.4rem", fontWeight:900, marginBottom:"0.2rem" }}>The Sign Up Spot</div>
           <div style={{ color:T.textMuted, fontSize:"0.75rem", textTransform:"uppercase", letterSpacing:"1.5px" }}>
             {mode === "signin" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset password"}
           </div>
         </div>
         {mode !== "forgot" && (
-          <div style={{ display:"flex", background:T.bgDeep, borderRadius:"10px",
-            padding:"3px", marginBottom:"1.5rem", gap:"3px" }}>
+          <div style={{ display:"flex", background:T.bgDeep, borderRadius:"10px", padding:"3px", marginBottom:"1.5rem", gap:"3px" }}>
             {["signin","signup"].map(m => (
               <button key={m} onClick={() => setMode(m)}
-                style={{ flex:1, background:mode===m?T.bgCard:"transparent", border:"none",
-                  borderRadius:"8px", padding:"0.5rem", fontSize:"0.82rem",
-                  fontWeight:mode===m?700:500, color:mode===m?T.accent:T.textSoft,
-                  cursor:"pointer", fontFamily:"inherit",
-                  boxShadow:mode===m?"0 2px 6px "+T.shadow:"none" }}>
+                style={{ flex:1, background:mode===m?T.bgCard:"transparent", border:"none", borderRadius:"8px", padding:"0.5rem", fontSize:"0.82rem", fontWeight:mode===m?700:500, color:mode===m?T.accent:T.textSoft, cursor:"pointer", fontFamily:"inherit", boxShadow:mode===m?"0 2px 6px "+T.shadow:"none" }}>
                 {m === "signin" ? "Sign In" : "Sign Up"}
               </button>
             ))}
@@ -564,14 +486,11 @@ function AuthModal({ onClose, onSignIn }) {
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder="you@email.com" style={inp}/>
             <button onClick={() => setDone(true)}
-              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-                color:"#fff", border:"none", borderRadius:"99px", padding:"0.72rem",
-                fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.72rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
               Send Reset Link
             </button>
             <button onClick={() => setMode("signin")}
-              style={{ width:"100%", background:"none", border:"none", color:T.textSoft,
-                fontSize:"0.8rem", cursor:"pointer", marginTop:"0.75rem", fontFamily:"inherit" }}>
+              style={{ width:"100%", background:"none", border:"none", color:T.textSoft, fontSize:"0.8rem", cursor:"pointer", marginTop:"0.75rem", fontFamily:"inherit" }}>
               Back to Sign In
             </button>
           </div>
@@ -582,9 +501,7 @@ function AuthModal({ onClose, onSignIn }) {
             <p style={{ color:T.text, fontWeight:700, marginBottom:"0.3rem", fontFamily:"'Fraunces',serif" }}>Check your inbox!</p>
             <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Reset link sent to {email}.</p>
             <button onClick={() => { setMode("signin"); setDone(false); }}
-              style={{ background:"#f5e8d5", color:"#2e1a08",
-                border:"none", borderRadius:"99px", padding:"0.6rem 1.4rem",
-                fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ background:"#f5e8d5", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.6rem 1.4rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
               Back to Sign In
             </button>
           </div>
@@ -602,15 +519,13 @@ function AuthModal({ onClose, onSignIn }) {
             {mode === "signin" && (
               <div style={{ textAlign:"right", marginTop:"-0.5rem", marginBottom:"1.1rem" }}>
                 <button onClick={() => setMode("forgot")}
-                  style={{ background:"none", border:"none", color:T.accent, fontSize:"0.78rem",
-                    cursor:"pointer", fontFamily:"inherit", textDecoration:"underline" }}>
+                  style={{ background:"none", border:"none", color:T.accent, fontSize:"0.78rem", cursor:"pointer", fontFamily:"inherit", textDecoration:"underline" }}>
                   Forgot password?
                 </button>
               </div>
             )}
             {mode === "signup" && (
-              <label style={{ display:"flex", alignItems:"flex-start", gap:"0.6rem",
-                marginBottom:"1.1rem", cursor:"pointer" }}>
+              <label style={{ display:"flex", alignItems:"flex-start", gap:"0.6rem", marginBottom:"1.1rem", cursor:"pointer" }}>
                 <input type="checkbox" checked={nl} onChange={e => setNl(e.target.checked)}
                   style={{ marginTop:"2px", width:"15px", height:"15px" }}/>
                 <span style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.55 }}>
@@ -619,10 +534,7 @@ function AuthModal({ onClose, onSignIn }) {
               </label>
             )}
             <button onClick={() => { onSignIn(name || email.split("@")[0]); onClose(); }}
-              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-                color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem",
-                fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit",
-                marginBottom:"1.25rem" }}>
+              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", marginBottom:"1.25rem" }}>
               {mode === "signin" ? "Sign In" : "Create Account"}
             </button>
             <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"1rem" }}>
@@ -632,10 +544,7 @@ function AuthModal({ onClose, onSignIn }) {
             </div>
             {["Google","Apple"].map(label => (
               <button key={label}
-                style={{ width:"100%", background:T.bgDeep, border:"1.5px solid "+T.border,
-                  borderRadius:"10px", padding:"0.65rem", fontSize:"0.85rem",
-                  color:T.textMid, fontFamily:"inherit", fontWeight:600, cursor:"pointer",
-                  marginBottom:"0.5rem" }}
+                style={{ width:"100%", background:T.bgDeep, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.65rem", fontSize:"0.85rem", color:T.textMid, fontFamily:"inherit", fontWeight:600, cursor:"pointer", marginBottom:"0.5rem" }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = T.accent}
                 onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
                 {label === "Google" ? "🔵" : "🍎"}  Continue with {label}
@@ -768,44 +677,33 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   return (
     <div>
       {/* Search bar */}
-      <div style={{ background:T.bgDeep, padding:"1rem 1.5rem",
-        borderBottom:"1px solid "+T.border, position:"sticky", top:"56px", zIndex:50 }}>
+      <div style={{ background:T.bgDeep, padding:"1rem 1.5rem", borderBottom:"1px solid "+T.border, position:"sticky", top:"56px", zIndex:50 }}>
         <div style={{ display:"flex", gap:"0.5rem", maxWidth:"900px", margin:"0 auto", flexWrap:"wrap" }}>
           <div style={{ position:"relative", flex:"0 1 140px" }}>
             <span style={{ position:"absolute", left:"0.9rem", top:"50%", transform:"translateY(-50%)" }}>📍</span>
             <input value={zip} onChange={e => setZip(e.target.value.replace(/\D/g,"").slice(0,5))}
               placeholder="ZIP code" onKeyDown={e => e.key === "Enter" && doSearch()}
-              style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border,
-                borderRadius:"99px", padding:"0.62rem 1rem 0.62rem 2.4rem",
-                fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
+              style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"99px", padding:"0.62rem 1rem 0.62rem 2.4rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
           </div>
           <select value={radius} onChange={e => setRadius(Number(e.target.value))}
-            style={{ background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px",
-              padding:"0.62rem 0.75rem", fontSize:"0.82rem", color:T.textMid,
-              cursor:"pointer", fontFamily:"inherit" }}>
+            style={{ background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.62rem 0.75rem", fontSize:"0.82rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit" }}>
             {[5,10,15,25,50].map(r => <option key={r} value={r}>{r} mi</option>)}
           </select>
           <div style={{ position:"relative", flex:"2 1 200px" }}>
             <span style={{ position:"absolute", left:"0.9rem", top:"50%", transform:"translateY(-50%)" }}>🔍</span>
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Optional keyword…" onKeyDown={e => e.key === "Enter" && doSearch()}
-              style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border,
-                borderRadius:"99px", padding:"0.62rem 1rem 0.62rem 2.4rem",
-                fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
+              style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"99px", padding:"0.62rem 1rem 0.62rem 2.4rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
           </div>
           <button onClick={doSearch}
-            style={{               color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.62rem 1.6rem",
-              fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit",
-              whiteSpace:"nowrap", boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
+            style={{               color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.62rem 1.6rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
             Search
           </button>
         </div>
       </div>
 
       {/* Filters */}
-      <div style={{ background:T.bg, padding:"0.75rem 1.5rem",
-        borderBottom:"1px solid "+T.border, display:"flex", gap:"0.35rem",
-        flexWrap:"wrap", alignItems:"center", justifyContent:"space-between" }}>
+      <div style={{ background:T.bg, padding:"0.75rem 1.5rem", borderBottom:"1px solid "+T.border, display:"flex", gap:"0.35rem", flexWrap:"wrap", alignItems:"center", justifyContent:"space-between" }}>
         <div style={{ display:"flex", gap:"0.3rem", flexWrap:"wrap" }}>
           <button onClick={() => setCategory("")} style={selBtn(!category)}>All</button>
           {CATEGORIES.map(c => (
@@ -814,13 +712,10 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
             </button>
           ))}
         </div>
-        <div style={{ display:"flex", background:T.bgDeep, border:"1px solid "+T.border,
-          borderRadius:"8px", overflow:"hidden" }}>
+        <div style={{ display:"flex", background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"8px", overflow:"hidden" }}>
           {[{m:"grid",i:"⊞"},{m:"list",i:"☰"}].map(({m,i}) => (
             <button key={m} onClick={() => setViewMode(m)}
-              style={{ background:viewMode===m?T.bgCard:"transparent", border:"none",
-                color:viewMode===m?T.accent:T.textMuted,
-                padding:"0.3rem 0.65rem", cursor:"pointer", fontFamily:"inherit", fontSize:"0.9rem" }}>{i}</button>
+              style={{ background:viewMode===m?T.bgCard:"transparent", border:"none", color:viewMode===m?T.accent:T.textMuted, padding:"0.3rem 0.65rem", cursor:"pointer", fontFamily:"inherit", fontSize:"0.9rem" }}>{i}</button>
           ))}
         </div>
       </div>
@@ -831,8 +726,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
         {!hasSearched && !loading && (
           <div style={{ textAlign:"center", padding:"5rem 1rem" }}>
             <div style={{ fontSize:"3.5rem", marginBottom:"1rem" }}>🔍</div>
-            <p style={{ color:T.textMid, fontWeight:600, fontFamily:"'Fraunces',serif",
-              fontSize:"1.15rem", marginBottom:"0.5rem" }}>
+            <p style={{ color:T.textMid, fontWeight:600, fontFamily:"'Fraunces',serif", fontSize:"1.15rem", marginBottom:"0.5rem" }}>
               Enter a ZIP code to find activities near you
             </p>
             <p style={{ color:T.textMuted, fontSize:"0.85rem" }}>
@@ -856,14 +750,10 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                   const cat = getCatMeta(p.category);
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
-                      style={{ background:T.bgCard, border:"1px solid "+T.border,
-                        borderRadius:"12px", padding:"0.9rem 1.1rem", display:"flex",
-                        gap:"1rem", alignItems:"center", flexWrap:"wrap",
-                        cursor:"pointer", boxShadow:"0 2px 8px "+T.shadow }}
+                      style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"12px", padding:"0.9rem 1.1rem", display:"flex", gap:"1rem", alignItems:"center", flexWrap:"wrap", cursor:"pointer", boxShadow:"0 2px 8px "+T.shadow }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = T.accent}
                       onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
-                      <span style={{ fontSize:"1.8rem", background:cat.bg, padding:"0.45rem",
-                        borderRadius:"10px", flexShrink:0 }}>{cat.icon}</span>
+                      <span style={{ fontSize:"1.8rem", background:cat.bg, padding:"0.45rem", borderRadius:"10px", flexShrink:0 }}>{cat.icon}</span>
                       <div style={{ flex:1, minWidth:"180px" }}>
                         <div style={{ color:T.text, fontWeight:600, fontFamily:"'Fraunces',serif" }}>{p.name}</div>
                         <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>📍 {p.address}</div>
@@ -872,8 +762,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                           <span style={{ color:T.gold, fontSize:"0.78rem", fontWeight:600 }}>
                             {p.rating ? p.rating.toFixed(1) : "—"}
                           </span>
-                          <span style={{ background:cat.bg, color:cat.color, fontSize:"0.65rem",
-                            fontWeight:700, padding:"1px 7px", borderRadius:"99px" }}>{cat.label}</span>
+                          <span style={{ background:cat.bg, color:cat.color, fontSize:"0.65rem", fontWeight:700, padding:"1px 7px", borderRadius:"99px" }}>{cat.label}</span>
                         </div>
                       </div>
                       <span style={{ color:T.accent, fontSize:"0.78rem", fontWeight:600 }}>Details →</span>
@@ -929,9 +818,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
       {/* Kid tabs */}
       <div style={{ display:"flex", gap:"0.4rem", marginBottom:"1.25rem", flexWrap:"wrap" }}>
         <button onClick={() => setTab("all")}
-          style={{ background: tab==="all" ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep,
-            color: tab==="all" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="all"?"transparent":T.border),
-            borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+          style={{ background: tab==="all" ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: tab==="all" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="all"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
           ♥ All Saved ({favPlaces.length})
         </button>
         {kids.map(kid => {
@@ -939,12 +826,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           const isActive = tab === kid.id;
           return (
             <button key={kid.id} onClick={() => setTab(kid.id)}
-              style={{ background: isActive ? kid.color : T.bgDeep,
-                color: isActive ? "#fff" : T.textSoft,
-                border:"1px solid "+(isActive?"transparent":T.border),
-                borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem",
-                fontWeight:600, cursor:"pointer", fontFamily:"inherit",
-                display:"flex", alignItems:"center", gap:"0.35rem" }}>
+              style={{ background: isActive ? kid.color : T.bgDeep, color: isActive ? "#fff" : T.textSoft, border:"1px solid "+(isActive?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:"0.35rem" }}>
               <span style={{ width:"18px", height:"18px", borderRadius:"50%", background: isActive?"rgba(255,255,255,0.3)":kid.color, color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:"0.65rem", fontWeight:700 }}>
                 {kid.name.charAt(0).toUpperCase()}
               </span>
@@ -983,37 +865,24 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 function HomePage({ onNavigate, onOpenAuth }) {
   return (
     <div>
-      <div style={{         padding:"3.5rem 1.5rem 2.5rem", textAlign:"center",
-        borderBottom:"1px solid "+T.border, position:"relative", overflow:"hidden", background:"#fdf6ee"}}>
-        <div style={{ position:"absolute", inset:0,
-          backgroundImage:"radial-gradient(ellipse at 20% 80%, rgba(255,180,220,0.25) 0%, transparent 45%), radial-gradient(ellipse at 80% 20%, rgba(160,180,255,0.2) 0%, transparent 45%)",
-          pointerEvents:"none" }}/>
+      <div style={{         padding:"3.5rem 1.5rem 2.5rem", textAlign:"center", borderBottom:"1px solid "+T.border, position:"relative", overflow:"hidden", background:"#fdf6ee"}}>
+        <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(ellipse at 20% 80%, rgba(255,180,220,0.25) 0%, transparent 45%), radial-gradient(ellipse at 80% 20%, rgba(160,180,255,0.2) 0%, transparent 45%)", pointerEvents:"none" }}/>
         <div style={{ position:"relative" }}>
-          <span style={{ background:"#f5e8d5", border:"none", color:"#2e1a08",
-            fontSize:"0.72rem", fontWeight:800, padding:"4px 16px", borderRadius:"99px",
-            textTransform:"uppercase", letterSpacing:"2px",
-            boxShadow:"0 2px 12px "+T.shadow }}>Your Family Activity Hub</span>
-          <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.6rem)",
-            fontWeight:900, lineHeight:1.08, margin:"1rem 0", color:T.text }}>
+          <span style={{ background:"#f5e8d5", border:"none", color:"#2e1a08", fontSize:"0.72rem", fontWeight:800, padding:"4px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", boxShadow:"0 2px 12px "+T.shadow }}>Your Family Activity Hub</span>
+          <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.6rem)", fontWeight:900, lineHeight:1.08, margin:"1rem 0", color:T.text }}>
             Find Their Next<br/>
             <span style={{ background:"linear-gradient(135deg, #b5601a 0%, #c07820 35%, #8b3e10 70%, #6b2e08 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Favorite Activity</span>
           </h1>
-          <p style={{ color:T.textSoft, fontSize:"1.05rem", maxWidth:"460px",
-            margin:"0 auto 2rem", lineHeight:1.75 }}>
+          <p style={{ color:T.textSoft, fontSize:"1.05rem", maxWidth:"460px", margin:"0 auto 2rem", lineHeight:1.75 }}>
             All their activities. One app.
           </p>
           <div style={{ display:"flex", gap:"0.75rem", justifyContent:"center", flexWrap:"wrap" }}>
             <button onClick={() => onNavigate("browse")}
-              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.75rem 2rem",
-                fontSize:"0.95rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit",
-                boxShadow:"0 4px 20px "+T.shadow, background:"#f5e8d5"}}>
+              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 20px "+T.shadow, background:"#f5e8d5"}}>
               Find Activities Near Me →
             </button>
             <button onClick={onOpenAuth}
-              style={{ background:T.bgCard, color:T.accent,
-                border:"1.5px solid "+T.accent+"55", borderRadius:"99px",
-                padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:600,
-                cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ background:T.bgCard, color:T.accent, border:"1.5px solid "+T.accent+"55", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
               Sign In / Sign Up
             </button>
           </div>
@@ -1021,33 +890,25 @@ function HomePage({ onNavigate, onOpenAuth }) {
       </div>
 
       <div style={{ padding:"2.25rem 1.5rem", background:T.bg }}>
-        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem",
-          marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))",
-          gap:"0.75rem", maxWidth:"900px", margin:"0 auto" }}>
+        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:"0.75rem", maxWidth:"900px", margin:"0 auto" }}>
           {CATEGORIES.map((cat, i) => (
             <button key={cat.label} onClick={() => onNavigate("browse", { category:cat.label })}
-              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px",
-                padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s",
-                display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem",
-                boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit" }}
+              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor=cat.color; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 8px 24px "+cat.color+"44"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor=cat.color+"44"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+cat.color+"22"; }}>
               <span style={{ fontSize:"1.7rem" }}>{cat.icon}</span>
-              <span style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700,
-                textTransform:"uppercase", letterSpacing:"1px" }}>{cat.label}</span>
+              <span style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px" }}>{cat.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       <div style={{ padding:"2rem 1.5rem",         borderTop:"1px solid "+T.border, borderBottom:"1px solid "+T.border, background:"#fdf6ee"}}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",
-          gap:"1.5rem", maxWidth:"660px", margin:"0 auto", textAlign:"center" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1.5rem", maxWidth:"660px", margin:"0 auto", textAlign:"center" }}>
           {[{n:"✦",l:"AI Powered Search",c:"#7a5c48"},{n:"9",l:"Categories",c:"#6a6058"},{n:"Any ZIP",l:"Nationwide",c:"#587068"},{n:"Free",l:"Always",c:"#8a6a40"}].map(s => (
             <div key={s.l}>
-              <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.75rem",
-                fontWeight:900, color:s.c }}>{s.n}</div>
+              <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.75rem", fontWeight:900, color:s.c }}>{s.n}</div>
               <div style={{ color:T.textSoft, fontSize:"0.8rem", marginTop:"0.2rem" }}>{s.l}</div>
             </div>
           ))}
@@ -1119,10 +980,7 @@ function ListYourBusinessForm() {
             </div>
           </div>
           <button onClick={handleSubmit} disabled={!form.name.trim()||!form.email.trim()||loading}
-            style={{ background: form.name.trim()&&form.email.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep,
-              color: form.name.trim()&&form.email.trim() ? "#3a3028" : T.textMuted,
-              border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.9rem",
-              fontWeight:700, cursor: form.name.trim()&&form.email.trim()?"pointer":"not-allowed", fontFamily:"inherit" }}>
+            style={{ background: form.name.trim()&&form.email.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: form.name.trim()&&form.email.trim() ? "#3a3028" : T.textMuted, border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.9rem", fontWeight:700, cursor: form.name.trim()&&form.email.trim()?"pointer":"not-allowed", fontFamily:"inherit" }}>
             {loading ? "Submitting…" : "Submit Application →"}
           </button>
         </div>
@@ -1228,13 +1086,10 @@ function AboutPage() {
           { icon:"🔒", title:"Trust & Safety", text:"We are committed to showing you real, accurate information. We never accept payment to alter rankings or fabricate listings." },
           { icon:"📬", title:"Get in Touch", text:"Questions or want to feature your program? Reach us at hello@thesignupspot.com or follow us @thesignupspot." },
         ].map(s => (
-          <div key={s.title} style={{ background:T.bgCard, border:"1px solid "+T.border,
-            borderRadius:"16px", padding:"1.3rem", display:"flex", gap:"1rem",
-            alignItems:"flex-start", boxShadow:"0 2px 8px "+T.shadow }}>
+          <div key={s.title} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.3rem", display:"flex", gap:"1rem", alignItems:"flex-start", boxShadow:"0 2px 8px "+T.shadow }}>
             <span style={{ fontSize:"1.75rem", flexShrink:0 }}>{s.icon}</span>
             <div>
-              <h3 style={{ color:T.text, fontFamily:"'Fraunces',serif",
-                fontSize:"1.05rem", marginBottom:"0.45rem" }}>{s.title}</h3>
+              <h3 style={{ color:T.text, fontFamily:"'Fraunces',serif", fontSize:"1.05rem", marginBottom:"0.45rem" }}>{s.title}</h3>
               <p style={{ color:T.textSoft, fontSize:"0.84rem", lineHeight:1.7 }}>{s.text}</p>
             </div>
           </div>
@@ -1342,35 +1197,23 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
   ];
   return (
     <>
-      <div onClick={onClose} style={{ position:"fixed", inset:0,
-        background:"rgba(80,40,10,0.35)", zIndex:900, backdropFilter:"blur(4px)" }}/>
-      <div style={{ position:"fixed", top:0, left:0, bottom:0, width:"280px",
-        background:T.bgCard, borderRight:"1px solid "+T.border, zIndex:901,
-        display:"flex", flexDirection:"column", animation:"slideIn 0.22s ease",
-        boxShadow:"4px 0 32px "+T.shadow }}>
+      <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.35)", zIndex:900, backdropFilter:"blur(4px)" }}/>
+      <div style={{ position:"fixed", top:0, left:0, bottom:0, width:"280px", background:T.bgCard, borderRight:"1px solid "+T.border, zIndex:901, display:"flex", flexDirection:"column", animation:"slideIn 0.22s ease", boxShadow:"4px 0 32px "+T.shadow }}>
         <style>{"@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}"}</style>
-        <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border,
-          display:"flex", alignItems:"center", justifyContent:"space-between", background:"#fdf6ee" }}>
+        <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border, display:"flex", alignItems:"center", justifyContent:"space-between", background:"#fdf6ee" }}>
           <div>
             <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem" }}>
               The Sign Up Spot
             </div>
-            <div style={{ color:T.textMuted, fontSize:"0.67rem", fontWeight:600,
-              letterSpacing:"1.5px", textTransform:"uppercase", marginTop:"0.2rem" }}>
+            <div style={{ color:T.textMuted, fontSize:"0.67rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", marginTop:"0.2rem" }}>
               Family Activity Hub
             </div>
           </div>
-          <button onClick={onClose} style={{ background:T.bg, border:"1px solid "+T.border,
-            color:T.textSoft, width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer",
-            fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
+          <button onClick={onClose} style={{ background:T.bg, border:"1px solid "+T.border, color:T.textSoft, width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
         </div>
         {user && (
-          <div style={{ padding:"0.9rem 1.25rem", borderBottom:"1px solid "+T.border,
-            background:T.accentBg, display:"flex", alignItems:"center", gap:"0.65rem" }}>
-            <div style={{ width:"34px", height:"34px", borderRadius:"50%",
-              background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-              color:"#fff", display:"flex", alignItems:"center", justifyContent:"center",
-              fontWeight:700, fontSize:"0.95rem", flexShrink:0 }}>
+          <div style={{ padding:"0.9rem 1.25rem", borderBottom:"1px solid "+T.border, background:T.accentBg, display:"flex", alignItems:"center", gap:"0.65rem" }}>
+            <div style={{ width:"34px", height:"34px", borderRadius:"50%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, fontSize:"0.95rem", flexShrink:0 }}>
               {user.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -1382,14 +1225,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
         <nav style={{ flex:1, padding:"0.65rem 0", overflowY:"auto" }}>
           {navItems.map(({ page, icon, label }) => (
             <button key={page} onClick={() => { onNavigate(page); onClose(); }}
-              style={{ width:"100%",
-                background: currentPage === page ? T.accentBg : "transparent", border:"none",
-                borderLeft:"3px solid "+(currentPage === page ? T.accent : "transparent"),
-                color: currentPage === page ? T.accent : T.textMid,
-                padding:"0.85rem 1.25rem", textAlign:"left", cursor:"pointer", fontSize:"0.88rem",
-                fontWeight: currentPage === page ? 700 : 400,
-                display:"flex", alignItems:"center", gap:"0.75rem",
-                transition:"all 0.15s", fontFamily:"inherit" }}
+              style={{ width:"100%", background: currentPage === page ? T.accentBg : "transparent", border:"none", borderLeft:"3px solid "+(currentPage === page ? T.accent : "transparent"), color: currentPage === page ? T.accent : T.textMid, padding:"0.85rem 1.25rem", textAlign:"left", cursor:"pointer", fontSize:"0.88rem", fontWeight: currentPage === page ? 700 : 400, display:"flex", alignItems:"center", gap:"0.75rem", transition:"all 0.15s", fontFamily:"inherit" }}
               onMouseEnter={e => { if (currentPage !== page) e.currentTarget.style.background = T.bgDeep; }}
               onMouseLeave={e => { if (currentPage !== page) e.currentTarget.style.background = "transparent"; }}>
               <span style={{ fontSize:"1rem" }}>{icon}</span>{label}
@@ -1404,11 +1240,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
               <div style={{ display:"flex", gap:"0.35rem", flexWrap:"wrap" }}>
                 {kids.map(kid => (
                   <button key={kid.id} onClick={() => setActiveKidId(kid.id)}
-                    style={{ background: activeKidId===kid.id ? kid.color : T.bgDeep,
-                      color: activeKidId===kid.id ? "#fff" : T.textMid,
-                      border:"1px solid "+(activeKidId===kid.id ? kid.color : T.border),
-                      borderRadius:"99px", padding:"0.3rem 0.75rem", fontSize:"0.75rem",
-                      fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+                    style={{ background: activeKidId===kid.id ? kid.color : T.bgDeep, color: activeKidId===kid.id ? "#fff" : T.textMid, border:"1px solid "+(activeKidId===kid.id ? kid.color : T.border), borderRadius:"99px", padding:"0.3rem 0.75rem", fontSize:"0.75rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
                     {kid.name}
                   </button>
                 ))}
@@ -1419,16 +1251,11 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
           )}
           {!user ? (
             <button onClick={() => { onOpenAuth(); onClose(); }}
-              style={{ width:"100%",
-                                color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.65rem",
-                fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit",
-                boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
+              style={{ width:"100%", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
               Sign In / Create Account
             </button>
           ) : (
-            <button style={{ width:"100%", background:T.bgDeep, color:T.textSoft,
-              border:"1px solid "+T.border, borderRadius:"99px", padding:"0.65rem",
-              fontSize:"0.85rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+            <button style={{ width:"100%", background:T.bgDeep, color:T.textSoft, border:"1px solid "+T.border, borderRadius:"99px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
               Sign Out
             </button>
           )}
@@ -1494,25 +1321,19 @@ export default function TheSignUpSpot() {
   const favPlaces = [...favorites.values()];
 
   return (
-    <div style={{ minHeight:"100vh", background:T.bg,
-      fontFamily:"'DM Sans','Segoe UI',sans-serif", color:T.text }}>
+    <div style={{ minHeight:"100vh", background:T.bg, fontFamily:"'DM Sans','Segoe UI',sans-serif", color:T.text }}>
       <style>{"@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:"+T.bgDeep+";}::-webkit-scrollbar-thumb{background:"+T.borderMid+";border-radius:3px;}input,select,textarea{outline:none;font-family:inherit;color:"+T.text+";}input::placeholder,textarea::placeholder{color:"+T.textMuted+";}select option{background:"+T.bgCard+";}"}</style>
 
       {/* Nav — centered logo row + links row */}
-      <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)",
-        backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border,
-        boxShadow:"0 2px 12px "+T.shadow }}>
+      <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border, boxShadow:"0 2px 12px "+T.shadow }}>
         {/* Top row: hamburger | centered logo | actions */}
         <div style={{ display:"flex", alignItems:"center", padding:"0 1.25rem", height:"52px", gap:"0.75rem" }}>
           <button onClick={() => setMenuOpen(true)}
-            style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid,
-              width:"34px", height:"34px", borderRadius:"8px", cursor:"pointer",
-              fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
+            style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, width:"34px", height:"34px", borderRadius:"8px", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
           {/* Centered logo */}
           <div style={{ flex:1, display:"flex", justifyContent:"center", position:"relative" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
-              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1,
-                background:"linear-gradient(135deg, #b5601a 0%, #c07820 35%, #8b3e10 70%, #6b2e08 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #b5601a 0%, #c07820 35%, #8b3e10 70%, #6b2e08 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
                 The Sign Up Spot
               </div>
               <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"1px" }}>
@@ -1524,15 +1345,8 @@ export default function TheSignUpSpot() {
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
-              style={{ background: kids.find(k=>k.id===activeKidId)?.color+"22" || T.bgDeep,
-                border:"1px solid "+(kids.find(k=>k.id===activeKidId)?.color||T.border)+"55",
-                borderRadius:"99px", padding:"0.28rem 0.7rem", fontSize:"0.75rem",
-                fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center",
-                gap:"0.35rem", fontFamily:"inherit", color:T.textMid }}>
-              <span style={{ width:"18px", height:"18px", borderRadius:"50%",
-                background:kids.find(k=>k.id===activeKidId)?.color||T.accent,
-                color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center",
-                fontSize:"0.65rem", fontWeight:700 }}>
+              style={{ background: kids.find(k=>k.id===activeKidId)?.color+"22" || T.bgDeep, border:"1px solid "+(kids.find(k=>k.id===activeKidId)?.color||T.border)+"55", borderRadius:"99px", padding:"0.28rem 0.7rem", fontSize:"0.75rem", fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", gap:"0.35rem", fontFamily:"inherit", color:T.textMid }}>
+              <span style={{ width:"18px", height:"18px", borderRadius:"50%", background:kids.find(k=>k.id===activeKidId)?.color||T.accent, color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:"0.65rem", fontWeight:700 }}>
                 {(kids.find(k=>k.id===activeKidId)?.name||"K").charAt(0).toUpperCase()}
               </span>
               {kids.find(k=>k.id===activeKidId)?.name||"Kid"}
@@ -1541,16 +1355,11 @@ export default function TheSignUpSpot() {
           {user ? (
             <div style={{ display:"flex", alignItems:"center", gap:"0.4rem", cursor:"pointer" }}
               onClick={() => setMenuOpen(true)}>
-              <div style={{ width:"30px", height:"30px", borderRadius:"50%",
-                background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-                color:"#fff", display:"flex", alignItems:"center", justifyContent:"center",
-                fontWeight:700, fontSize:"0.85rem" }}>{user.charAt(0).toUpperCase()}</div>
+              <div style={{ width:"30px", height:"30px", borderRadius:"50%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, fontSize:"0.85rem" }}>{user.charAt(0).toUpperCase()}</div>
             </div>
           ) : (
             <button onClick={() => setAuthOpen(true)}
-              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.35rem 0.9rem",
-                fontSize:"0.75rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit",
-                boxShadow:"0 2px 10px "+T.shadow, background:"#f5e8d5"}}>
+              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.75rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 2px 10px "+T.shadow, background:"#f5e8d5"}}>
               Sign In
             </button>
           )}
@@ -1560,13 +1369,7 @@ export default function TheSignUpSpot() {
         <div style={{ display:"flex", justifyContent:"center", gap:"0.25rem", borderTop:"1px solid "+T.border+"88", padding:"0 1rem 0" }}>
           {[{p:"home",l:"Home"},{p:"browse",l:"Browse"},{p:"businesses",l:"Businesses"},{p:"favorites",l:"Saved"+(favSet.size>0?" ("+favSet.size+")":"")},{p:"about",l:"About"}].map(({p,l}) => (
             <button key={p} onClick={() => navigate(p)}
-              style={{ background:"none", border:"none",
-                color: page===p ? T.accent : T.textSoft,
-                fontWeight: page===p ? 700 : 400,
-                padding:"0.4rem 0.7rem", fontSize:"0.76rem",
-                cursor:"pointer", fontFamily:"inherit",
-                borderBottom: page===p ? "2px solid #c084c0" : "2px solid transparent",
-                transition:"all 0.15s" }}>{l}</button>
+              style={{ background:"none", border:"none", color: page===p ? T.accent : T.textSoft, fontWeight: page===p ? 700 : 400, padding:"0.4rem 0.7rem", fontSize:"0.76rem", cursor:"pointer", fontFamily:"inherit", borderBottom: page===p ? "2px solid #c084c0" : "2px solid transparent", transition:"all 0.15s" }}>{l}</button>
           ))}
         </div>
       </div>
@@ -1588,11 +1391,9 @@ export default function TheSignUpSpot() {
       </div>
 
       <div style={{ background:"#fdf6ee", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
-        <div style={{ maxWidth:"900px", margin:"0 auto", display:"flex",
-          justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"1rem" }}>
+        <div style={{ maxWidth:"900px", margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"1rem" }}>
           <div>
-            <div style={{ fontFamily:"'Fraunces',serif", color:T.accent,
-              fontWeight:900, fontSize:"1.1rem", marginBottom:"0.25rem" }}>The Sign Up Spot</div>
+            <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem", marginBottom:"0.25rem" }}>The Sign Up Spot</div>
             <div style={{ color:T.textMuted, fontSize:"0.75rem" }}>
               © 2026 · Connecting families to amazing experiences
             </div>
@@ -1600,8 +1401,7 @@ export default function TheSignUpSpot() {
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
             {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"]].map(([l,p]) => (
               <button key={p} onClick={() => navigate(p)}
-                style={{ background:"none", border:"none", color:T.textSoft,
-                  cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
+                style={{ background:"none", border:"none", color:T.textSoft, cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
             ))}
           </div>
         </div>
