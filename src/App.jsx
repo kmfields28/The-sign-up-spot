@@ -149,7 +149,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
     const [reviewDone, setReviewDone] = useState(false);
-  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewSubmitting] = useState(false);
 
 
   function handleSubmitReview() {
@@ -1222,8 +1222,6 @@ export default function TheSignUpSpot() {
   }
 
   const activeKidMap = kidSaves[activeKidId] || new Map();
-  const activeKidFavSet = new Set(activeKidMap.keys());
-  const activeKidFavPlaces = [...activeKidMap.values()];
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
