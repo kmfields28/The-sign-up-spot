@@ -1321,7 +1321,7 @@ function AdminPage() {
       {loading&&<div style={{textAlign:"center",padding:"2rem",color:T.textSoft}}>Loading...</div>}
       {!loading&&listings.length===0&&<div style={{textAlign:"center",padding:"3rem",background:T.bgCard,borderRadius:"16px",border:"1px solid "+T.border}}><p style={{color:T.textSoft}}>{tab==="pending"?"No pending submissions!":"No approved listings yet."}</p></div>}
       <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-        {listings.map(function(biz){var cat=getCatMeta(biz.category);return(
+        {listings.map(function(biz){return(
           <div key={biz.id} style={{background:T.bgCard,border:"1px solid "+T.border,borderRadius:"16px",padding:"1.25rem",boxShadow:"0 2px 8px "+T.shadow}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"0.75rem"}}>
               <div style={{flex:1}}>
