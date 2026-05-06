@@ -928,73 +928,144 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
 // ── About Page ────────────────────────────────────────────────────────────────
 function ListYourBusinessForm() {
-  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"" });
+  const [form, setForm] = useState({
+    name:"", categories:[], age_min:"", age_max:"", class_types:"",
+    address:"", phone:"", website:"", email:"", description:"",
+    hours:"", price:"$$", photo_url:"", featured_interest:false
+  });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const set = (k, v) => setForm(f => ({...f, [k]:v}));
+
+  function toggleCategory(cat) {
+    setForm(f => ({
+      ...f,
+      categories: f.categories.includes(cat)
+        ? f.categories.filter(c => c !== cat)
+        : [...f.categories, cat]
+    }));
+  }
+
+  async function handleSubmit() {
+    if (!form.name.trim() || !form.email.trim() || form.categories.length === 0) {
+      setError("Please fill in business name, email, and at least one category.");
+      return;
+    }
+    setLoading(true); setError("");
+    try {
+      const payload = {
+        name: form.name.trim(),
+        category: form.categories[0],
+        categories: form.categories,
+        address: form.address.trim(),
+        phone: form.phone.trim(),
+        website: form.website.trim(),
+        description: form.description.trim(),
+        hours: form.hours.trim(),
+        price: form.price,
+        photo_url: form.photo_url.trim(),
+        age_range: form.age_min && form.age_max ? form.age_min + "-" + form.age_max : "",
+        age_min: form.age_min ? parseInt(form.age_min) : null,
+        age_max: form.age_max ? parseInt(form.age_max) : null,
+        class_types: form.class_types ? form.class_types.split(",").map(s => s.trim()).filter(Boolean) : [],
+        featured_interest: form.featured_interest,
+        status: "pending",
+        rating: 0,
+        review_count: 0,
+      };
+      await sbPost("activities", payload);
+      setSubmitted(true);
+    } catch(e) {
+      setError("Submission failed: " + e.message + ". Please try again.");
+    }
+    setLoading(false);
+  }
+
   const inp = { width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.65rem 0.9rem", fontSize:"0.85rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", display:"block" };
   const lbl = { display:"block", color:T.textMid, fontSize:"0.75rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase", letterSpacing:"0.8px" };
 
-  function handleSubmit() {
-    if (!form.name.trim() || !form.email.trim()) return;
-    setLoading(true);
-    setTimeout(() => { setSubmitted(true); setLoading(false); }, 900);
-  }
+  if (submitted) return (
+    <div id="list-biz-form" style={{ marginTop:"2rem", background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", padding:"2rem", textAlign:"center" }}>
+      <div style={{ fontSize:"3rem", marginBottom:"0.75rem" }}>🎉</div>
+      <h4 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.4rem" }}>Application Received!</h4>
+      <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Thanks! We will review your listing and be in touch at {form.email} within 2 business days.</p>
+    </div>
+  );
 
   return (
     <div id="list-biz-form" style={{ marginTop:"2rem", background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", padding:"1.75rem", boxShadow:"0 2px 12px "+T.shadow }}>
       <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.25rem" }}>List Your Business</h3>
-      <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Fill out the form below and our team will be in touch within 2 business days.</p>
+      <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Fill out the form and our team will review your listing within 2 business days.</p>
 
-      {submitted ? (
-        <div style={{ textAlign:"center", padding:"2rem" }}>
-          <div style={{ fontSize:"3rem", marginBottom:"0.75rem" }}>🎉</div>
-          <h4 style={{ fontFamily:"'Fraunces',serif", color:T.text, marginBottom:"0.4rem" }}>Application Received!</h4>
-          <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Thanks for reaching out. We'll contact you at {form.email} within 2 business days.</p>
+      {error && <div style={{ background:"#fdf5f3", border:"1px solid "+T.accentSoft, borderRadius:"10px", padding:"0.85rem", marginBottom:"1rem", color:T.textMid, fontSize:"0.83rem" }}>⚠️ {error}</div>}
+
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
+        <div style={{ gridColumn:"1/-1" }}><label style={lbl}>Business Name *</label><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="Miller Street Dance Academy" style={inp}/></div>
+        <div><label style={lbl}>Contact Email *</label><input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="you@yourbusiness.com" style={inp}/></div>
+        <div><label style={lbl}>Phone</label><input value={form.phone} onChange={e=>set("phone",e.target.value)} placeholder="(555) 000-0000" style={inp}/></div>
+        <div style={{ gridColumn:"1/-1" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
+        <div><label style={lbl}>Website</label><input value={form.website} onChange={e=>set("website",e.target.value)} placeholder="https://yourbusiness.com" style={inp}/></div>
+        <div><label style={lbl}>Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-6pm" style={inp}/></div>
+      </div>
+
+      <div style={{ marginBottom:"1rem" }}>
+        <label style={lbl}>Categories * (select all that apply)</label>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:"0.4rem", marginTop:"0.35rem" }}>
+          {CATEGORIES.map(cat => (
+            <button key={cat.label} type="button" onClick={() => toggleCategory(cat.label)}
+              style={{ background: form.categories.includes(cat.label) ? cat.color : T.bgDeep,
+                color: form.categories.includes(cat.label) ? "#fff" : T.textMid,
+                border:"1.5px solid "+(form.categories.includes(cat.label) ? cat.color : T.border),
+                borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.8rem",
+                fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+              {cat.icon} {cat.label}
+            </button>
+          ))}
         </div>
-      ) : (
-        <div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
-            <div><label style={lbl}>Business Name *</label><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="Your Business Name" style={inp}/></div>
-            <div><label style={lbl}>Category</label>
-              <select value={form.category} onChange={e=>set("category",e.target.value)} style={{...inp}}>
-                <option value="">Select category…</option>
-                {CATEGORIES.map(c => <option key={c.label} value={c.label}>{c.icon} {c.label}</option>)}
-              </select>
-            </div>
-            <div><label style={lbl}>Contact Email *</label><input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="you@yourbusiness.com" style={inp}/></div>
-            <div><label style={lbl}>Phone</label><input value={form.phone} onChange={e=>set("phone",e.target.value)} placeholder="(555) 000-0000" style={inp}/></div>
-            <div><label style={lbl}>Website</label><input value={form.website} onChange={e=>set("website",e.target.value)} placeholder="https://yourbusiness.com" style={inp}/></div>
-            <div><label style={lbl}>Age Range Served</label><input value={form.ageRange} onChange={e=>set("ageRange",e.target.value)} placeholder="e.g. 3-14" style={inp}/></div>
-          </div>
-          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
-          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-5pm" style={inp}/></div>
-          <div style={{ marginBottom:"1.5rem" }}>
-            <label style={lbl}>Tell us about your program</label>
-            <textarea value={form.description} onChange={e=>set("description",e.target.value)} rows={4}
-              placeholder="Describe what you offer, what makes you special, and why families should choose you…"
-              style={{...inp, resize:"vertical"}}/>
-          </div>
-          <div style={{ background:T.bgDeep, borderRadius:"10px", padding:"0.85rem", marginBottom:"1.25rem", border:"1px solid "+T.border }}>
-            <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.78rem", marginBottom:"0.5rem" }}>Featured Placement Options</div>
-            <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
-              {[{t:"Silver",l:"Sponsored badge + listing",c:T.textSoft},{t:"Gold",l:"Featured section + badge",c:T.gold},{t:"Platinum",l:"Top placement + all features",c:T.textMid}].map(o => (
-                <div key={o.t} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.5rem 0.75rem", flex:"1 1 120px" }}>
-                  <div style={{ color:o.c, fontWeight:700, fontSize:"0.75rem" }}>{o.t}</div>
-                  <div style={{ color:T.textMuted, fontSize:"0.7rem", marginTop:"0.15rem" }}>{o.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <button onClick={handleSubmit} disabled={!form.name.trim()||!form.email.trim()||loading}
-            style={{ background: form.name.trim()&&form.email.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: form.name.trim()&&form.email.trim() ? "#3a3028" : T.textMuted, border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.9rem", fontWeight:700, cursor: form.name.trim()&&form.email.trim()?"pointer":"not-allowed", fontFamily:"inherit" }}>
-            {loading ? "Submitting…" : "Submit Application →"}
-          </button>
+      </div>
+
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
+        <div><label style={lbl}>Min Age</label><input type="number" value={form.age_min} onChange={e=>set("age_min",e.target.value)} placeholder="0" min="0" max="18" style={inp}/></div>
+        <div><label style={lbl}>Max Age</label><input type="number" value={form.age_max} onChange={e=>set("age_max",e.target.value)} placeholder="18" min="0" max="18" style={inp}/></div>
+      </div>
+
+      <div style={{ marginBottom:"1rem" }}><label style={lbl}>Class Types Offered (comma separated)</label><input value={form.class_types} onChange={e=>set("class_types",e.target.value)} placeholder="Ballet, Hip Hop, Mommy & Me, Tap, Jazz" style={inp}/></div>
+      <div style={{ marginBottom:"1rem" }}><label style={lbl}>Photo URL (optional)</label><input value={form.photo_url} onChange={e=>set("photo_url",e.target.value)} placeholder="https://yourbusiness.com/photo.jpg" style={inp}/></div>
+      <div style={{ marginBottom:"1rem" }}>
+        <label style={lbl}>Price Range</label>
+        <div style={{ display:"flex", gap:"0.5rem" }}>
+          {["$","$$","$$$"].map(p => (
+            <button key={p} type="button" onClick={() => set("price", p)}
+              style={{ background: form.price===p ? T.accent : T.bgDeep,
+                color: form.price===p ? "#fff" : T.textMid,
+                border:"1.5px solid "+(form.price===p ? T.accent : T.border),
+                borderRadius:"8px", padding:"0.4rem 1rem", fontSize:"0.85rem",
+                fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>{p}</button>
+          ))}
         </div>
-      )}
+      </div>
+      <div style={{ marginBottom:"1.25rem" }}><label style={lbl}>Description</label><textarea value={form.description} onChange={e=>set("description",e.target.value)} rows={4} placeholder="Tell parents about your programs, what makes you special, your teaching philosophy..." style={{...inp, resize:"vertical"}}/></div>
+
+      <div style={{ marginBottom:"1.25rem" }}>
+        <label style={{ display:"flex", alignItems:"center", gap:"0.6rem", cursor:"pointer" }}>
+          <input type="checkbox" checked={form.featured_interest} onChange={e=>set("featured_interest",e.target.checked)} style={{ width:"16px", height:"16px" }}/>
+          <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>I am interested in a featured placement (Gold/Platinum) to appear at the top of search results</span>
+        </label>
+      </div>
+
+      <button onClick={handleSubmit} disabled={loading}
+        style={{ background: "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
+          color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem 2rem",
+          fontSize:"0.9rem", fontWeight:700, cursor: loading ? "not-allowed" : "pointer",
+          fontFamily:"inherit", opacity: loading ? 0.7 : 1 }}>
+        {loading ? "Submitting…" : "Submit Application →"}
+      </button>
     </div>
   );
 }
+
 
 function BusinessesPage() {
   return (
@@ -1194,6 +1265,95 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
   );
 }
 
+function AdminPage() {
+  const [password, setPassword] = useState("");
+  const [authed, setAuthed] = useState(false);
+  const [pending, setPending] = useState([]);
+  const [approved, setApproved] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState("pending");
+  const ADMIN_PASSWORD = "signupspot2024";
+  async function loadListings() {
+    setLoading(true);
+    try {
+      const all = await sbGet("activities?select=*&order=submitted_at.desc");
+      setPending((all||[]).filter(a=>a.status==="pending"));
+      setApproved((all||[]).filter(a=>a.status==="approved"));
+    } catch(e) { console.error(e); }
+    setLoading(false);
+  }
+  async function updateStatus(id, status) {
+    try {
+      await fetch(SUPABASE_URL+"/rest/v1/activities?id=eq."+id, { method:"PATCH", headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=minimal"}, body:JSON.stringify({status}) });
+      await loadListings();
+    } catch(e) { alert("Error: "+e.message); }
+  }
+  async function deleteListing(id) {
+    if (!window.confirm("Delete permanently?")) return;
+    try {
+      await fetch(SUPABASE_URL+"/rest/v1/activities?id=eq."+id, { method:"DELETE", headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY} });
+      await loadListings();
+    } catch(e) { alert("Error: "+e.message); }
+  }
+  if (!authed) return (
+    <div style={{minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg,padding:"1.5rem"}}>
+      <div style={{background:T.bgCard,border:"1px solid "+T.border,borderRadius:"20px",padding:"2.5rem",maxWidth:"360px",width:"100%",textAlign:"center"}}>
+        <div style={{fontSize:"2.5rem",marginBottom:"0.75rem"}}>🔐</div>
+        <h2 style={{fontFamily:"'Fraunces',serif",color:T.text,fontSize:"1.4rem",marginBottom:"0.5rem"}}>Admin Access</h2>
+        <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&password===ADMIN_PASSWORD){setAuthed(true);loadListings();}}} placeholder="Password" style={{width:"100%",background:T.bgInput,border:"1.5px solid "+T.border,borderRadius:"10px",padding:"0.7rem 1rem",fontSize:"0.9rem",color:T.text,boxSizing:"border-box",fontFamily:"inherit",marginBottom:"0.75rem",display:"block"}}/>
+        <button onClick={()=>{if(password===ADMIN_PASSWORD){setAuthed(true);loadListings();}else{alert("Incorrect password");}}} style={{width:"100%",background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",color:"#fff",border:"none",borderRadius:"99px",padding:"0.7rem",fontSize:"0.9rem",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Sign In</button>
+      </div>
+    </div>
+  );
+  const listings = tab==="pending" ? pending : approved;
+  return (
+    <div style={{padding:"1.5rem",background:T.bg,minHeight:"80vh"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.5rem",flexWrap:"wrap",gap:"1rem"}}>
+        <div>
+          <h2 style={{fontFamily:"'Fraunces',serif",color:T.text,fontSize:"1.5rem",marginBottom:"0.25rem"}}>Admin Dashboard</h2>
+          <p style={{color:T.textSoft,fontSize:"0.83rem"}}>{pending.length} pending · {approved.length} approved</p>
+        </div>
+        <button onClick={loadListings} style={{background:T.bgDeep,border:"1px solid "+T.border,color:T.textMid,borderRadius:"99px",padding:"0.45rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Refresh</button>
+      </div>
+      <div style={{display:"flex",gap:"0.5rem",marginBottom:"1.25rem"}}>
+        {[["pending","Pending ("+pending.length+")"],["approved","Approved ("+approved.length+")"]].map(function(item){var t=item[0],l=item[1];return(<button key={t} onClick={()=>setTab(t)} style={{background:tab===t?"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")":T.bgDeep,color:tab===t?"#fff":T.textMid,border:"1px solid "+(tab===t?"transparent":T.border),borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.82rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>);})}
+      </div>
+      {loading&&<div style={{textAlign:"center",padding:"2rem",color:T.textSoft}}>Loading...</div>}
+      {!loading&&listings.length===0&&<div style={{textAlign:"center",padding:"3rem",background:T.bgCard,borderRadius:"16px",border:"1px solid "+T.border}}><p style={{color:T.textSoft}}>{tab==="pending"?"No pending submissions!":"No approved listings yet."}</p></div>}
+      <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+        {listings.map(function(biz){var cat=getCatMeta(biz.category);return(
+          <div key={biz.id} style={{background:T.bgCard,border:"1px solid "+T.border,borderRadius:"16px",padding:"1.25rem",boxShadow:"0 2px 8px "+T.shadow}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"0.75rem"}}>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"0.35rem",flexWrap:"wrap"}}>
+                  <span style={{fontFamily:"'Fraunces',serif",color:T.text,fontWeight:700,fontSize:"1rem"}}>{biz.name}</span>
+                  {biz.featured_interest&&<span style={{background:T.goldBg,color:T.gold,fontSize:"0.65rem",fontWeight:700,padding:"2px 8px",borderRadius:"99px"}}>Featured Interest</span>}
+                </div>
+                <div style={{display:"flex",gap:"0.35rem",flexWrap:"wrap",marginBottom:"0.5rem"}}>
+                  {(biz.categories||[biz.category]).filter(Boolean).map(function(c){var cm=getCatMeta(c);return <span key={c} style={{background:cm.bg,color:cm.color,fontSize:"0.68rem",fontWeight:700,padding:"2px 8px",borderRadius:"99px"}}>{cm.icon} {c}</span>;})}
+                  {biz.age_min!=null&&biz.age_max!=null&&<span style={{background:T.bgDeep,color:T.textSoft,fontSize:"0.68rem",padding:"2px 8px",borderRadius:"99px",border:"1px solid "+T.border}}>Ages {biz.age_min}-{biz.age_max}</span>}
+                </div>
+                {biz.description&&<p style={{color:T.textSoft,fontSize:"0.8rem",lineHeight:1.55,marginBottom:"0.5rem"}}>{biz.description.slice(0,150)}</p>}
+                <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
+                  {biz.address&&<span style={{color:T.textMuted,fontSize:"0.75rem"}}>📍 {biz.address}</span>}
+                  {biz.phone&&<span style={{color:T.textMuted,fontSize:"0.75rem"}}>📞 {biz.phone}</span>}
+                  {biz.website&&<a href={biz.website} target="_blank" rel="noreferrer" style={{color:T.accent,fontSize:"0.75rem"}}>Website</a>}
+                </div>
+                {biz.class_types&&biz.class_types.length>0&&<div style={{marginTop:"0.4rem"}}><span style={{color:T.textMuted,fontSize:"0.73rem"}}>Classes: {biz.class_types.join(", ")}</span></div>}
+              </div>
+              <div style={{display:"flex",gap:"0.5rem",flexShrink:0}}>
+                {tab==="pending"&&<button onClick={()=>updateStatus(biz.id,"approved")} style={{background:"#eef4eb",color:"#3a7a30",border:"1px solid #3a7a3044",borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Approve</button>}
+                {tab==="approved"&&<button onClick={()=>updateStatus(biz.id,"pending")} style={{background:T.bgDeep,color:T.textMid,border:"1px solid "+T.border,borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Unpublish</button>}
+                <button onClick={()=>deleteListing(biz.id)} style={{background:"#fdf0f0",color:"#b04040",border:"1px solid #b0404044",borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Delete</button>
+              </div>
+            </div>
+          </div>
+        );})}
+      </div>
+    </div>
+  );
+}
+
 function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth, user, kids, activeKidId, setActiveKidId, onOpenKidsManager }) {
   const navItems = [
     { page:"home",       icon:"🏠", label:"Home" },
@@ -1201,6 +1361,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
     { page:"businesses", icon:"🏢", label:"Local Businesses" },
     { page:"favorites",  icon:"♥",  label:"Saved ("+favCount+")" },
     { page:"about",      icon:"ℹ️", label:"About Us" },
+    { page:"admin", icon:"🔐", label:"Admin" },
   ];
   return (
     <>
@@ -1392,6 +1553,7 @@ export default function TheSignUpSpot() {
                                    onOpenKidsManager={() => setKidsManagerOpen(true)}/>}
         {page === "businesses" && <BusinessesPage/>}
         {page === "about"      && <AboutPage/>}
+        {page === "admin"      && <AdminPage/>}
       </div>
 
       <div style={{ background:"#fdf6ee", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
