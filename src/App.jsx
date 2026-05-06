@@ -244,7 +244,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewText, setReviewText] = useState("");
     const [reviewDone, setReviewDone] = useState(false);
   const [reviewsLoading, setReviewsLoading] = useState(true);
-  const [reviewSubmitting] = useState(false);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
 
   useState(() => {
