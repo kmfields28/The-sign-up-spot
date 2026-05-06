@@ -640,7 +640,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   // Auto-search when filters change (if zip already entered)
   useEffect(() => {
     if (zip && zip.length === 5 && hasSearched) { doSearch(); }
-  }, [category, ageRange, actType]);
+  }, [category]);
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
