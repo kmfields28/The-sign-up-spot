@@ -154,7 +154,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewDone, setReviewDone] = useState(false);
 
   useEffect(() => {
-    getReviews(place.id).then(rows => {
+
       setReviews(rows || []);
       setReviewsLoading(false);
     }).catch(() => setReviewsLoading(false));
@@ -164,7 +164,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
     setReviewSubmitting(true);
     try {
-      await submitReview(place.id, reviewAuthor.trim(), reviewRating, reviewText.trim());
+
       setReviewDone(true);
       setReviews(prev => [{ author: reviewAuthor, rating: reviewRating, text: reviewText, created_at: new Date().toISOString() }, ...prev]);
     } catch(e) {
