@@ -811,6 +811,10 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           style={{ background: tab==="all" ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: tab==="all" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="all"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
           ♥ All Saved ({favPlaces.length})
         </button>
+        <button onClick={() => setTab("calendar")}
+          style={{ background: tab==="calendar" ? "#16a34a" : T.bgDeep, color: tab==="calendar" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="calendar"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+          📅 Calendar
+        </button>
         {kids.map(kid => {
           const count = (kidSaves[kid.id]||new Map()).size;
           const isActive = tab === kid.id;
