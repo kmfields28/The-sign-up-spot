@@ -50,7 +50,7 @@ async function sbGet(path) {
   return res.json();
 }
 
-async function sbPost(path, body) {
+async function sbPost(path, body) { // eslint-disable-line no-unused-vars
   const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
     method: "POST",
     headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
