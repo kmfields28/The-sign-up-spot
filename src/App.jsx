@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 const T = {
   bg:"#ffffff",
@@ -39,8 +39,6 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
 ];
 
-const AGE_RANGES = ["All Ages","0-2","3-5","6-8","9-12","13-16","17+"];
-const ACTIVITY_TYPES = ["All Types","Competitive","Recreational"];
 
 function getCatMeta(label) {
   return CATEGORIES.find(c => c.label === label) || { icon:"🎯", color:T.accent, bg:T.accentBg };
@@ -223,13 +221,13 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
-  const [reviewsLoading, setReviewsLoading] = useState(false);
-  const [reviewAuthor, setReviewAuthor] = useState("");
+    const [reviewAuthor, setReviewAuthor] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
+  const reviewsLoading = false;
 
   function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
@@ -628,84 +626,6 @@ function AuthModal({ onClose, onSignIn }) {
 }
 
 // ── Browse Page ───────────────────────────────────────────────────────────────
-// ── Simple SVG Map ────────────────────────────────────────────────────────────
-function SimpleMap({ places, favorites, onToggleFav, onSelect }) {
-  const [selected, setSelected] = useState(null);
-  if (!places.length) return null;
-
-  // Compute bounds
-  const lats = places.map(p => p._lat || 40.72).filter(Boolean);
-  const lngs = places.map(p => p._lng || -73.99).filter(Boolean);
-  const minLat = Math.min(...lats) - 0.01;
-  const maxLat = Math.max(...lats) + 0.01;
-  const minLng = Math.min(...lngs) - 0.01;
-  const maxLng = Math.max(...lngs) + 0.01;
-  const W = 600; const H = 340;
-  const px = lng => ((lng - minLng) / (maxLng - minLng)) * W * 0.88 + W * 0.06;
-  const py = lat => ((maxLat - lat) / (maxLat - minLat)) * H * 0.88 + H * 0.06;
-
-  // Assign fake coords spread across NYC if none
-  const withCoords = places.map((p, i) => ({
-    ...p,
-    _lat: p._lat || 40.68 + (i % 5) * 0.018 + Math.floor(i/5) * 0.01,
-    _lng: p._lng || -74.02 + (i % 7) * 0.022,
-  }));
-
-  return (
-    <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
-      <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
-        <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {places.length} locations</span>
-        <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to preview</span>
-      </div>
-      <div style={{ position:"relative", background:"linear-gradient(160deg,"+T.bgDeep+",#e8e2d4)" }}>
-        <svg viewBox={"0 0 "+W+" "+H} style={{ width:"100%", display:"block", minHeight:"280px" }}>
-          <defs><pattern id="mg" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke={T.borderMid} strokeWidth="0.4" opacity="0.5"/></pattern></defs>
-          <rect width={W} height={H} fill="url(#mg)"/>
-          <line x1="0" y1={H*0.45} x2={W} y2={H*0.45} stroke={T.borderMid} strokeWidth="1" opacity="0.3"/>
-          <line x1={W*0.4} y1="0" x2={W*0.4} y2={H} stroke={T.borderMid} strokeWidth="0.8" opacity="0.25"/>
-          {withCoords.map(p => {
-            const cat = getCatMeta(p.category);
-            const x = px(p._lng); const y = py(p._lat);
-            const isSel = selected && selected.id === p.id;
-            return (
-              <g key={p.id} style={{ cursor:"pointer" }} onClick={() => setSelected(p)}>
-                {isSel && <circle cx={x} cy={y} r={24} fill="none" stroke={cat.color} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.7"/>}
-                <circle cx={x} cy={y} r={isSel?16:11} fill={cat.bg} stroke={cat.color} strokeWidth={isSel?2:1.5}/>
-                <text x={x} y={y+1} textAnchor="middle" dominantBaseline="middle" fontSize={isSel?10:8}>{cat.icon}</text>
-              </g>
-            );
-          })}
-        </svg>
-        <div style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", display:"flex", gap:"0.3rem", flexWrap:"wrap" }}>
-          {[...new Set(places.map(p=>p.category))].map(cat => {
-            const m = getCatMeta(cat);
-            return <span key={cat} style={{ background:T.bgCard+"ee", border:"1px solid "+m.color+"55", color:m.color, fontSize:"0.62rem", padding:"2px 6px", borderRadius:"99px", fontWeight:600 }}>{m.icon} {cat}</span>;
-          })}
-        </div>
-      </div>
-      {selected && (
-        <div style={{ padding:"0.9rem 1.25rem", borderTop:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:T.bgDeep }}>
-          <div style={{ display:"flex", gap:"0.65rem", alignItems:"center" }}>
-            <span style={{ fontSize:"1.5rem", background:getCatMeta(selected.category).bg, padding:"0.4rem", borderRadius:"10px" }}>{getCatMeta(selected.category).icon}</span>
-            <div>
-              <div style={{ color:T.text, fontWeight:700, fontSize:"0.9rem", fontFamily:"'Fraunces',serif" }}>{selected.name}</div>
-              <div style={{ display:"flex", alignItems:"center", gap:"0.35rem", marginTop:"0.15rem" }}>
-                <Stars rating={selected.rating}/>
-                <span style={{ color:T.textSoft, fontSize:"0.72rem" }}>{selected.address}</span>
-              </div>
-            </div>
-          </div>
-          <div style={{ display:"flex", gap:"0.4rem" }}>
-            <button onClick={() => onToggleFav(selected.id, selected)} style={{ background:favorites.has(selected.id)?T.goldBg:T.bgDeep, border:"1px solid "+(favorites.has(selected.id)?T.gold:T.border), color:favorites.has(selected.id)?T.gold:T.textSoft, borderRadius:"99px", padding:"0.35rem 0.85rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:600, fontFamily:"inherit" }}>{favorites.has(selected.id)?"♥ Saved":"♡ Save"}</button>
-            <button onClick={() => onSelect(selected)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.35rem 1rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:700, fontFamily:"inherit" }}>Details →</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
 function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth }) {
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(10);
@@ -1674,7 +1594,6 @@ function AdminPage() {
       )}
       <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
         {listings.map(function(biz) {
-          var cat = getCatMeta(biz.category);
           return (
             <div key={biz.id} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.25rem", boxShadow:"0 2px 8px "+T.shadow }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
@@ -1847,9 +1766,6 @@ export default function TheSignUpSpot() {
     setKids(prev => prev.map(k => k.id === id ? {...k, name} : k));
   }
 
-  const activeKidMap = kidSaves[activeKidId] || new Map();
-  const activeKidFavSet = new Set(activeKidMap.keys());
-  const activeKidFavPlaces = [...activeKidMap.values()];
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
