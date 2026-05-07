@@ -106,7 +106,6 @@ async function searchNearby(location, keyword, radius) {
 }
 
 function placeToActivity(place, category) {
-  const priceMap = { 0:"$", 1:"$", 2:"$$", 3:"$$$", 4:"$$$" };
   return {
     id: place.place_id,
     placeId: place.place_id,
