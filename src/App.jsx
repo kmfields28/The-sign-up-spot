@@ -101,7 +101,7 @@ async function geocodeZip(zip) {
 
 async function getPlaceDetails(placeId) {
   try {
-    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number");
+    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number,url");
     const data = await res.json();
     return data.result || {};
   } catch(e) { return {}; }
@@ -159,9 +159,9 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   deduped.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   if (deduped.length === 0) throw new Error("No activities found near " + zip + ". Try a larger radius.");
 
-  // Fetch website details for top 10 results
-  const top = deduped.slice(0, 10);
-  const rest = deduped.slice(10);
+  // Fetch website details for all results
+  const top = deduped;
+  const rest = [];
   const withDetails = await Promise.all(top.map(async p => {
     const details = await getPlaceDetails(p.placeId);
     const website = details.website || "";
