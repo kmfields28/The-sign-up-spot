@@ -99,6 +99,14 @@ async function geocodeZip(zip) {
   throw new Error("ZIP code not found: " + data.status + ". Please try another ZIP.");
 }
 
+async function getPlaceDetails(placeId) {
+  try {
+    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number");
+    const data = await res.json();
+    return data.result || {};
+  } catch(e) { return {}; }
+}
+
 async function searchNearby(location, keyword, radius) {
   const res = await fetch("/api/places?endpoint=place/nearbysearch&location=" + location.lat + "," + location.lng + "&radius=" + Math.min(radius * 1609, 50000) + "&keyword=" + encodeURIComponent(keyword));
   const data = await res.json();
@@ -150,7 +158,22 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   });
   deduped.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   if (deduped.length === 0) throw new Error("No activities found near " + zip + ". Try a larger radius.");
-  return deduped;
+
+  // Fetch website details for top 10 results
+  const top = deduped.slice(0, 10);
+  const rest = deduped.slice(10);
+  const withDetails = await Promise.all(top.map(async p => {
+    const details = await getPlaceDetails(p.placeId);
+    const website = details.website || "";
+    const phone = details.formatted_phone_number || "";
+    return {
+      ...p,
+      website,
+      phone,
+      bookingUrl: "/api/go?placeId=" + p.placeId + "&name=" + encodeURIComponent(p.name) + "&dest=" + encodeURIComponent(website || "https://www.google.com/maps/place/?q=place_id:" + p.placeId),
+    };
+  }));
+  return [...withDetails, ...rest];
 }
 
 
