@@ -170,6 +170,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const [reviewText, setReviewText] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
+  const reviewsLoading = false;
 
   function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
