@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 const T = {
   bg:"#fdf6ee",        // warm cream
