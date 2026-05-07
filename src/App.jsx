@@ -117,14 +117,14 @@ function placeToActivity(place, category) {
     website: "",
     rating: place.rating || 0,
     reviewCount: place.user_ratings_total || 0,
-    price: priceMap[place.price_level] || "$$",
-    description: place.name + " — " + category + " activity near you. Tap View on Maps for hours, directions, and contact info.",
+    price: place.price_level != null ? { 0:"Free", 1:"$", 2:"$$", 3:"$$$", 4:"$$$$" }[place.price_level] : null,
+    description: category + " program for kids and families in your area. View details for hours, pricing, and contact information.",
     hours: "",
     ageRange: "",
     tags: [category.toLowerCase()],
     activityType: "recreational",
     photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
-    bookingUrl: "https://www.google.com/maps/place/?q=place_id:" + place.place_id,
+    bookingUrl: "/go/" + place.place_id + "?name=" + encodeURIComponent(place.name) + "&maps=https://www.google.com/maps/place/?q=place_id:" + place.place_id,
   };
 }
 
