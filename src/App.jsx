@@ -626,7 +626,7 @@ function AuthModal({ onClose, onSignIn }) {
 }
 
 // ── Browse Page ───────────────────────────────────────────────────────────────
-function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth }) {
+function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth, onAddToCalendarPrompt }) {
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(10);
   const [category, setCategory] = useState(initialCategory || "");
