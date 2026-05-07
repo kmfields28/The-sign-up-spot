@@ -116,7 +116,7 @@ function placeToActivity(place, category) {
     website: "",
     rating: place.rating || 0,
     reviewCount: place.user_ratings_total || 0,
-    price: place.price_level != null ? { 0:"Free", 1:"$", 2:"$$", 3:"$$$", 4:"$$$$" }[place.price_level] : null,
+    price: (place.price_level !== undefined && place.price_level !== null) ? { 0:"Free", 1:"$", 2:"$$", 3:"$$$", 4:"$$$$" }[place.price_level] : null,
     description: category + " program for kids and families in your area. View details for hours, pricing, and contact information.",
     hours: "",
     ageRange: "",
@@ -451,7 +451,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
           </div>
         )}
 
-        <p style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.5, marginBottom:"0.65rem", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>{place.description}</p>
+
 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
@@ -463,7 +463,10 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               ({(place.reviewCount||0).toLocaleString()})
             </span>
           </div>
-          <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
+          <div style={{ display:"flex", gap:"0.4rem" }}>
+            <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
+            <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.75rem", fontSize:"0.72rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
+          </div>
         </div>
       </div>
     </div>
