@@ -1,24 +1,24 @@
-import { useState, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const T = {
-  bg:"#fdf6ee",        // warm cream
-  bgCard:"#fff9f2",    // soft butter white
-  bgDeep:"#f5e8d5",    // warm caramel linen
-  bgInput:"#fefaf4",
-  border:"#e8d5b8",
-  borderMid:"#d4b896",
-  text:"#2e1a08",      // deep espresso
-  textMid:"#6b3e1e",   // warm chestnut
-  textSoft:"#9c6840",  // warm sienna
-  textMuted:"#c49a6c", // warm caramel
-  accent:"#b5601a",    // warm burnt sienna
-  accentAlt:"#c97c35", // amber
-  accentSoft:"#e4aa70",
-  accentBg:"#fdf0e0",
-  highlight:"#8b3e10", // deep terracotta
-  gold:"#c09040",      // warm antique gold
-  goldBg:"#fdf5dc",
-  shadow:"rgba(80,40,10,0.10)",
+  bg:"#ffffff",
+  bgCard:"#ffffff",
+  bgDeep:"#f8f8f8",
+  bgInput:"#f5f5f5",
+  border:"#e8e8e8",
+  borderMid:"#d0d0d0",
+  text:"#1a1a1a",
+  textMid:"#444444",
+  textSoft:"#666666",
+  textMuted:"#999999",
+  accent:"#2563eb",
+  accentAlt:"#3b82f6",
+  accentSoft:"#93c5fd",
+  accentBg:"#eff6ff",
+  highlight:"#1d4ed8",
+  gold:"#d97706",
+  goldBg:"#fef3c7",
+  shadow:"rgba(0,0,0,0.06)",
 };
 
 
@@ -28,38 +28,19 @@ const T = {
 
 
 const CATEGORIES = [
-  { label:"Sports",     icon:"⚽", color:"#b5601a", bg:"#fdf0e2" },
-  { label:"Arts",       icon:"🎨", color:"#c07820", bg:"#fef5e0" },
-  { label:"Music",      icon:"🎵", color:"#8b5e30", bg:"#faeee0" },
-  { label:"Dance",      icon:"🩰", color:"#b04040", bg:"#fdeee8" },
-  { label:"STEM",       icon:"🔬", color:"#5a7840", bg:"#eef4e8" },
-  { label:"Outdoors",   icon:"🌲", color:"#6a7030", bg:"#f2f0e0" },
-  { label:"Theater",    icon:"🎭", color:"#904828", bg:"#fdeee5" },
-  { label:"Tutoring",   icon:"📚", color:"#7a5020", bg:"#f8ede0" },
-  { label:"Mommy & Me", icon:"🤱", color:"#a04060", bg:"#fdeaee" },
+  { label:"Sports",     icon:"⚽", color:"#dc2626", bg:"#fef2f2" },
+  { label:"Arts",       icon:"🎨", color:"#ea580c", bg:"#fff7ed" },
+  { label:"Music",      icon:"🎵", color:"#7c3aed", bg:"#f5f3ff" },
+  { label:"Dance",      icon:"🩰", color:"#db2777", bg:"#fdf2f8" },
+  { label:"STEM",       icon:"🔬", color:"#0891b2", bg:"#ecfeff" },
+  { label:"Outdoors",   icon:"🌲", color:"#16a34a", bg:"#f0fdf4" },
+  { label:"Theater",    icon:"🎭", color:"#9333ea", bg:"#faf5ff" },
+  { label:"Tutoring",   icon:"📚", color:"#2563eb", bg:"#eff6ff" },
+  { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
 ];
 
-const SUPABASE_URL = "https://owehkzrhtwyjgccjpptq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93ZWhrenJodHd5amdjY2pwcHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODMwNjgsImV4cCI6MjA5MzY1OTA2OH0.OAOwSAReUlaG7MOkGvx0bhRO0EjNfRzmkEkuINuZinU";
-
-async function sbGet(path) {
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.json();
-}
-
-async function sbPost(path, body) { // eslint-disable-line no-unused-vars
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    method: "POST",
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.status === 204 ? null : res.json();
-}
-
+const AGE_RANGES = ["All Ages","0-2","3-5","6-8","9-12","13-16","17+"];
+const ACTIVITY_TYPES = ["All Types","Competitive","Recreational"];
 
 function getCatMeta(label) {
   return CATEGORIES.find(c => c.label === label) || { icon:"🎯", color:T.accent, bg:T.accentBg };
@@ -164,13 +145,13 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
-    const [reviewAuthor, setReviewAuthor] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewAuthor, setReviewAuthor] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
-  const reviewsLoading = false;
 
   function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
@@ -270,7 +251,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             ) : (
               <a href={"https://www.google.com/search?q="+encodeURIComponent(place.name+" "+place.address)}
                 target="_blank" rel="noreferrer"
-                style={{ flex:1,                   color:"#2e1a08", borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", textDecoration:"none", fontWeight:800, textAlign:"center", display:"block", background:"#f5e8d5"}}>
+                style={{ flex:1,                   color:"#2e1a08", borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", textDecoration:"none", fontWeight:800, textAlign:"center", display:"block", background:"#f8f8f8"}}>
                 Search on Google →
               </a>
             )}
@@ -417,7 +398,7 @@ function NewsletterBanner() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   return (
-    <div style={{ background:"#f5e8d5", padding:"2.25rem 1.5rem", textAlign:"center", position:"relative", overflow:"hidden" }}>
+    <div style={{ background:"#f8f8f8", padding:"2.25rem 1.5rem", textAlign:"center", position:"relative", overflow:"hidden" }}>
       <div style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 20% 50%, rgba(255,255,255,0.18) 0%, transparent 55%)", pointerEvents:"none" }}/>
       <div style={{ position:"relative", maxWidth:"480px", margin:"0 auto" }}>
         <div style={{ fontSize:"1.6rem", marginBottom:"0.5rem" }}>📬</div>
@@ -508,7 +489,7 @@ function AuthModal({ onClose, onSignIn }) {
             <p style={{ color:T.text, fontWeight:700, marginBottom:"0.3rem", fontFamily:"'Fraunces',serif" }}>Check your inbox!</p>
             <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Reset link sent to {email}.</p>
             <button onClick={() => { setMode("signin"); setDone(false); }}
-              style={{ background:"#f5e8d5", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.6rem 1.4rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ background:"#f8f8f8", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.6rem 1.4rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
               Back to Sign In
             </button>
           </div>
@@ -565,7 +546,85 @@ function AuthModal({ onClose, onSignIn }) {
 }
 
 // ── Browse Page ───────────────────────────────────────────────────────────────
-function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav }) {
+// ── Simple SVG Map ────────────────────────────────────────────────────────────
+function SimpleMap({ places, favorites, onToggleFav, onSelect }) {
+  const [selected, setSelected] = useState(null);
+  if (!places.length) return null;
+
+  // Compute bounds
+  const lats = places.map(p => p._lat || 40.72).filter(Boolean);
+  const lngs = places.map(p => p._lng || -73.99).filter(Boolean);
+  const minLat = Math.min(...lats) - 0.01;
+  const maxLat = Math.max(...lats) + 0.01;
+  const minLng = Math.min(...lngs) - 0.01;
+  const maxLng = Math.max(...lngs) + 0.01;
+  const W = 600; const H = 340;
+  const px = lng => ((lng - minLng) / (maxLng - minLng)) * W * 0.88 + W * 0.06;
+  const py = lat => ((maxLat - lat) / (maxLat - minLat)) * H * 0.88 + H * 0.06;
+
+  // Assign fake coords spread across NYC if none
+  const withCoords = places.map((p, i) => ({
+    ...p,
+    _lat: p._lat || 40.68 + (i % 5) * 0.018 + Math.floor(i/5) * 0.01,
+    _lng: p._lng || -74.02 + (i % 7) * 0.022,
+  }));
+
+  return (
+    <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
+      <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
+        <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {places.length} locations</span>
+        <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to preview</span>
+      </div>
+      <div style={{ position:"relative", background:"linear-gradient(160deg,"+T.bgDeep+",#e8e2d4)" }}>
+        <svg viewBox={"0 0 "+W+" "+H} style={{ width:"100%", display:"block", minHeight:"280px" }}>
+          <defs><pattern id="mg" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke={T.borderMid} strokeWidth="0.4" opacity="0.5"/></pattern></defs>
+          <rect width={W} height={H} fill="url(#mg)"/>
+          <line x1="0" y1={H*0.45} x2={W} y2={H*0.45} stroke={T.borderMid} strokeWidth="1" opacity="0.3"/>
+          <line x1={W*0.4} y1="0" x2={W*0.4} y2={H} stroke={T.borderMid} strokeWidth="0.8" opacity="0.25"/>
+          {withCoords.map(p => {
+            const cat = getCatMeta(p.category);
+            const x = px(p._lng); const y = py(p._lat);
+            const isSel = selected && selected.id === p.id;
+            return (
+              <g key={p.id} style={{ cursor:"pointer" }} onClick={() => setSelected(p)}>
+                {isSel && <circle cx={x} cy={y} r={24} fill="none" stroke={cat.color} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.7"/>}
+                <circle cx={x} cy={y} r={isSel?16:11} fill={cat.bg} stroke={cat.color} strokeWidth={isSel?2:1.5}/>
+                <text x={x} y={y+1} textAnchor="middle" dominantBaseline="middle" fontSize={isSel?10:8}>{cat.icon}</text>
+              </g>
+            );
+          })}
+        </svg>
+        <div style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", display:"flex", gap:"0.3rem", flexWrap:"wrap" }}>
+          {[...new Set(places.map(p=>p.category))].map(cat => {
+            const m = getCatMeta(cat);
+            return <span key={cat} style={{ background:T.bgCard+"ee", border:"1px solid "+m.color+"55", color:m.color, fontSize:"0.62rem", padding:"2px 6px", borderRadius:"99px", fontWeight:600 }}>{m.icon} {cat}</span>;
+          })}
+        </div>
+      </div>
+      {selected && (
+        <div style={{ padding:"0.9rem 1.25rem", borderTop:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:T.bgDeep }}>
+          <div style={{ display:"flex", gap:"0.65rem", alignItems:"center" }}>
+            <span style={{ fontSize:"1.5rem", background:getCatMeta(selected.category).bg, padding:"0.4rem", borderRadius:"10px" }}>{getCatMeta(selected.category).icon}</span>
+            <div>
+              <div style={{ color:T.text, fontWeight:700, fontSize:"0.9rem", fontFamily:"'Fraunces',serif" }}>{selected.name}</div>
+              <div style={{ display:"flex", alignItems:"center", gap:"0.35rem", marginTop:"0.15rem" }}>
+                <Stars rating={selected.rating}/>
+                <span style={{ color:T.textSoft, fontSize:"0.72rem" }}>{selected.address}</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:"0.4rem" }}>
+            <button onClick={() => onToggleFav(selected.id, selected)} style={{ background:favorites.has(selected.id)?T.goldBg:T.bgDeep, border:"1px solid "+(favorites.has(selected.id)?T.gold:T.border), color:favorites.has(selected.id)?T.gold:T.textSoft, borderRadius:"99px", padding:"0.35rem 0.85rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:600, fontFamily:"inherit" }}>{favorites.has(selected.id)?"♥ Saved":"♡ Save"}</button>
+            <button onClick={() => onSelect(selected)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.35rem 1rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:700, fontFamily:"inherit" }}>Details →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth }) {
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(10);
   const [category, setCategory] = useState(initialCategory || "");
@@ -625,7 +684,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"99px", padding:"0.62rem 1rem 0.62rem 2.4rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
           </div>
           <button onClick={doSearch}
-            style={{               color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.62rem 1.6rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
+            style={{               color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.62rem 1.6rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 3px 14px "+T.shadow, background:"#f8f8f8"}}>
             Search
           </button>
         </div>
@@ -721,9 +780,9 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
 
 
 // ── Favorites Page ────────────────────────────────────────────────────────────
-function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, setActiveKidId, kidSaves, onToggleKidFav, onOpenKidsManager }) {
+function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, setActiveKidId, kidSaves, onToggleKidFav, onOpenKidsManager, user, onOpenAuth, calendarEvents, onAddCalendarEvent }) {
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [tab, setTab] = useState("all"); // "all" | kidId
+  const [tab, setTab] = useState("all"); // "all" | kidId | "calendar"
 
   const displayPlaces = tab === "all"
     ? favPlaces
@@ -765,7 +824,23 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
         })}
       </div>
 
-      {displayPlaces.length === 0 ? (
+      {tab === "calendar" ? (
+        user ? (
+          <CalendarPage kids={kids} kidSaves={kidSaves} events={calendarEvents} setEvents={ev => { setCalendarEvents(ev); try { localStorage.setItem("sss_events", JSON.stringify(ev)); } catch(e) {} }}/>
+        ) : (
+          <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
+            <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>📅</div>
+            <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Your Family Calendar</h3>
+            <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>
+              Create a free account to access your weekly calendar, track each child's schedule, and export to Google Calendar or Apple Calendar.
+            </p>
+            <button onClick={onOpenAuth}
+              style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+              Create Free Account →
+            </button>
+          </div>
+        )
+      ) : displayPlaces.length === 0 ? (
         <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
           <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>🌻</div>
           <p style={{ color:T.textSoft, fontFamily:"'Fraunces',serif" }}>
@@ -794,20 +869,20 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 function HomePage({ onNavigate, onOpenAuth }) {
   return (
     <div>
-      <div style={{         padding:"3.5rem 1.5rem 2.5rem", textAlign:"center", borderBottom:"1px solid "+T.border, position:"relative", overflow:"hidden", background:"#fdf6ee"}}>
+      <div style={{         padding:"3.5rem 1.5rem 2.5rem", textAlign:"center", borderBottom:"1px solid "+T.border, position:"relative", overflow:"hidden", background:"#f8f8f8"}}>
         <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(ellipse at 20% 80%, rgba(255,180,220,0.25) 0%, transparent 45%), radial-gradient(ellipse at 80% 20%, rgba(160,180,255,0.2) 0%, transparent 45%)", pointerEvents:"none" }}/>
         <div style={{ position:"relative" }}>
-          <span style={{ background:"#f5e8d5", border:"none", color:"#2e1a08", fontSize:"0.72rem", fontWeight:800, padding:"4px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", boxShadow:"0 2px 12px "+T.shadow }}>Your Family Activity Hub</span>
+          <span style={{ background:"#f8f8f8", border:"none", color:"#2e1a08", fontSize:"0.72rem", fontWeight:800, padding:"4px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", boxShadow:"0 2px 12px "+T.shadow }}>Your Family Activity Hub</span>
           <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.6rem)", fontWeight:900, lineHeight:1.08, margin:"1rem 0", color:T.text }}>
             Find Their Next<br/>
-            <span style={{ background:"linear-gradient(135deg, #b5601a 0%, #c07820 35%, #8b3e10 70%, #6b2e08 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Favorite Activity</span>
+            <span style={{ background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Favorite Activity</span>
           </h1>
           <p style={{ color:T.textSoft, fontSize:"1.05rem", maxWidth:"460px", margin:"0 auto 2rem", lineHeight:1.75 }}>
             All their activities. One app.
           </p>
           <div style={{ display:"flex", gap:"0.75rem", justifyContent:"center", flexWrap:"wrap" }}>
             <button onClick={() => onNavigate("browse")}
-              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 20px "+T.shadow, background:"#f5e8d5"}}>
+              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 20px "+T.shadow, background:"#f8f8f8"}}>
               Find Activities Near Me →
             </button>
             <button onClick={onOpenAuth}
@@ -833,7 +908,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
         </div>
       </div>
 
-      <div style={{ padding:"2rem 1.5rem",         borderTop:"1px solid "+T.border, borderBottom:"1px solid "+T.border, background:"#fdf6ee"}}>
+      <div style={{ padding:"2rem 1.5rem",         borderTop:"1px solid "+T.border, borderBottom:"1px solid "+T.border, background:"#f8f8f8"}}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1.5rem", maxWidth:"660px", margin:"0 auto", textAlign:"center" }}>
           {[{n:"✦",l:"AI Powered Search",c:"#7a5c48"},{n:"9",l:"Categories",c:"#6a6058"},{n:"Any ZIP",l:"Nationwide",c:"#587068"},{n:"Free",l:"Always",c:"#8a6a40"}].map(s => (
             <div key={s.l}>
@@ -977,7 +1052,7 @@ function BusinessesPage() {
       </div>
 
       {/* List your business CTA */}
-      <div style={{ background:"#f5e8d5", borderRadius:"18px", padding:"2rem", textAlign:"center", marginTop:"1rem" }}>
+      <div style={{ background:"#f8f8f8", borderRadius:"18px", padding:"2rem", textAlign:"center", marginTop:"1rem" }}>
         <div style={{ fontSize:"2rem", marginBottom:"0.5rem" }}>🏢</div>
         <h3 style={{ fontFamily:"'Fraunces',serif", color:"#2e1a08", fontSize:"1.3rem", marginBottom:"0.5rem" }}>List Your Business</h3>
         <p style={{ color:T.textSoft, fontSize:"0.87rem", marginBottom:"1.25rem", maxWidth:"380px", margin:"0 auto 1.25rem", lineHeight:1.65 }}>
@@ -1031,7 +1106,7 @@ function AboutPage() {
 
 // ── Hamburger Menu ────────────────────────────────────────────────────────────
 // ── Kid Profile Colors ────────────────────────────────────────────────────────
-const KID_COLORS = ["#b5601a","#c07820","#904828","#b04040","#5a7840","#8b5e30","#a04060","#7a5020"];
+const KID_COLORS = ["#dc2626","#ea580c","#16a34a","#2563eb","#7c3aed","#db2777","#0891b2","#d97706"];
 
 // ── Kids Manager Modal ────────────────────────────────────────────────────────
 function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, renameKid, kidSaves, onClose }) {
@@ -1103,7 +1178,7 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
             onKeyDown={e => { if(e.key==="Enter" && newName.trim()){ addKid(newName.trim(), newColor); setNewName(""); setNewColor(KID_COLORS[(kids.length+1)%KID_COLORS.length]); }}}
             style={{ flex:1, background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.62rem 0.9rem", fontSize:"0.87rem", color:T.text, fontFamily:"inherit" }}/>
           <button onClick={() => { if(newName.trim()){ addKid(newName.trim(), newColor); setNewName(""); setNewColor(KID_COLORS[(kids.length+1)%KID_COLORS.length]); }}}
-            style={{ background:"#f5e8d5", color:"#2e1a08", border:"none", borderRadius:"10px", padding:"0.62rem 1rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 2px 10px "+T.shadow }}>
+            style={{ background:"#f8f8f8", color:"#2e1a08", border:"none", borderRadius:"10px", padding:"0.62rem 1rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 2px 10px "+T.shadow }}>
             + Add Child
           </button>
         </div>
@@ -1117,6 +1192,328 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
 }
 
 // ── Admin Page ────────────────────────────────────────────────────────────────
+// ── Add To Calendar Modal ─────────────────────────────────────────────────────
+function AddToCalendarModal({ place, kids, user, onOpenAuth, onClose, onSaveEvent }) {
+  const [kidId, setKidId] = useState(kids[0]?.id || "");
+  const [day, setDay] = useState(1);
+  const [startHour, setStartHour] = useState(9);
+  const [endHour, setEndHour] = useState(10);
+  const [notes, setNotes] = useState("");
+  const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const HOURS = Array.from({length:13}, (_,i) => i + 7);
+
+  if (!user) return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"2rem", maxWidth:"380px", width:"100%", textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
+        <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>📅</div>
+        <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Add to Your Calendar</h3>
+        <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>Create a free account to add <strong>{place.name}</strong> to your family calendar and track each child's schedule.</p>
+        <button onClick={() => { onClose(); onOpenAuth(); }}
+          style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", marginBottom:"0.5rem" }}>
+          Create Free Account →
+        </button>
+        <button onClick={onClose} style={{ background:"none", border:"none", color:T.textMuted, fontSize:"0.82rem", cursor:"pointer", fontFamily:"inherit" }}>Maybe later</button>
+      </div>
+    </div>
+  );
+
+  function save() {
+    const kid = kids.find(k => k.id === kidId);
+    onSaveEvent({
+      id: Date.now().toString(),
+      title: place.name,
+      kidId, day, startHour, endHour, startMin:0, endMin:0,
+      notes, color: kid ? kid.color : T.accent,
+      placeId: place.placeId,
+    });
+    onClose();
+  }
+
+  const inp = { width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.85rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" };
+  const lbl = { display:"block", color:T.textMid, fontSize:"0.72rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" };
+
+  return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"1.75rem", maxWidth:"400px", width:"100%", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
+        <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.1rem", marginBottom:"0.25rem" }}>Add to Calendar</h3>
+        <p style={{ color:T.textSoft, fontSize:"0.82rem", marginBottom:"1.25rem" }}>{place.name}</p>
+
+        {kids.length > 0 && (
+          <div style={{ marginBottom:"0.85rem" }}>
+            <label style={lbl}>For which child?</label>
+            <select value={kidId} onChange={e=>setKidId(e.target.value)} style={inp}>
+              <option value="">No child assigned</option>
+              {kids.map(k => <option key={k.id} value={k.id}>{k.name}</option>)}
+            </select>
+          </div>
+        )}
+
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"0.65rem", marginBottom:"0.85rem" }}>
+          <div>
+            <label style={lbl}>Day</label>
+            <select value={day} onChange={e=>setDay(Number(e.target.value))} style={inp}>
+              {DAYS.map((d,i) => <option key={d} value={i}>{d}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={lbl}>Start</label>
+            <select value={startHour} onChange={e=>setStartHour(Number(e.target.value))} style={inp}>
+              {HOURS.map(h => <option key={h} value={h}>{h>12?h-12+"pm":h===12?"12pm":h+"am"}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={lbl}>End</label>
+            <select value={endHour} onChange={e=>setEndHour(Number(e.target.value))} style={inp}>
+              {HOURS.filter(h=>h>startHour).map(h => <option key={h} value={h}>{h>12?h-12+"pm":h===12?"12pm":h+"am"}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div style={{ marginBottom:"1.25rem" }}>
+          <label style={lbl}>Notes (optional)</label>
+          <input value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Location, what to bring..." style={inp}/>
+        </div>
+
+        <div style={{ display:"flex", gap:"0.5rem" }}>
+          <button onClick={onClose} style={{ flex:1, background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Cancel</button>
+          <button onClick={save} style={{ flex:2, background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"8px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Add to Calendar ✓</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Calendar Page ─────────────────────────────────────────────────────────────
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const HOURS = Array.from({length:13}, (_,i) => i + 7); // 7am to 7pm
+
+function CalendarPage({ kids, kidSaves, events, setEvents }) {
+  if (!events) events = [];
+  if (!setEvents) setEvents = () => {};
+  const [showAdd, setShowAdd] = useState(false);
+  const [editEvent, setEditEvent] = useState(null);
+  const [form, setForm] = useState({ title:"", kidId:"", day:1, startHour:9, startMin:0, endHour:10, endMin:0, color:"", notes:"" });
+
+  function saveEvents(evs) { setEvents(evs); }
+
+  function openAdd(day, hour) {
+    const kid = kids[0] || {};
+    setForm({ title:"", kidId:kid.id||"", day, startHour:hour, startMin:0, endHour:hour+1, endMin:0, color:kid.color||"#2563eb", notes:"" });
+    setEditEvent(null);
+    setShowAdd(true);
+  }
+
+  function openEdit(ev) {
+    setForm({...ev});
+    setEditEvent(ev.id);
+    setShowAdd(true);
+  }
+
+  function saveEvent() {
+    if (!form.title.trim()) return;
+    const kid = kids.find(k => k.id === form.kidId);
+    const ev = { ...form, id: editEvent || Date.now().toString(), color: kid ? kid.color : form.color };
+    if (editEvent) {
+      saveEvents(events.map(e => e.id === editEvent ? ev : e));
+    } else {
+      saveEvents([...events, ev]);
+    }
+    setShowAdd(false);
+  }
+
+  function deleteEvent(id) {
+    saveEvents(events.filter(e => e.id !== id));
+    setShowAdd(false);
+  }
+
+  function exportICS() {
+    const lines = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//The Sign Up Spot//EN",
+    ];
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+
+    events.forEach(ev => {
+      const d = new Date(startOfWeek);
+      d.setDate(startOfWeek.getDate() + ev.day);
+      const pad = n => String(n).padStart(2,"0");
+      const dateStr = d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate());
+      const startStr = dateStr + "T" + pad(ev.startHour) + pad(ev.startMin||0) + "00";
+      const endStr = dateStr + "T" + pad(ev.endHour) + pad(ev.endMin||0) + "00";
+      const kid = kids.find(k => k.id === ev.kidId);
+      lines.push("BEGIN:VEVENT");
+      lines.push("DTSTART:" + startStr);
+      lines.push("DTEND:" + endStr);
+      lines.push("SUMMARY:" + (ev.title) + (kid ? " (" + kid.name + ")" : ""));
+      lines.push("DESCRIPTION:" + (ev.notes || ""));
+      lines.push("END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    const blob = new Blob([lines.join("\r\n")], { type:"text/calendar" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "signupspot-schedule.ics"; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportGoogleCalendar(ev) {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + ev.day);
+    const pad = n => String(n).padStart(2,"0");
+    const dateStr = d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate());
+    const start = dateStr + "T" + pad(ev.startHour) + pad(ev.startMin||0) + "00";
+    const end = dateStr + "T" + pad(ev.endHour) + pad(ev.endMin||0) + "00";
+    const kid = kids.find(k => k.id === ev.kidId);
+    const title = encodeURIComponent(ev.title + (kid ? " (" + kid.name + ")" : ""));
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&dates=" + start + "/" + end + "&details=" + encodeURIComponent(ev.notes||"");
+    window.open(url, "_blank");
+  }
+
+  const cellH = 60;
+
+  return (
+    <div style={{ background:T.bg, minHeight:"80vh" }}>
+      {/* Header */}
+      <div style={{ padding:"1.25rem 1.5rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:"#fff" }}>
+        <div>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.15rem" }}>Weekly Schedule</h2>
+          <p style={{ color:T.textSoft, fontSize:"0.82rem" }}>This week · tap a time slot to add an activity</p>
+        </div>
+        <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+          <button onClick={exportICS} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>📅 Export .ics</button>
+          <button onClick={() => { if(events.length>0) exportGoogleCalendar(events[0]); }} style={{ background:"#4285f4", border:"none", color:"#fff", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Google Cal</button>
+          <button onClick={() => openAdd(1,9)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", border:"none", color:"#fff", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>+ Add Activity</button>
+        </div>
+      </div>
+
+      {/* Kid legend */}
+      {kids.length > 0 && (
+        <div style={{ padding:"0.6rem 1.5rem", borderBottom:"1px solid "+T.border, display:"flex", gap:"0.5rem", flexWrap:"wrap", background:"#fafafa" }}>
+          {kids.map(kid => (
+            <div key={kid.id} style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
+              <div style={{ width:"12px", height:"12px", borderRadius:"50%", background:kid.color }}/>
+              <span style={{ color:T.textMid, fontSize:"0.76rem", fontWeight:600 }}>{kid.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Calendar grid */}
+      <div style={{ overflowX:"auto" }}>
+        <div style={{ minWidth:"640px" }}>
+          {/* Day headers */}
+          <div style={{ display:"grid", gridTemplateColumns:"56px repeat(7, 1fr)", borderBottom:"2px solid "+T.border, background:"#fff" }}>
+            <div/>
+            {DAYS.map(d => (
+              <div key={d} style={{ padding:"0.6rem 0.25rem", textAlign:"center", color:T.textMid, fontSize:"0.78rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px" }}>{d}</div>
+            ))}
+          </div>
+
+          {/* Time slots */}
+          <div style={{ position:"relative" }}>
+            {HOURS.map(hour => (
+              <div key={hour} style={{ display:"grid", gridTemplateColumns:"56px repeat(7, 1fr)", borderBottom:"1px solid "+T.border+"88", minHeight:cellH+"px" }}>
+                <div style={{ padding:"0 0.5rem", paddingTop:"0.2rem", color:T.textMuted, fontSize:"0.68rem", textAlign:"right", flexShrink:0, userSelect:"none" }}>
+                  {hour === 12 ? "12pm" : hour > 12 ? (hour-12)+"pm" : hour+"am"}
+                </div>
+                {DAYS.map((_, dayIdx) => (
+                  <div key={dayIdx} onClick={() => openAdd(dayIdx, hour)}
+                    style={{ borderLeft:"1px solid "+T.border+"44", cursor:"pointer", position:"relative", minHeight:cellH+"px" }}
+                    onMouseEnter={e => e.currentTarget.style.background="#f0f9ff"}
+                    onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+                    {events.filter(ev => ev.day===dayIdx && ev.startHour===hour).map(ev => {
+                      const kid = kids.find(k => k.id === ev.kidId);
+                      const dur = (ev.endHour - ev.startHour) + (ev.endMin - (ev.startMin||0))/60;
+                      return (
+                        <div key={ev.id} onClick={e => { e.stopPropagation(); openEdit(ev); }}
+                          style={{ position:"absolute", top:"2px", left:"2px", right:"2px",
+                            height: Math.max(dur * cellH - 4, 24) + "px",
+                            background: (kid ? kid.color : ev.color) + "22",
+                            border:"1.5px solid "+(kid ? kid.color : ev.color),
+                            borderRadius:"6px", padding:"3px 6px", cursor:"pointer",
+                            overflow:"hidden", zIndex:2 }}>
+                          <div style={{ color: kid ? kid.color : ev.color, fontSize:"0.7rem", fontWeight:700, lineHeight:1.2, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{ev.title}</div>
+                          {kid && <div style={{ color:kid.color, fontSize:"0.62rem", opacity:0.8 }}>{kid.name}</div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Add/Edit Modal */}
+      {showAdd && (
+        <div onClick={() => setShowAdd(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.4)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"1.75rem", maxWidth:"400px", width:"100%", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
+            <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.15rem", marginBottom:"1.25rem" }}>{editEvent ? "Edit Activity" : "Add Activity"}</h3>
+
+            <div style={{ marginBottom:"0.85rem" }}>
+              <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Activity Name</label>
+              <input value={form.title} onChange={e => setForm(f=>({...f,title:e.target.value}))} placeholder="e.g. Soccer Practice" style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
+            </div>
+
+            <div style={{ marginBottom:"0.85rem" }}>
+              <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Child</label>
+              <select value={form.kidId} onChange={e => { const kid=kids.find(k=>k.id===e.target.value); setForm(f=>({...f,kidId:e.target.value,color:kid?kid.color:f.color})); }} style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}>
+                <option value="">No child assigned</option>
+                {kids.map(k => <option key={k.id} value={k.id}>{k.name}</option>)}
+              </select>
+            </div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem", marginBottom:"0.85rem" }}>
+              <div>
+                <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Day</label>
+                <select value={form.day} onChange={e => setForm(f=>({...f,day:Number(e.target.value)}))} style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}>
+                  {DAYS.map((d,i) => <option key={d} value={i}>{d}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Start Time</label>
+                <select value={form.startHour} onChange={e => setForm(f=>({...f,startHour:Number(e.target.value)}))} style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}>
+                  {HOURS.map(h => <option key={h} value={h}>{h>12?h-12+"pm":h===12?"12pm":h+"am"}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div style={{ marginBottom:"0.85rem" }}>
+              <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>End Time</label>
+              <select value={form.endHour} onChange={e => setForm(f=>({...f,endHour:Number(e.target.value)}))} style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}>
+                {HOURS.filter(h => h > form.startHour).map(h => <option key={h} value={h}>{h>12?h-12+"pm":h===12?"12pm":h+"am"}</option>)}
+              </select>
+            </div>
+
+            <div style={{ marginBottom:"1.25rem" }}>
+              <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Notes (optional)</label>
+              <input value={form.notes} onChange={e => setForm(f=>({...f,notes:e.target.value}))} placeholder="Location, what to bring..." style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.6rem 0.8rem", fontSize:"0.87rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit" }}/>
+            </div>
+
+            <div style={{ display:"flex", gap:"0.5rem" }}>
+              {editEvent && (
+                <button onClick={() => deleteEvent(editEvent)} style={{ background:"#fef2f2", color:"#dc2626", border:"1px solid #fca5a5", borderRadius:"8px", padding:"0.6rem 1rem", fontSize:"0.83rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Delete</button>
+              )}
+              {editEvent && (
+                <button onClick={() => exportGoogleCalendar(form)} style={{ background:"#4285f4", border:"none", color:"#fff", borderRadius:"8px", padding:"0.6rem 1rem", fontSize:"0.83rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>+ Google</button>
+              )}
+              <button onClick={() => setShowAdd(false)} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.6rem 1rem", fontSize:"0.83rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", marginLeft:"auto" }}>Cancel</button>
+              <button onClick={saveEvent} disabled={!form.title.trim()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"8px", padding:"0.6rem 1.25rem", fontSize:"0.83rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", opacity:form.title.trim()?1:0.5 }}>Save</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminPage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -1195,7 +1592,7 @@ function AdminPage() {
       )}
       <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
         {listings.map(function(biz) {
-          
+          var cat = getCatMeta(biz.category);
           return (
             <div key={biz.id} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.25rem", boxShadow:"0 2px 8px "+T.shadow }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
@@ -1244,7 +1641,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
       <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.35)", zIndex:900, backdropFilter:"blur(4px)" }}/>
       <div style={{ position:"fixed", top:0, left:0, bottom:0, width:"280px", background:T.bgCard, borderRight:"1px solid "+T.border, zIndex:901, display:"flex", flexDirection:"column", animation:"slideIn 0.22s ease", boxShadow:"4px 0 32px "+T.shadow }}>
         <style>{"@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}"}</style>
-        <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border, display:"flex", alignItems:"center", justifyContent:"space-between", background:"#fdf6ee" }}>
+        <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border, display:"flex", alignItems:"center", justifyContent:"space-between", background:"#f8f8f8" }}>
           <div>
             <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem" }}>
               The Sign Up Spot
@@ -1295,7 +1692,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
           )}
           {!user ? (
             <button onClick={() => { onOpenAuth(); onClose(); }}
-              style={{ width:"100%", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 3px 14px "+T.shadow, background:"#f5e8d5"}}>
+              style={{ width:"100%", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.65rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 3px 14px "+T.shadow, background:"#f8f8f8"}}>
               Sign In / Create Account
             </button>
           ) : (
@@ -1322,6 +1719,16 @@ export default function TheSignUpSpot() {
   const [activeKidId, setActiveKidId] = useState("k1");
   const [kidSaves, setKidSaves] = useState({ k1: new Map() }); // kidId -> Map(activityId -> place)
   const [kidsManagerOpen, setKidsManagerOpen] = useState(false);
+  const [calendarPlace, setCalendarPlace] = useState(null);
+  const [calendarEvents, setCalendarEvents] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("sss_events") || "[]"); } catch(e) { return []; }
+  });
+
+  function addCalendarEvent(ev) {
+    const updated = [...calendarEvents, ev];
+    setCalendarEvents(updated);
+    try { localStorage.setItem("sss_events", JSON.stringify(updated)); } catch(e) {}
+  }
 
   function navigate(pg, props) { setPage(pg); setPageProps(props || {}); }
   function toggleFav(id, place) {
@@ -1358,6 +1765,9 @@ export default function TheSignUpSpot() {
     setKids(prev => prev.map(k => k.id === id ? {...k, name} : k));
   }
 
+  const activeKidMap = kidSaves[activeKidId] || new Map();
+  const activeKidFavSet = new Set(activeKidMap.keys());
+  const activeKidFavPlaces = [...activeKidMap.values()];
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
@@ -1374,7 +1784,7 @@ export default function TheSignUpSpot() {
           {/* Centered logo */}
           <div style={{ flex:1, display:"flex", justifyContent:"center", position:"relative" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
-              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #b5601a 0%, #c07820 35%, #8b3e10 70%, #6b2e08 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
                 The Sign Up Spot
               </div>
               <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"1px" }}>
@@ -1400,7 +1810,7 @@ export default function TheSignUpSpot() {
             </div>
           ) : (
             <button onClick={() => setAuthOpen(true)}
-              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.75rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 2px 10px "+T.shadow, background:"#f5e8d5"}}>
+              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.75rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 2px 10px "+T.shadow, background:"#f8f8f8"}}>
               Sign In
             </button>
           )}
@@ -1420,19 +1830,23 @@ export default function TheSignUpSpot() {
         {page === "browse"     && <BrowsePage initialCategory={pageProps.category}
                                    favorites={favSet} onToggleFav={toggleFav}
                                    kids={kids} activeKidId={activeKidId}
-                                   kidSaves={kidSaves} onToggleKidFav={toggleKidFav}/>}
+                                   kidSaves={kidSaves} onToggleKidFav={toggleKidFav}
+                                   user={user} onOpenAuth={() => setAuthOpen(true)}
+                                   onAddToCalendarPrompt={setCalendarPlace}/>}
         {page === "favorites"  && <FavoritesPage favPlaces={favPlaces}
                                    favorites={favSet} onToggleFav={toggleFav}
                                    kids={kids} activeKidId={activeKidId}
                                    setActiveKidId={setActiveKidId}
                                    kidSaves={kidSaves} onToggleKidFav={toggleKidFav}
-                                   onOpenKidsManager={() => setKidsManagerOpen(true)}/>}
+                                   onOpenKidsManager={() => setKidsManagerOpen(true)}
+                                   user={user} onOpenAuth={() => setAuthOpen(true)}
+                                   calendarEvents={calendarEvents} onAddCalendarEvent={addCalendarEvent}/>}
         {page === "businesses" && <BusinessesPage/>}
         {page === "about"      && <AboutPage/>}
         {page === "admin"      && <AdminPage/>}
       </div>
 
-      <div style={{ background:"#fdf6ee", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
+      <div style={{ background:"#f8f8f8", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
         <div style={{ maxWidth:"900px", margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"1rem" }}>
           <div>
             <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem", marginBottom:"0.25rem" }}>The Sign Up Spot</div>
@@ -1460,6 +1874,11 @@ export default function TheSignUpSpot() {
         kids={kids} activeKidId={activeKidId} setActiveKidId={setActiveKidId}
         addKid={addKid} removeKid={removeKid} renameKid={renameKid}
         kidSaves={kidSaves} onClose={() => setKidsManagerOpen(false)}/>}
+      {calendarPlace && <AddToCalendarModal
+        place={calendarPlace} kids={kids} user={user}
+        onOpenAuth={() => { setCalendarPlace(null); setAuthOpen(true); }}
+        onClose={() => setCalendarPlace(null)}
+        onSaveEvent={addCalendarEvent}/>}
     </div>
   );
 }
