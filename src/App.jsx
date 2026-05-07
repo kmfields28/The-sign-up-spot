@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const T = {
   bg:"#fdf6ee",        // warm cream
@@ -39,6 +39,8 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#a04060", bg:"#fdeaee" },
 ];
 
+const AGE_RANGES = ["All Ages","0-2","3-5","6-8","9-12","13-16","17+"];
+const ACTIVITY_TYPES = ["All Types","Competitive","Recreational"];
 
 function getCatMeta(label) {
   return CATEGORIES.find(c => c.label === label) || { icon:"🎯", color:T.accent, bg:T.accentBg };
@@ -46,145 +48,50 @@ function getCatMeta(label) {
 
 // ── Claude-powered search via Anthropic API ──────────────────────────────────
 
-const SUPABASE_URL = "https://owehkzrhtwyjgccjpptq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93ZWhrenJodHd5amdjY2pwcHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODMwNjgsImV4cCI6MjA5MzY1OTA2OH0.OAOwSAReUlaG7MOkGvx0bhRO0EjNfRzmkEkuINuZinU";
-
-async function sbGet(path) {
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY,
-    }
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.json();
-}
-
-async function sbPost(path, body) {
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json",
-      "Prefer": "return=minimal"
-    },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.status === 204 ? null : res.json();
-}
-
-
-const GOOGLE_API_KEY = "AIzaSyDBNrlLOqcrWw3pYXDJQxCNSO3tifBXR68";
-
-const CATEGORY_KEYWORDS = {
-  "Sports":     ["youth sports","kids soccer","youth gymnastics","swim lessons kids","martial arts kids","youth baseball","kids tennis"],
-  "Arts":       ["art class kids","art studio children","pottery class kids","painting class children"],
-  "Music":      ["music school","music lessons kids","piano lessons children","guitar lessons kids"],
-  "Dance":      ["dance studio kids","ballet school children","dance class kids"],
-  "STEM":       ["stem camp kids","robotics for kids","coding class children","science camp kids"],
-  "Outdoors":   ["summer camp kids","outdoor camp","nature camp children","adventure camp kids"],
-  "Theater":    ["theater camp kids","drama class children","acting class kids","musical theater kids"],
-  "Tutoring":   ["tutoring center","learning center kids","academic enrichment"],
-  "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup"],
-};
-
-async function geocodeZip(zip) {
-  const res = await fetch("/api/places?endpoint=geocode&address=" + encodeURIComponent(zip + " USA"));
-  const data = await res.json();
-  if (data.status === "OK" && data.results && data.results[0]) {
-    return { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng };
-  }
-  throw new Error("ZIP code not found: " + data.status + ". Please try another ZIP.");
-}
-
-async function getPlaceDetails(placeId) {
-  try {
-    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number,url");
-    const data = await res.json();
-    return data.result || {};
-  } catch(e) { return {}; }
-}
-
-async function searchNearby(location, keyword, radius) {
-  const res = await fetch("/api/places?endpoint=place/nearbysearch&location=" + location.lat + "," + location.lng + "&radius=" + Math.min(radius * 1609, 50000) + "&keyword=" + encodeURIComponent(keyword));
-  const data = await res.json();
-  return data.results || [];
-}
-
-function placeToActivity(place, category) {
-  return {
-    id: place.place_id,
-    placeId: place.place_id,
-    name: place.name,
-    category: category,
-    address: place.vicinity || "",
-    phone: "",
-    website: "",
-    rating: place.rating || 0,
-    reviewCount: place.user_ratings_total || 0,
-    price: (place.price_level !== undefined && place.price_level !== null) ? { 0:"Free", 1:"$", 2:"$$", 3:"$$$", 4:"$$$$" }[place.price_level] : null,
-    description: category + " program for kids and families in your area. View details for hours, pricing, and contact information.",
-    hours: "",
-    ageRange: "",
-    tags: [category.toLowerCase()],
-    activityType: "recreational",
-    photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
-    bookingUrl: "/api/go?placeId=" + place.place_id + "&name=" + encodeURIComponent(place.name) + "&dest=" + encodeURIComponent(place.website || "https://www.google.com/maps/place/?q=place_id:" + place.place_id),
-  };
-}
+// ── Activity seed data ────────────────────────────────────────────────────────
+const SEED_ACTIVITIES = [
+  { id:"a1",  name:"Champions Soccer Academy",       category:"Sports",     address:"245 Field Ave, Brooklyn, NY 11201",        phone:"(718) 555-0101", website:"https://championssoccer.com",      rating:4.8, reviewCount:213, price:"$$",  description:"Year-round youth soccer training for ages 4-18. Recreational leagues and competitive travel teams with UEFA-certified coaches.", hours:"Mon-Sat 9am-7pm", ageRange:"4-18", tags:["outdoor","team","year-round"], activityType:"competitive" },
+  { id:"a2",  name:"Little Maestros Music School",   category:"Music",      address:"88 Melody Lane, Brooklyn, NY 11215",        phone:"(718) 555-0202", website:"https://littlemaestros.com",       rating:4.9, reviewCount:187, price:"$$$", description:"Private and group lessons in piano, violin, guitar, and voice for children ages 3 and up. Two recitals per year.", hours:"Mon-Sat 10am-7pm", ageRange:"3-17", tags:["indoor","individual","year-round"], activityType:"recreational" },
+  { id:"a3",  name:"Pixel & Paint Art Studio",       category:"Arts",       address:"512 Creative Blvd, Manhattan, NY 10012",    phone:"(212) 555-0303", website:"https://pixelandpaint.com",       rating:4.7, reviewCount:142, price:"$$",  description:"Painting, sculpture, and mixed-media art classes for kids in a nurturing studio environment. All materials included.", hours:"Tue-Sun 10am-6pm", ageRange:"4-14", tags:["indoor","creative","year-round"], activityType:"recreational" },
+  { id:"a4",  name:"Brooklyn Dance Center",           category:"Dance",      address:"320 Rhythm St, Brooklyn, NY 11217",         phone:"(718) 555-0404", website:"https://brooklyndance.com",       rating:4.6, reviewCount:298, price:"$$",  description:"Ballet, tap, hip-hop, and contemporary dance for ages 2-18. Spring showcase and holiday performances throughout the year.", hours:"Mon-Sat 9am-8pm", ageRange:"2-18", tags:["indoor","performance","year-round"], activityType:"recreational" },
+  { id:"a5",  name:"RoboKids STEM Lab",               category:"STEM",       address:"77 Circuit Dr, Queens, NY 11374",           phone:"(718) 555-0505", website:"https://robokids.com",            rating:4.9, reviewCount:94,  price:"$$$", description:"Hands-on robotics, coding, and engineering for ages 6-16. Kids build and program real robots and apps to take home.", hours:"Tue-Sun 10am-6pm", ageRange:"6-16", tags:["indoor","creative","year-round"], activityType:"recreational" },
+  { id:"a6",  name:"Trailblazers Outdoor Camp",       category:"Outdoors",   address:"1 Camp Rd, Hoboken, NJ 07030",              phone:"(201) 555-0606", website:"https://trailblazersnj.com",      rating:4.8, reviewCount:167, price:"$$",  description:"Summer day camp featuring hiking, kayaking, rock climbing, and nature science. Half-day and full-day options available.", hours:"Summer: Mon-Fri 8am-5pm", ageRange:"5-15", tags:["outdoor","nature","summer"], activityType:"recreational" },
+  { id:"a7",  name:"Stage Lights Theater Camp",       category:"Theater",    address:"190 Broadway Ave, Manhattan, NY 10013",     phone:"(212) 555-0707", website:"https://stagelights.com",        rating:4.9, reviewCount:156, price:"$$$", description:"Full musical productions with professional direction, costumes, and live accompaniment. Builds confidence and performance skills.", hours:"Mon-Fri 9am-4pm", ageRange:"7-16", tags:["indoor","performance","summer"], activityType:"recreational" },
+  { id:"a8",  name:"Bright Futures Tutoring",         category:"Tutoring",   address:"400 Scholar Way, Bronx, NY 10451",          phone:"(718) 555-0808", website:"https://brightfuturestutoring.com", rating:4.7, reviewCount:321, price:"$$", description:"Personalized academic support in math, reading, science, and test prep. Small group and one-on-one sessions for K-12.", hours:"Mon-Sat 9am-7pm", ageRange:"5-18", tags:["indoor","individual","year-round"], activityType:"recreational" },
+  { id:"a9",  name:"Elite Gymnastics Center",         category:"Sports",     address:"88 Tumble Dr, Staten Island, NY 10301",     phone:"(718) 555-0909", website:"https://elitegymnastics.com",     rating:4.5, reviewCount:112, price:"$$$", description:"USAG-sanctioned gym offering recreational and competitive gymnastics for ages 3-18. Olympic-trained coaching staff.", hours:"Mon-Sat 9am-7pm", ageRange:"3-18", tags:["indoor","individual","year-round"], activityType:"competitive" },
+  { id:"a10", name:"Harmony Swim Academy",            category:"Sports",     address:"55 Aqua Blvd, Queens, NY 11101",            phone:"(718) 555-1010", website:"https://harmonyswim.com",        rating:4.6, reviewCount:88,  price:"$$",  description:"Year-round swim lessons for all levels, from beginner to competitive. Heated indoor pool with certified instructors.", hours:"Daily 7am-8pm", ageRange:"2-18", tags:["indoor","individual","year-round"], activityType:"competitive" },
+  { id:"a11", name:"Creative Kids Art Workshop",      category:"Arts",       address:"230 Palette Ave, Astoria, NY 11102",        phone:"(718) 555-1111", website:"https://creativekidsart.com",    rating:4.8, reviewCount:176, price:"$",   description:"Affordable and fun art workshops covering drawing, watercolor, and clay. Drop-in sessions and monthly memberships available.", hours:"Wed-Sun 10am-5pm", ageRange:"3-12", tags:["indoor","creative","year-round"], activityType:"recreational" },
+  { id:"a12", name:"Code Wizards Academy",            category:"STEM",       address:"15 Binary Blvd, Manhattan, NY 10003",       phone:"(212) 555-1212", website:"https://codewizards.com",       rating:4.8, reviewCount:78,  price:"$$",  description:"Game design, app development, and web coding taught through fun project-based learning for ages 7-16.", hours:"Mon-Sat 10am-6pm", ageRange:"7-16", tags:["indoor","creative","year-round"], activityType:"recreational" },
+  { id:"a13", name:"Nature Cubs Outdoor School",      category:"Outdoors",   address:"300 Greenway Rd, Brooklyn, NY 11215",       phone:"(718) 555-1313", website:"https://naturecubs.com",        rating:4.7, reviewCount:91,  price:"$$",  description:"Year-round nature exploration, wildlife tracking, and environmental science for young adventurers. Screen-free guaranteed.", hours:"Sat-Sun 9am-3pm", ageRange:"4-12", tags:["outdoor","nature","year-round"], activityType:"recreational" },
+  { id:"a14", name:"Kick It Martial Arts",            category:"Sports",     address:"175 Warrior Way, Brooklyn, NY 11220",       phone:"(718) 555-1414", website:"https://kickitmartialarts.com",  rating:4.6, reviewCount:203, price:"$$",  description:"Traditional karate and judo building discipline, focus, and fitness. Belt progression program with monthly evaluations.", hours:"Mon-Sat 9am-8pm", ageRange:"4-17", tags:["indoor","individual","year-round"], activityType:"competitive" },
+  { id:"a15", name:"Spotlight Dance Studio",          category:"Dance",      address:"60 Pirouette Lane, Brooklyn, NY 11215",     phone:"(718) 555-1515", website:"https://spotlightdance.com",    rating:4.9, reviewCount:228, price:"$$",  description:"Ballet, jazz, tap, and hip-hop dance in a welcoming studio. Annual spring recital at a professional venue.", hours:"Mon-Sat 9am-7pm", ageRange:"2-18", tags:["indoor","performance","year-round"], activityType:"recreational" },
+  { id:"a16", name:"Young Actors Workshop",           category:"Theater",    address:"44 Stage St, Williamsburg, NY 11211",       phone:"(718) 555-1616", website:"https://youngactors.com",       rating:4.7, reviewCount:119, price:"$$",  description:"Acting, improv, and scene-study classes for kids and teens. Culminates in a full public performance each semester.", hours:"Sat-Sun 10am-4pm", ageRange:"6-17", tags:["indoor","performance","year-round"], activityType:"recreational" },
+  { id:"a17", name:"Math Olympians Tutoring",         category:"Tutoring",   address:"222 Scholar Blvd, Forest Hills, NY 11375",  phone:"(718) 555-1717", website:"https://matholympians.com",     rating:4.8, reviewCount:145, price:"$$",  description:"Specialized math tutoring and enrichment from arithmetic through calculus. Competition prep for AMC and MathCounts.", hours:"Mon-Fri 3pm-8pm, Sat 9am-5pm", ageRange:"6-18", tags:["indoor","individual","year-round"], activityType:"recreational" },
+  { id:"a18", name:"Sprouts Baseball League",         category:"Sports",     address:"88 Diamond Ave, Flushing, NY 11355",        phone:"(718) 555-1818", website:"https://sproutsbaseball.com",   rating:4.5, reviewCount:167, price:"$",   description:"Community baseball and softball leagues for all skill levels. Season runs spring through fall with weekend games.", hours:"Spring-Fall weekends", ageRange:"5-16", tags:["outdoor","team","seasonal"], activityType:"competitive" },
+  { id:"a19", name:"Tiny Tots Music & Movement",      category:"Music",      address:"10 Nursery Rd, Brooklyn, NY 11215",         phone:"(718) 555-1919", website:"https://tinytots.com",          rating:4.9, reviewCount:312, price:"$",   description:"Music and movement classes for babies, toddlers, and preschoolers. Builds rhythm, coordination, and early musical skills.", hours:"Mon-Fri 9am-12pm", ageRange:"0-5", tags:["indoor","group","year-round"], activityType:"recreational" },
+  { id:"a20", name:"Adventure Rock Climbing Gym",     category:"Outdoors",   address:"500 Summit St, Long Island City, NY 11101", phone:"(718) 555-2020", website:"https://adventurerock.com",     rating:4.7, reviewCount:134, price:"$$",  description:"Indoor climbing gym with classes and open climb for kids and families. Birthday parties and group events welcome.", hours:"Mon-Fri 3pm-9pm, Sat-Sun 9am-7pm", ageRange:"4-17", tags:["indoor","individual","year-round"], activityType:"recreational" },
+  { id:"a21", name:"Mommy & Me Playhouse",            category:"Mommy & Me", address:"14 Blossom St, Park Slope, NY 11215",       phone:"(718) 555-2121", website:"https://mommymeplayhouse.com",  rating:4.9, reviewCount:278, price:"$",   description:"Structured play classes for babies and toddlers ages 0-3 with their caregivers. Music, movement, sensory play, and social time.", hours:"Mon-Fri 9am-12pm", ageRange:"0-3", tags:["indoor","group","year-round"], activityType:"recreational" },
+  { id:"a22", name:"Tiny Steps Parent & Child Yoga",  category:"Mommy & Me", address:"88 Zen Lane, Cobble Hill, NY 11201",        phone:"(718) 555-2222", website:"https://tinystepsyoga.com",     rating:4.8, reviewCount:142, price:"$$",  description:"Gentle yoga and mindfulness sessions for parents and babies or toddlers. Promotes bonding, development, and caregiver wellbeing.", hours:"Tue-Thu 9am-11am, Sat 9am-12pm", ageRange:"0-4", tags:["indoor","wellness","year-round"], activityType:"recreational" },
+  { id:"a23", name:"Little Learners Music Together",  category:"Mommy & Me", address:"55 Harmony Ave, Astoria, NY 11102",         phone:"(718) 555-2323", website:"https://littlelearners.com",    rating:4.9, reviewCount:203, price:"$",   description:"Award-winning Music Together program for children birth through age 5 and their grown-ups. Singing, dancing, and instrument exploration.", hours:"Mon-Sat various", ageRange:"0-5", tags:["indoor","music","year-round"], activityType:"recreational" },
+];
 
 async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
-  const location = await geocodeZip(zip);
-  const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
-  const terms = keyword && keyword.trim()
-    ? [keyword.trim()]
-    : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
-  const unique = [...new Set(terms)].slice(0, 8);
-
-  const allResults = await Promise.all(
-    unique.map(async kw => {
-      const cat = category || Object.keys(CATEGORY_KEYWORDS).find(c => CATEGORY_KEYWORDS[c].includes(kw)) || "Sports";
-      const places = await searchNearby(location, kw, radiusMiles);
-      return places.map(p => placeToActivity(p, cat));
-    })
-  );
-
-  const seen = new Set();
-  const deduped = allResults.flat().filter(p => {
-    if (seen.has(p.id)) return false;
-    seen.add(p.id); return true;
-  });
-  deduped.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  if (deduped.length === 0) throw new Error("No activities found near " + zip + ". Try a larger radius.");
-
-  // Fetch website details for all results
-  const top = deduped;
-  const rest = [];
-  const withDetails = await Promise.all(top.map(async p => {
-    const details = await getPlaceDetails(p.placeId);
-    const website = details.website || "";
-    const phone = details.formatted_phone_number || "";
-    return {
-      ...p,
-      website,
-      phone,
-      bookingUrl: "/api/go?placeId=" + p.placeId + "&name=" + encodeURIComponent(p.name) + "&dest=" + encodeURIComponent(website || "https://www.google.com/maps/place/?q=place_id:" + p.placeId),
-    };
-  }));
-  return [...withDetails, ...rest];
+  await new Promise(r => setTimeout(r, 400));
+  let results = [...SEED_ACTIVITIES];
+  if (category) results = results.filter(a => a.category === category);
+  if (keyword && keyword.trim()) {
+    const q = keyword.trim().toLowerCase();
+    results = results.filter(a =>
+      a.name.toLowerCase().includes(q) ||
+      a.category.toLowerCase().includes(q) ||
+      a.description.toLowerCase().includes(q) ||
+      (a.tags && a.tags.some(t => t.toLowerCase().includes(q)))
+    );
+  }
+  results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  if (results.length === 0) throw new Error("No activities found. Try a different category or keyword.");
+  return results;
 }
-
-
-async function getReviews(activityId) {
-  return sbGet("reviews?activity_id=eq." + activityId + "&order=created_at.desc");
-}
-
-async function submitReview(activityId, author, rating, text) {
-  return sbPost("reviews", { activity_id: activityId, author, rating, text });
-}
-
 
 
 
@@ -238,26 +145,19 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
-    const [reviewAuthor, setReviewAuthor] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewAuthor, setReviewAuthor] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
-    const [reviewDone, setReviewDone] = useState(false);
-  const [reviewsLoading, setReviewsLoading] = useState(true);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewDone, setReviewDone] = useState(false);
 
-
-  useState(() => {
-    getReviews(place.id).then(rows => { setReviews(rows || []); setReviewsLoading(false); }).catch(() => setReviewsLoading(false));
-  });
-  async function handleSubmitReview() {
+  function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
     setReviewSubmitting(true);
-    try {
-      await submitReview(place.id, reviewAuthor.trim(), reviewRating, reviewText.trim());
-      setReviewDone(true);
-      setReviews(prev => [{ author: reviewAuthor, rating: reviewRating, text: reviewText, created_at: new Date().toISOString() }, ...prev]);
-    } catch(e) { alert("Could not submit review: " + e.message); }
+    setReviews(prev => [{ author: reviewAuthor, rating: reviewRating, text: reviewText, created_at: new Date().toISOString() }, ...prev]);
+    setReviewDone(true);
     setReviewSubmitting(false);
   }
   return (
@@ -474,7 +374,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
           </div>
         )}
 
-
+        <p style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.5, marginBottom:"0.65rem", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>{place.description}</p>
 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
@@ -486,12 +386,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               ({(place.reviewCount||0).toLocaleString()})
             </span>
           </div>
-          <div style={{ display:"flex", gap:"0.4rem", alignItems:"center" }}>
-            <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
-            {place.website && (
-              <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.75rem", fontSize:"0.72rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
-            )}
-          </div>
+          <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
         </div>
       </div>
     </div>
@@ -651,6 +546,84 @@ function AuthModal({ onClose, onSignIn }) {
 }
 
 // ── Browse Page ───────────────────────────────────────────────────────────────
+// ── Simple SVG Map ────────────────────────────────────────────────────────────
+function SimpleMap({ places, favorites, onToggleFav, onSelect }) {
+  const [selected, setSelected] = useState(null);
+  if (!places.length) return null;
+
+  // Compute bounds
+  const lats = places.map(p => p._lat || 40.72).filter(Boolean);
+  const lngs = places.map(p => p._lng || -73.99).filter(Boolean);
+  const minLat = Math.min(...lats) - 0.01;
+  const maxLat = Math.max(...lats) + 0.01;
+  const minLng = Math.min(...lngs) - 0.01;
+  const maxLng = Math.max(...lngs) + 0.01;
+  const W = 600; const H = 340;
+  const px = lng => ((lng - minLng) / (maxLng - minLng)) * W * 0.88 + W * 0.06;
+  const py = lat => ((maxLat - lat) / (maxLat - minLat)) * H * 0.88 + H * 0.06;
+
+  // Assign fake coords spread across NYC if none
+  const withCoords = places.map((p, i) => ({
+    ...p,
+    _lat: p._lat || 40.68 + (i % 5) * 0.018 + Math.floor(i/5) * 0.01,
+    _lng: p._lng || -74.02 + (i % 7) * 0.022,
+  }));
+
+  return (
+    <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
+      <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
+        <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {places.length} locations</span>
+        <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to preview</span>
+      </div>
+      <div style={{ position:"relative", background:"linear-gradient(160deg,"+T.bgDeep+",#e8e2d4)" }}>
+        <svg viewBox={"0 0 "+W+" "+H} style={{ width:"100%", display:"block", minHeight:"280px" }}>
+          <defs><pattern id="mg" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke={T.borderMid} strokeWidth="0.4" opacity="0.5"/></pattern></defs>
+          <rect width={W} height={H} fill="url(#mg)"/>
+          <line x1="0" y1={H*0.45} x2={W} y2={H*0.45} stroke={T.borderMid} strokeWidth="1" opacity="0.3"/>
+          <line x1={W*0.4} y1="0" x2={W*0.4} y2={H} stroke={T.borderMid} strokeWidth="0.8" opacity="0.25"/>
+          {withCoords.map(p => {
+            const cat = getCatMeta(p.category);
+            const x = px(p._lng); const y = py(p._lat);
+            const isSel = selected && selected.id === p.id;
+            return (
+              <g key={p.id} style={{ cursor:"pointer" }} onClick={() => setSelected(p)}>
+                {isSel && <circle cx={x} cy={y} r={24} fill="none" stroke={cat.color} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.7"/>}
+                <circle cx={x} cy={y} r={isSel?16:11} fill={cat.bg} stroke={cat.color} strokeWidth={isSel?2:1.5}/>
+                <text x={x} y={y+1} textAnchor="middle" dominantBaseline="middle" fontSize={isSel?10:8}>{cat.icon}</text>
+              </g>
+            );
+          })}
+        </svg>
+        <div style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", display:"flex", gap:"0.3rem", flexWrap:"wrap" }}>
+          {[...new Set(places.map(p=>p.category))].map(cat => {
+            const m = getCatMeta(cat);
+            return <span key={cat} style={{ background:T.bgCard+"ee", border:"1px solid "+m.color+"55", color:m.color, fontSize:"0.62rem", padding:"2px 6px", borderRadius:"99px", fontWeight:600 }}>{m.icon} {cat}</span>;
+          })}
+        </div>
+      </div>
+      {selected && (
+        <div style={{ padding:"0.9rem 1.25rem", borderTop:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:T.bgDeep }}>
+          <div style={{ display:"flex", gap:"0.65rem", alignItems:"center" }}>
+            <span style={{ fontSize:"1.5rem", background:getCatMeta(selected.category).bg, padding:"0.4rem", borderRadius:"10px" }}>{getCatMeta(selected.category).icon}</span>
+            <div>
+              <div style={{ color:T.text, fontWeight:700, fontSize:"0.9rem", fontFamily:"'Fraunces',serif" }}>{selected.name}</div>
+              <div style={{ display:"flex", alignItems:"center", gap:"0.35rem", marginTop:"0.15rem" }}>
+                <Stars rating={selected.rating}/>
+                <span style={{ color:T.textSoft, fontSize:"0.72rem" }}>{selected.address}</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:"0.4rem" }}>
+            <button onClick={() => onToggleFav(selected.id, selected)} style={{ background:favorites.has(selected.id)?T.goldBg:T.bgDeep, border:"1px solid "+(favorites.has(selected.id)?T.gold:T.border), color:favorites.has(selected.id)?T.gold:T.textSoft, borderRadius:"99px", padding:"0.35rem 0.85rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:600, fontFamily:"inherit" }}>{favorites.has(selected.id)?"♥ Saved":"♡ Save"}</button>
+            <button onClick={() => onSelect(selected)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.35rem 1rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:700, fontFamily:"inherit" }}>Details →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav }) {
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(10);
@@ -663,9 +636,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (zip && zip.length === 5 && hasSearched) { doSearch(); } }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
@@ -683,10 +653,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     }
     setLoading(false); setLoadingMsg("");
   }, [zip, radius, category, search]);
-
-  const hasSearchedRef = useRef(false);
-  useEffect(() => { if (hasSearchedRef.current && zip.length === 5) { doSearch(); } }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { hasSearchedRef.current = hasSearched; }, [hasSearched]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
@@ -735,7 +701,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
           ))}
         </div>
         <div style={{ display:"flex", background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"8px", overflow:"hidden" }}>
-          {[{m:"grid",i:"⊞"},{m:"map",i:"🗺"},{m:"list",i:"☰"}].map(({m,i}) => (
+          {[{m:"grid",i:"⊞"},{m:"list",i:"☰"}].map(({m,i}) => (
             <button key={m} onClick={() => setViewMode(m)}
               style={{ background:viewMode===m?T.bgCard:"transparent", border:"none", color:viewMode===m?T.accent:T.textMuted, padding:"0.3rem 0.65rem", cursor:"pointer", fontFamily:"inherit", fontSize:"0.9rem" }}>{i}</button>
           ))}
@@ -766,18 +732,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
             </div>
-            {viewMode === "map" && (
-              <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
-                <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
-                  <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {results.length} locations</span>
-                  <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to open in Google Maps</span>
-                </div>
-                <iframe title="Activity Map" width="100%" height="420" style={{ border:0, display:"block" }} loading="lazy" allowFullScreen src={"https://www.google.com/maps/embed/v1/search?key=AIzaSyDBNrlLOqcrWw3pYXDJQxCNSO3tifBXR68&q=" + encodeURIComponent((category || "kids activities") + " near " + zip) + "&zoom=12"}/>
-                <div style={{ padding:"0.75rem 1.25rem", borderTop:"1px solid "+T.border, background:T.bgDeep, display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
-                  {results.slice(0,8).map(p => { const cat = getCatMeta(p.category); return <a key={p.id} href={p.bookingUrl} target="_blank" rel="noreferrer" style={{ background:cat.bg, border:"1px solid "+cat.color+"44", borderRadius:"99px", padding:"0.3rem 0.75rem", fontSize:"0.73rem", color:cat.color, fontWeight:600, textDecoration:"none" }}>{cat.icon} {p.name}</a>; })}
-                </div>
-              </div>
-            )}
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
                 {results.map(p => {
@@ -955,144 +909,73 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
 // ── About Page ────────────────────────────────────────────────────────────────
 function ListYourBusinessForm() {
-  const [form, setForm] = useState({
-    name:"", categories:[], age_min:"", age_max:"", class_types:"",
-    address:"", phone:"", website:"", email:"", description:"",
-    hours:"", price:"$$", photo_url:"", featured_interest:false
-  });
+  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const set = (k, v) => setForm(f => ({...f, [k]:v}));
-
-  function toggleCategory(cat) {
-    setForm(f => ({
-      ...f,
-      categories: f.categories.includes(cat)
-        ? f.categories.filter(c => c !== cat)
-        : [...f.categories, cat]
-    }));
-  }
-
-  async function handleSubmit() {
-    if (!form.name.trim() || !form.email.trim() || form.categories.length === 0) {
-      setError("Please fill in business name, email, and at least one category.");
-      return;
-    }
-    setLoading(true); setError("");
-    try {
-      const payload = {
-        name: form.name.trim(),
-        category: form.categories[0],
-        categories: form.categories,
-        address: form.address.trim(),
-        phone: form.phone.trim(),
-        website: form.website.trim(),
-        description: form.description.trim(),
-        hours: form.hours.trim(),
-        price: form.price,
-        photo_url: form.photo_url.trim(),
-        age_range: form.age_min && form.age_max ? form.age_min + "-" + form.age_max : "",
-        age_min: form.age_min ? parseInt(form.age_min) : null,
-        age_max: form.age_max ? parseInt(form.age_max) : null,
-        class_types: form.class_types ? form.class_types.split(",").map(s => s.trim()).filter(Boolean) : [],
-        featured_interest: form.featured_interest,
-        status: "pending",
-        rating: 0,
-        review_count: 0,
-      };
-      await sbPost("activities", payload);
-      setSubmitted(true);
-    } catch(e) {
-      setError("Submission failed: " + e.message + ". Please try again.");
-    }
-    setLoading(false);
-  }
-
   const inp = { width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.65rem 0.9rem", fontSize:"0.85rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", display:"block" };
   const lbl = { display:"block", color:T.textMid, fontSize:"0.75rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase", letterSpacing:"0.8px" };
 
-  if (submitted) return (
-    <div id="list-biz-form" style={{ marginTop:"2rem", background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", padding:"2rem", textAlign:"center" }}>
-      <div style={{ fontSize:"3rem", marginBottom:"0.75rem" }}>🎉</div>
-      <h4 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.4rem" }}>Application Received!</h4>
-      <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Thanks! We will review your listing and be in touch at {form.email} within 2 business days.</p>
-    </div>
-  );
+  function handleSubmit() {
+    if (!form.name.trim() || !form.email.trim()) return;
+    setLoading(true);
+    setTimeout(() => { setSubmitted(true); setLoading(false); }, 900);
+  }
 
   return (
     <div id="list-biz-form" style={{ marginTop:"2rem", background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", padding:"1.75rem", boxShadow:"0 2px 12px "+T.shadow }}>
       <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.25rem" }}>List Your Business</h3>
-      <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Fill out the form and our team will review your listing within 2 business days.</p>
+      <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Fill out the form below and our team will be in touch within 2 business days.</p>
 
-      {error && <div style={{ background:"#fdf5f3", border:"1px solid "+T.accentSoft, borderRadius:"10px", padding:"0.85rem", marginBottom:"1rem", color:T.textMid, fontSize:"0.83rem" }}>⚠️ {error}</div>}
-
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
-        <div style={{ gridColumn:"1/-1" }}><label style={lbl}>Business Name *</label><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="Miller Street Dance Academy" style={inp}/></div>
-        <div><label style={lbl}>Contact Email *</label><input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="you@yourbusiness.com" style={inp}/></div>
-        <div><label style={lbl}>Phone</label><input value={form.phone} onChange={e=>set("phone",e.target.value)} placeholder="(555) 000-0000" style={inp}/></div>
-        <div style={{ gridColumn:"1/-1" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
-        <div><label style={lbl}>Website</label><input value={form.website} onChange={e=>set("website",e.target.value)} placeholder="https://yourbusiness.com" style={inp}/></div>
-        <div><label style={lbl}>Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-6pm" style={inp}/></div>
-      </div>
-
-      <div style={{ marginBottom:"1rem" }}>
-        <label style={lbl}>Categories * (select all that apply)</label>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:"0.4rem", marginTop:"0.35rem" }}>
-          {CATEGORIES.map(cat => (
-            <button key={cat.label} type="button" onClick={() => toggleCategory(cat.label)}
-              style={{ background: form.categories.includes(cat.label) ? cat.color : T.bgDeep,
-                color: form.categories.includes(cat.label) ? "#fff" : T.textMid,
-                border:"1.5px solid "+(form.categories.includes(cat.label) ? cat.color : T.border),
-                borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.8rem",
-                fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-              {cat.icon} {cat.label}
-            </button>
-          ))}
+      {submitted ? (
+        <div style={{ textAlign:"center", padding:"2rem" }}>
+          <div style={{ fontSize:"3rem", marginBottom:"0.75rem" }}>🎉</div>
+          <h4 style={{ fontFamily:"'Fraunces',serif", color:T.text, marginBottom:"0.4rem" }}>Application Received!</h4>
+          <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Thanks for reaching out. We'll contact you at {form.email} within 2 business days.</p>
         </div>
-      </div>
-
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
-        <div><label style={lbl}>Min Age</label><input type="number" value={form.age_min} onChange={e=>set("age_min",e.target.value)} placeholder="0" min="0" max="18" style={inp}/></div>
-        <div><label style={lbl}>Max Age</label><input type="number" value={form.age_max} onChange={e=>set("age_max",e.target.value)} placeholder="18" min="0" max="18" style={inp}/></div>
-      </div>
-
-      <div style={{ marginBottom:"1rem" }}><label style={lbl}>Class Types Offered (comma separated)</label><input value={form.class_types} onChange={e=>set("class_types",e.target.value)} placeholder="Ballet, Hip Hop, Mommy & Me, Tap, Jazz" style={inp}/></div>
-      <div style={{ marginBottom:"1rem" }}><label style={lbl}>Photo URL (optional)</label><input value={form.photo_url} onChange={e=>set("photo_url",e.target.value)} placeholder="https://yourbusiness.com/photo.jpg" style={inp}/></div>
-      <div style={{ marginBottom:"1rem" }}>
-        <label style={lbl}>Price Range</label>
-        <div style={{ display:"flex", gap:"0.5rem" }}>
-          {["$","$$","$$$"].map(p => (
-            <button key={p} type="button" onClick={() => set("price", p)}
-              style={{ background: form.price===p ? T.accent : T.bgDeep,
-                color: form.price===p ? "#fff" : T.textMid,
-                border:"1.5px solid "+(form.price===p ? T.accent : T.border),
-                borderRadius:"8px", padding:"0.4rem 1rem", fontSize:"0.85rem",
-                fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>{p}</button>
-          ))}
+      ) : (
+        <div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
+            <div><label style={lbl}>Business Name *</label><input value={form.name} onChange={e=>set("name",e.target.value)} placeholder="Your Business Name" style={inp}/></div>
+            <div><label style={lbl}>Category</label>
+              <select value={form.category} onChange={e=>set("category",e.target.value)} style={{...inp}}>
+                <option value="">Select category…</option>
+                {CATEGORIES.map(c => <option key={c.label} value={c.label}>{c.icon} {c.label}</option>)}
+              </select>
+            </div>
+            <div><label style={lbl}>Contact Email *</label><input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="you@yourbusiness.com" style={inp}/></div>
+            <div><label style={lbl}>Phone</label><input value={form.phone} onChange={e=>set("phone",e.target.value)} placeholder="(555) 000-0000" style={inp}/></div>
+            <div><label style={lbl}>Website</label><input value={form.website} onChange={e=>set("website",e.target.value)} placeholder="https://yourbusiness.com" style={inp}/></div>
+            <div><label style={lbl}>Age Range Served</label><input value={form.ageRange} onChange={e=>set("ageRange",e.target.value)} placeholder="e.g. 3-14" style={inp}/></div>
+          </div>
+          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
+          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-5pm" style={inp}/></div>
+          <div style={{ marginBottom:"1.5rem" }}>
+            <label style={lbl}>Tell us about your program</label>
+            <textarea value={form.description} onChange={e=>set("description",e.target.value)} rows={4}
+              placeholder="Describe what you offer, what makes you special, and why families should choose you…"
+              style={{...inp, resize:"vertical"}}/>
+          </div>
+          <div style={{ background:T.bgDeep, borderRadius:"10px", padding:"0.85rem", marginBottom:"1.25rem", border:"1px solid "+T.border }}>
+            <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.78rem", marginBottom:"0.5rem" }}>Featured Placement Options</div>
+            <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+              {[{t:"Silver",l:"Sponsored badge + listing",c:T.textSoft},{t:"Gold",l:"Featured section + badge",c:T.gold},{t:"Platinum",l:"Top placement + all features",c:T.textMid}].map(o => (
+                <div key={o.t} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.5rem 0.75rem", flex:"1 1 120px" }}>
+                  <div style={{ color:o.c, fontWeight:700, fontSize:"0.75rem" }}>{o.t}</div>
+                  <div style={{ color:T.textMuted, fontSize:"0.7rem", marginTop:"0.15rem" }}>{o.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button onClick={handleSubmit} disabled={!form.name.trim()||!form.email.trim()||loading}
+            style={{ background: form.name.trim()&&form.email.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: form.name.trim()&&form.email.trim() ? "#3a3028" : T.textMuted, border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.9rem", fontWeight:700, cursor: form.name.trim()&&form.email.trim()?"pointer":"not-allowed", fontFamily:"inherit" }}>
+            {loading ? "Submitting…" : "Submit Application →"}
+          </button>
         </div>
-      </div>
-      <div style={{ marginBottom:"1.25rem" }}><label style={lbl}>Description</label><textarea value={form.description} onChange={e=>set("description",e.target.value)} rows={4} placeholder="Tell parents about your programs, what makes you special, your teaching philosophy..." style={{...inp, resize:"vertical"}}/></div>
-
-      <div style={{ marginBottom:"1.25rem" }}>
-        <label style={{ display:"flex", alignItems:"center", gap:"0.6rem", cursor:"pointer" }}>
-          <input type="checkbox" checked={form.featured_interest} onChange={e=>set("featured_interest",e.target.checked)} style={{ width:"16px", height:"16px" }}/>
-          <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>I am interested in a featured placement (Gold/Platinum) to appear at the top of search results</span>
-        </label>
-      </div>
-
-      <button onClick={handleSubmit} disabled={loading}
-        style={{ background: "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",
-          color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem 2rem",
-          fontSize:"0.9rem", fontWeight:700, cursor: loading ? "not-allowed" : "pointer",
-          fontFamily:"inherit", opacity: loading ? 0.7 : 1 }}>
-        {loading ? "Submitting…" : "Submit Application →"}
-      </button>
+      )}
     </div>
   );
 }
-
 
 function BusinessesPage() {
   return (
@@ -1292,6 +1175,7 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
   );
 }
 
+// ── Admin Page ────────────────────────────────────────────────────────────────
 function AdminPage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -1300,82 +1184,106 @@ function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState("pending");
   const ADMIN_PASSWORD = "signupspot2024";
+
   async function loadListings() {
     setLoading(true);
     try {
       const all = await sbGet("activities?select=*&order=submitted_at.desc");
-      setPending((all||[]).filter(a=>a.status==="pending"));
-      setApproved((all||[]).filter(a=>a.status==="approved"));
+      setPending((all || []).filter(a => a.status === "pending"));
+      setApproved((all || []).filter(a => a.status === "approved"));
     } catch(e) { console.error(e); }
     setLoading(false);
   }
+
   async function updateStatus(id, status) {
     try {
-      await fetch(SUPABASE_URL+"/rest/v1/activities?id=eq."+id, { method:"PATCH", headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=minimal"}, body:JSON.stringify({status}) });
+      await fetch(SUPABASE_URL + "/rest/v1/activities?id=eq." + id, {
+        method: "PATCH",
+        headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
+        body: JSON.stringify({ status })
+      });
       await loadListings();
-    } catch(e) { alert("Error: "+e.message); }
+    } catch(e) { alert("Error: " + e.message); }
   }
+
   async function deleteListing(id) {
-    if (!window.confirm("Delete permanently?")) return;
+    if (!window.confirm("Delete this listing permanently?")) return;
     try {
-      await fetch(SUPABASE_URL+"/rest/v1/activities?id=eq."+id, { method:"DELETE", headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY} });
+      await fetch(SUPABASE_URL + "/rest/v1/activities?id=eq." + id, {
+        method: "DELETE",
+        headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
+      });
       await loadListings();
-    } catch(e) { alert("Error: "+e.message); }
+    } catch(e) { alert("Error: " + e.message); }
   }
+
   if (!authed) return (
-    <div style={{minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg,padding:"1.5rem"}}>
-      <div style={{background:T.bgCard,border:"1px solid "+T.border,borderRadius:"20px",padding:"2.5rem",maxWidth:"360px",width:"100%",textAlign:"center"}}>
-        <div style={{fontSize:"2.5rem",marginBottom:"0.75rem"}}>🔐</div>
-        <h2 style={{fontFamily:"'Fraunces',serif",color:T.text,fontSize:"1.4rem",marginBottom:"0.5rem"}}>Admin Access</h2>
-        <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&password===ADMIN_PASSWORD){setAuthed(true);loadListings();}}} placeholder="Password" style={{width:"100%",background:T.bgInput,border:"1.5px solid "+T.border,borderRadius:"10px",padding:"0.7rem 1rem",fontSize:"0.9rem",color:T.text,boxSizing:"border-box",fontFamily:"inherit",marginBottom:"0.75rem",display:"block"}}/>
-        <button onClick={()=>{if(password===ADMIN_PASSWORD){setAuthed(true);loadListings();}else{alert("Incorrect password");}}} style={{width:"100%",background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")",color:"#fff",border:"none",borderRadius:"99px",padding:"0.7rem",fontSize:"0.9rem",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Sign In</button>
+    <div style={{ minHeight:"80vh", display:"flex", alignItems:"center", justifyContent:"center", background:T.bg, padding:"1.5rem" }}>
+      <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"20px", padding:"2.5rem", maxWidth:"360px", width:"100%", boxShadow:"0 8px 32px "+T.shadow, textAlign:"center" }}>
+        <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>🔐</div>
+        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.5rem" }}>Admin Access</h2>
+        <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Enter your admin password to manage listings</p>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && password === ADMIN_PASSWORD) { setAuthed(true); loadListings(); }}} placeholder="Password" style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.7rem 1rem", fontSize:"0.9rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.75rem", display:"block" }}/>
+        <button onClick={() => { if (password === ADMIN_PASSWORD) { setAuthed(true); loadListings(); } else { alert("Incorrect password"); }}} style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.7rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In</button>
       </div>
     </div>
   );
-  const listings = tab==="pending" ? pending : approved;
+
+  const listings = tab === "pending" ? pending : approved;
+
   return (
-    <div style={{padding:"1.5rem",background:T.bg,minHeight:"80vh"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.5rem",flexWrap:"wrap",gap:"1rem"}}>
+    <div style={{ padding:"1.5rem", background:T.bg, minHeight:"80vh" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1.5rem", flexWrap:"wrap", gap:"1rem" }}>
         <div>
-          <h2 style={{fontFamily:"'Fraunces',serif",color:T.text,fontSize:"1.5rem",marginBottom:"0.25rem"}}>Admin Dashboard</h2>
-          <p style={{color:T.textSoft,fontSize:"0.83rem"}}>{pending.length} pending · {approved.length} approved</p>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Admin Dashboard</h2>
+          <p style={{ color:T.textSoft, fontSize:"0.83rem" }}>{pending.length} pending · {approved.length} approved</p>
         </div>
-        <button onClick={loadListings} style={{background:T.bgDeep,border:"1px solid "+T.border,color:T.textMid,borderRadius:"99px",padding:"0.45rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Refresh</button>
+        <button onClick={loadListings} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"99px", padding:"0.45rem 1rem", fontSize:"0.8rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Refresh</button>
       </div>
-      <div style={{display:"flex",gap:"0.5rem",marginBottom:"1.25rem"}}>
-        {[["pending","Pending ("+pending.length+")"],["approved","Approved ("+approved.length+")"]].map(function(item){var t=item[0],l=item[1];return(<button key={t} onClick={()=>setTab(t)} style={{background:tab===t?"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")":T.bgDeep,color:tab===t?"#fff":T.textMid,border:"1px solid "+(tab===t?"transparent":T.border),borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.82rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>);})}
+      <div style={{ display:"flex", gap:"0.5rem", marginBottom:"1.25rem" }}>
+        {[["pending","Pending ("+pending.length+")"],["approved","Approved ("+approved.length+")"]].map(function(item) { var t=item[0],l=item[1]; return (
+          <button key={t} onClick={() => setTab(t)} style={{ background: tab===t ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: tab===t ? "#fff" : T.textMid, border:"1px solid "+(tab===t ? "transparent" : T.border), borderRadius:"99px", padding:"0.4rem 1rem", fontSize:"0.82rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>{l}</button>
+        );})}
       </div>
-      {loading&&<div style={{textAlign:"center",padding:"2rem",color:T.textSoft}}>Loading...</div>}
-      {!loading&&listings.length===0&&<div style={{textAlign:"center",padding:"3rem",background:T.bgCard,borderRadius:"16px",border:"1px solid "+T.border}}><p style={{color:T.textSoft}}>{tab==="pending"?"No pending submissions!":"No approved listings yet."}</p></div>}
-      <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-        {listings.map(function(biz){return(
-          <div key={biz.id} style={{background:T.bgCard,border:"1px solid "+T.border,borderRadius:"16px",padding:"1.25rem",boxShadow:"0 2px 8px "+T.shadow}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"0.75rem"}}>
-              <div style={{flex:1}}>
-                <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"0.35rem",flexWrap:"wrap"}}>
-                  <span style={{fontFamily:"'Fraunces',serif",color:T.text,fontWeight:700,fontSize:"1rem"}}>{biz.name}</span>
-                  {biz.featured_interest&&<span style={{background:T.goldBg,color:T.gold,fontSize:"0.65rem",fontWeight:700,padding:"2px 8px",borderRadius:"99px"}}>Featured Interest</span>}
+      {loading && <div style={{ textAlign:"center", padding:"2rem", color:T.textSoft }}>Loading...</div>}
+      {!loading && listings.length === 0 && (
+        <div style={{ textAlign:"center", padding:"3rem", background:T.bgCard, borderRadius:"16px", border:"1px solid "+T.border }}>
+          <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>{tab === "pending" ? "🎉" : "📭"}</div>
+          <p style={{ color:T.textSoft }}>{tab === "pending" ? "No pending submissions!" : "No approved listings yet."}</p>
+        </div>
+      )}
+      <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
+        {listings.map(function(biz) {
+          var cat = getCatMeta(biz.category);
+          return (
+            <div key={biz.id} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.25rem", boxShadow:"0 2px 8px "+T.shadow }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
+                <div style={{ flex:1 }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:"0.5rem", marginBottom:"0.35rem", flexWrap:"wrap" }}>
+                    <span style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700, fontSize:"1rem" }}>{biz.name}</span>
+                    {biz.featured_interest && <span style={{ background:T.goldBg, color:T.gold, fontSize:"0.65rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>Featured Interest</span>}
+                  </div>
+                  <div style={{ display:"flex", gap:"0.35rem", flexWrap:"wrap", marginBottom:"0.5rem" }}>
+                    {(biz.categories || [biz.category]).filter(Boolean).map(function(c) { var cm=getCatMeta(c); return <span key={c} style={{ background:cm.bg, color:cm.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>{cm.icon} {c}</span>; })}
+                    {biz.age_min != null && biz.age_max != null && <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.68rem", padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>Ages {biz.age_min}-{biz.age_max}</span>}
+                  </div>
+                  {biz.description && <p style={{ color:T.textSoft, fontSize:"0.8rem", lineHeight:1.55, marginBottom:"0.5rem" }}>{biz.description.slice(0,150)}</p>}
+                  <div style={{ display:"flex", gap:"1rem", flexWrap:"wrap" }}>
+                    {biz.address && <span style={{ color:T.textMuted, fontSize:"0.75rem" }}>📍 {biz.address}</span>}
+                    {biz.phone && <span style={{ color:T.textMuted, fontSize:"0.75rem" }}>📞 {biz.phone}</span>}
+                    {biz.website && <a href={biz.website} target="_blank" rel="noreferrer" style={{ color:T.accent, fontSize:"0.75rem" }}>Website</a>}
+                  </div>
+                  {biz.class_types && biz.class_types.length > 0 && <div style={{ marginTop:"0.4rem" }}><span style={{ color:T.textMuted, fontSize:"0.73rem" }}>Classes: {biz.class_types.join(", ")}</span></div>}
                 </div>
-                <div style={{display:"flex",gap:"0.35rem",flexWrap:"wrap",marginBottom:"0.5rem"}}>
-                  {(biz.categories||[biz.category]).filter(Boolean).map(function(c){var cm=getCatMeta(c);return <span key={c} style={{background:cm.bg,color:cm.color,fontSize:"0.68rem",fontWeight:700,padding:"2px 8px",borderRadius:"99px"}}>{cm.icon} {c}</span>;})}
-                  {biz.age_min!=null&&biz.age_max!=null&&<span style={{background:T.bgDeep,color:T.textSoft,fontSize:"0.68rem",padding:"2px 8px",borderRadius:"99px",border:"1px solid "+T.border}}>Ages {biz.age_min}-{biz.age_max}</span>}
+                <div style={{ display:"flex", gap:"0.5rem", flexShrink:0 }}>
+                  {tab === "pending" && <button onClick={() => updateStatus(biz.id, "approved")} style={{ background:"#eef4eb", color:"#3a7a30", border:"1px solid #3a7a3044", borderRadius:"99px", padding:"0.4rem 1rem", fontSize:"0.8rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Approve</button>}
+                  {tab === "approved" && <button onClick={() => updateStatus(biz.id, "pending")} style={{ background:T.bgDeep, color:T.textMid, border:"1px solid "+T.border, borderRadius:"99px", padding:"0.4rem 1rem", fontSize:"0.8rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Unpublish</button>}
+                  <button onClick={() => deleteListing(biz.id)} style={{ background:"#fdf0f0", color:"#b04040", border:"1px solid #b0404044", borderRadius:"99px", padding:"0.4rem 1rem", fontSize:"0.8rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Delete</button>
                 </div>
-                {biz.description&&<p style={{color:T.textSoft,fontSize:"0.8rem",lineHeight:1.55,marginBottom:"0.5rem"}}>{biz.description.slice(0,150)}</p>}
-                <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
-                  {biz.address&&<span style={{color:T.textMuted,fontSize:"0.75rem"}}>📍 {biz.address}</span>}
-                  {biz.phone&&<span style={{color:T.textMuted,fontSize:"0.75rem"}}>📞 {biz.phone}</span>}
-                  {biz.website&&<a href={biz.website} target="_blank" rel="noreferrer" style={{color:T.accent,fontSize:"0.75rem"}}>Website</a>}
-                </div>
-                {biz.class_types&&biz.class_types.length>0&&<div style={{marginTop:"0.4rem"}}><span style={{color:T.textMuted,fontSize:"0.73rem"}}>Classes: {biz.class_types.join(", ")}</span></div>}
-              </div>
-              <div style={{display:"flex",gap:"0.5rem",flexShrink:0}}>
-                {tab==="pending"&&<button onClick={()=>updateStatus(biz.id,"approved")} style={{background:"#eef4eb",color:"#3a7a30",border:"1px solid #3a7a3044",borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Approve</button>}
-                {tab==="approved"&&<button onClick={()=>updateStatus(biz.id,"pending")} style={{background:T.bgDeep,color:T.textMid,border:"1px solid "+T.border,borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Unpublish</button>}
-                <button onClick={()=>deleteListing(biz.id)} style={{background:"#fdf0f0",color:"#b04040",border:"1px solid #b0404044",borderRadius:"99px",padding:"0.4rem 1rem",fontSize:"0.8rem",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Delete</button>
               </div>
             </div>
-          </div>
-        );})}
+          );
+        })}
       </div>
     </div>
   );
@@ -1388,7 +1296,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
     { page:"businesses", icon:"🏢", label:"Local Businesses" },
     { page:"favorites",  icon:"♥",  label:"Saved ("+favCount+")" },
     { page:"about",      icon:"ℹ️", label:"About Us" },
-    { page:"admin", icon:"🔐", label:"Admin" },
+    { page:"admin",      icon:"🔐", label:"Admin" },
   ];
   return (
     <>
@@ -1509,6 +1417,9 @@ export default function TheSignUpSpot() {
     setKids(prev => prev.map(k => k.id === id ? {...k, name} : k));
   }
 
+  const activeKidMap = kidSaves[activeKidId] || new Map();
+  const activeKidFavSet = new Set(activeKidMap.keys());
+  const activeKidFavPlaces = [...activeKidMap.values()];
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
@@ -1592,7 +1503,7 @@ export default function TheSignUpSpot() {
             </div>
           </div>
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
-            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"]].map(([l,p]) => (
+            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"],["Admin","admin"]].map(([l,p]) => (
               <button key={p} onClick={() => navigate(p)}
                 style={{ background:"none", border:"none", color:T.textSoft, cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
             ))}
