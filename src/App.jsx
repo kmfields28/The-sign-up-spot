@@ -486,9 +486,11 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               ({(place.reviewCount||0).toLocaleString()})
             </span>
           </div>
-          <div style={{ display:"flex", gap:"0.4rem" }}>
+          <div style={{ display:"flex", gap:"0.4rem", alignItems:"center" }}>
             <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
-            <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.75rem", fontSize:"0.72rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
+            {place.website && (
+              <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.75rem", fontSize:"0.72rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
+            )}
           </div>
         </div>
       </div>
