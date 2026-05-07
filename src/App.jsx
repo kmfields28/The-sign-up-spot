@@ -847,7 +847,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 
       {tab === "calendar" ? (
         user ? (
-          <CalendarPage kids={kids} kidSaves={kidSaves} events={calendarEvents} setEvents={setCalendarEvents}/>
+          <CalendarPage kids={kids} kidSaves={kidSaves} events={calendarEvents} setEvents={onAddCalendarEvent}/>
         ) : (
           <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
             <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>📅</div>
