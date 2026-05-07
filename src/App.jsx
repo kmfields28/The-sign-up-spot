@@ -123,7 +123,8 @@ function placeToActivity(place, category) {
     tags: [category.toLowerCase()],
     activityType: "recreational",
     photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
-    bookingUrl: "/api/go?placeId=" + place.place_id + "&name=" + encodeURIComponent(place.name) + "&maps=" + encodeURIComponent("https://www.google.com/maps/place/?q=place_id:" + place.place_id),
+    website: place.website || "",
+    bookingUrl: "/api/go?placeId=" + place.place_id + "&name=" + encodeURIComponent(place.name) + "&dest=" + encodeURIComponent(place.website || "https://www.google.com/maps/place/?q=place_id:" + place.place_id),
   };
 }
 
