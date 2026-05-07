@@ -113,7 +113,7 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   const location = await geocodeZip(zip);
   const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
   const terms = keyword && keyword.trim()
-    ? [keyword.trim()]
+    ? categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 1)).map(t => t + " " + keyword.trim())
     : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
   const unique = [...new Set(terms)].slice(0, 8);
 
@@ -764,7 +764,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
                 {results.map(p => (
                   <ActivityCard key={p.id} place={p} favorites={favorites}
-                    onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
+                    onToggleFav={onToggleFav} onSelect={setSelectedPlace} onAddToCalendar={p2 => { onAddToCalendarPrompt && onAddToCalendarPrompt(p2); }}/>
                 ))}
               </div>
             )}
