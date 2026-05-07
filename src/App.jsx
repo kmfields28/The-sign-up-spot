@@ -1195,7 +1195,7 @@ function AdminPage() {
       )}
       <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
         {listings.map(function(biz) {
-          var cat = getCatMeta(biz.category);
+          
           return (
             <div key={biz.id} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.25rem", boxShadow:"0 2px 8px "+T.shadow }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
