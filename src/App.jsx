@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const T = {
   bg:"#ffffff",
@@ -39,6 +39,8 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
 ];
 
+const AGE_RANGES = ["All Ages","0-2","3-5","6-8","9-12","13-16","17+"];
+const ACTIVITY_TYPES = ["All Types","Competitive","Recreational"];
 
 function getCatMeta(label) {
   return CATEGORIES.find(c => c.label === label) || { icon:"🎯", color:T.accent, bg:T.accentBg };
@@ -111,21 +113,15 @@ function placeToActivity(place, category) {
 
 async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   const location = await geocodeZip(zip);
-  let searchPairs = [];
-  if (keyword && keyword.trim()) {
-    // Direct keyword search — search exactly what user typed across all/selected categories
-    const cats = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
-    const kw = "kids " + keyword.trim();
-    searchPairs = cats.map(c => ({ kw, cat: c }));
-  } else {
-    // No keyword — use category keywords
-    const cats = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
-    searchPairs = cats.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2).map(kw => ({ kw, cat: c })));
-  }
-  const unique = searchPairs.slice(0, 8);
+  const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
+  const terms = keyword && keyword.trim()
+    ? [keyword.trim()]
+    : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
+  const unique = [...new Set(terms)].slice(0, 8);
 
   const allResults = await Promise.all(
-    unique.map(async ({ kw, cat }) => {
+    unique.map(async kw => {
+      const cat = category || Object.keys(CATEGORY_KEYWORDS).find(c => CATEGORY_KEYWORDS[c].includes(kw)) || "Sports";
       const places = await searchNearby(location, kw, radiusMiles);
       return places.map(p => placeToActivity(p, cat));
     })
@@ -158,27 +154,6 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
 
 
 // ── Shared UI ────────────────────────────────────────────────────────────────
-const SUPABASE_URL = "https://owehkzrhtwyjgccjpptq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93ZWhrenJodHd5amdjY2pwcHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODMwNjgsImV4cCI6MjA5MzY1OTA2OH0.OAOwSAReUlaG7MOkGvx0bhRO0EjNfRzmkEkuINuZinU";
-
-async function sbGet(path) {
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.json();
-}
-
-async function sbPost(path, body) { // eslint-disable-line no-unused-vars
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
-    method: "POST",
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) throw new Error("Database error " + res.status);
-  return res.status === 204 ? null : res.json();
-}
-
 function Stars({ rating, size }) {
   return (
     <span style={{ fontSize: size === "lg" ? "1.2rem" : "0.88rem", letterSpacing: "1px" }}>
@@ -227,13 +202,13 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
-    const [reviewAuthor, setReviewAuthor] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewAuthor, setReviewAuthor] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
-  const reviewsLoading = false;
 
   function handleSubmitReview() {
     if (!reviewAuthor.trim() || !reviewRating || !reviewText.trim()) return;
@@ -274,8 +249,6 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             )}
           </div>
 
-          {/* Description */}
-          <p style={{ color:T.textSoft, fontSize:"0.85rem", lineHeight:1.7, marginBottom:"1.25rem" }}>{place.description}</p>
 
           {/* Details */}
           <div style={{ background:T.bgDeep, borderRadius:"12px", padding:"1rem", marginBottom:"1rem", border:"1px solid "+T.border, display:"flex", flexDirection:"column", gap:"0.5rem" }}>
@@ -403,7 +376,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
 }
 
 // ── Activity Card ─────────────────────────────────────────────────────────────
-function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav, onAddToCalendar }) {
+function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   return (
@@ -632,7 +605,85 @@ function AuthModal({ onClose, onSignIn }) {
 }
 
 // ── Browse Page ───────────────────────────────────────────────────────────────
-function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth, onAddToCalendarPrompt }) {
+// ── Simple SVG Map ────────────────────────────────────────────────────────────
+function SimpleMap({ places, favorites, onToggleFav, onSelect }) {
+  const [selected, setSelected] = useState(null);
+  if (!places.length) return null;
+
+  // Compute bounds
+  const lats = places.map(p => p._lat || 40.72).filter(Boolean);
+  const lngs = places.map(p => p._lng || -73.99).filter(Boolean);
+  const minLat = Math.min(...lats) - 0.01;
+  const maxLat = Math.max(...lats) + 0.01;
+  const minLng = Math.min(...lngs) - 0.01;
+  const maxLng = Math.max(...lngs) + 0.01;
+  const W = 600; const H = 340;
+  const px = lng => ((lng - minLng) / (maxLng - minLng)) * W * 0.88 + W * 0.06;
+  const py = lat => ((maxLat - lat) / (maxLat - minLat)) * H * 0.88 + H * 0.06;
+
+  // Assign fake coords spread across NYC if none
+  const withCoords = places.map((p, i) => ({
+    ...p,
+    _lat: p._lat || 40.68 + (i % 5) * 0.018 + Math.floor(i/5) * 0.01,
+    _lng: p._lng || -74.02 + (i % 7) * 0.022,
+  }));
+
+  return (
+    <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", overflow:"hidden", boxShadow:"0 4px 20px "+T.shadow, marginBottom:"1rem" }}>
+      <div style={{ padding:"0.85rem 1.25rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", background:T.bgDeep }}>
+        <span style={{ color:T.text, fontWeight:700, fontSize:"0.88rem", fontFamily:"'Fraunces',serif" }}>📍 Map View · {places.length} locations</span>
+        <span style={{ color:T.textMuted, fontSize:"0.72rem" }}>Click a pin to preview</span>
+      </div>
+      <div style={{ position:"relative", background:"linear-gradient(160deg,"+T.bgDeep+",#e8e2d4)" }}>
+        <svg viewBox={"0 0 "+W+" "+H} style={{ width:"100%", display:"block", minHeight:"280px" }}>
+          <defs><pattern id="mg" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke={T.borderMid} strokeWidth="0.4" opacity="0.5"/></pattern></defs>
+          <rect width={W} height={H} fill="url(#mg)"/>
+          <line x1="0" y1={H*0.45} x2={W} y2={H*0.45} stroke={T.borderMid} strokeWidth="1" opacity="0.3"/>
+          <line x1={W*0.4} y1="0" x2={W*0.4} y2={H} stroke={T.borderMid} strokeWidth="0.8" opacity="0.25"/>
+          {withCoords.map(p => {
+            const cat = getCatMeta(p.category);
+            const x = px(p._lng); const y = py(p._lat);
+            const isSel = selected && selected.id === p.id;
+            return (
+              <g key={p.id} style={{ cursor:"pointer" }} onClick={() => setSelected(p)}>
+                {isSel && <circle cx={x} cy={y} r={24} fill="none" stroke={cat.color} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.7"/>}
+                <circle cx={x} cy={y} r={isSel?16:11} fill={cat.bg} stroke={cat.color} strokeWidth={isSel?2:1.5}/>
+                <text x={x} y={y+1} textAnchor="middle" dominantBaseline="middle" fontSize={isSel?10:8}>{cat.icon}</text>
+              </g>
+            );
+          })}
+        </svg>
+        <div style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", display:"flex", gap:"0.3rem", flexWrap:"wrap" }}>
+          {[...new Set(places.map(p=>p.category))].map(cat => {
+            const m = getCatMeta(cat);
+            return <span key={cat} style={{ background:T.bgCard+"ee", border:"1px solid "+m.color+"55", color:m.color, fontSize:"0.62rem", padding:"2px 6px", borderRadius:"99px", fontWeight:600 }}>{m.icon} {cat}</span>;
+          })}
+        </div>
+      </div>
+      {selected && (
+        <div style={{ padding:"0.9rem 1.25rem", borderTop:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:T.bgDeep }}>
+          <div style={{ display:"flex", gap:"0.65rem", alignItems:"center" }}>
+            <span style={{ fontSize:"1.5rem", background:getCatMeta(selected.category).bg, padding:"0.4rem", borderRadius:"10px" }}>{getCatMeta(selected.category).icon}</span>
+            <div>
+              <div style={{ color:T.text, fontWeight:700, fontSize:"0.9rem", fontFamily:"'Fraunces',serif" }}>{selected.name}</div>
+              <div style={{ display:"flex", alignItems:"center", gap:"0.35rem", marginTop:"0.15rem" }}>
+                <Stars rating={selected.rating}/>
+                <span style={{ color:T.textSoft, fontSize:"0.72rem" }}>{selected.address}</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:"0.4rem" }}>
+            <button onClick={() => onToggleFav(selected.id, selected)} style={{ background:favorites.has(selected.id)?T.goldBg:T.bgDeep, border:"1px solid "+(favorites.has(selected.id)?T.gold:T.border), color:favorites.has(selected.id)?T.gold:T.textSoft, borderRadius:"99px", padding:"0.35rem 0.85rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:600, fontFamily:"inherit" }}>{favorites.has(selected.id)?"♥ Saved":"♡ Save"}</button>
+            <button onClick={() => onSelect(selected)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.35rem 1rem", fontSize:"0.75rem", cursor:"pointer", fontWeight:700, fontFamily:"inherit" }}>Details →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId, kidSaves, onToggleKidFav, user, onOpenAuth }) {
   const [zip, setZip] = useState("");
   const [radius, setRadius] = useState(10);
   const [category, setCategory] = useState(initialCategory || "");
@@ -644,7 +695,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [sortBy, setSortBy] = useState("rating");
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
@@ -669,13 +719,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     border: "1px solid "+(active ? "transparent" : T.border),
     borderRadius:"99px", padding:"0.3rem 0.9rem", fontSize:"0.75rem",
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
-  });
-
-  const sortedResults = results.slice().sort((a,b) => {
-    if(sortBy==="rating") return (b.rating||0)-(a.rating||0);
-    if(sortBy==="az") return a.name < b.name ? -1 : 1;
-    if(sortBy==="za") return a.name > b.name ? -1 : 1;
-    return 0;
   });
 
   return (
@@ -743,24 +786,14 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
 
         {!loading && results.length > 0 && (
           <div>
-            <div style={{ marginBottom:"1rem", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.5rem" }}>
+            <div style={{ marginBottom:"1rem" }}>
               <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
-              <div style={{ display:"flex", alignItems:"center", gap:"0.5rem" }}>
-                <span style={{ color:T.textMuted, fontSize:"0.75rem", fontWeight:600 }}>Sort:</span>
-                <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-                  style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
-                  <option value="rating">⭐ Highest Rated</option>
-                  <option value="az">🔤 A to Z</option>
-                  <option value="za">🔤 Z to A</option>
-                  <option value="distance">📍 By Distance</option>
-                </select>
-              </div>
             </div>
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
-                {sortedResults.map(p => {
+                {results.map(p => {
                   const cat = getCatMeta(p.category);
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
@@ -786,9 +819,9 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               </div>
             ) : (
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
-                {sortedResults.map(p => (
+                {results.map(p => (
                   <ActivityCard key={p.id} place={p} favorites={favorites}
-                    onToggleFav={onToggleFav} onSelect={setSelectedPlace} onAddToCalendar={p2 => { onAddToCalendarPrompt && onAddToCalendarPrompt(p2); }}/>
+                    onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
                 ))}
               </div>
             )}
@@ -834,10 +867,6 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
         <button onClick={() => setTab("all")}
           style={{ background: tab==="all" ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: tab==="all" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="all"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
           ♥ All Saved ({favPlaces.length})
-        </button>
-        <button onClick={() => setTab("calendar")}
-          style={{ background: tab==="calendar" ? "#16a34a" : T.bgDeep, color: tab==="calendar" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="calendar"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-          📅 Calendar
         </button>
         {kids.map(kid => {
           const count = (kidSaves[kid.id]||new Map()).size;
@@ -1102,99 +1131,37 @@ function BusinessesPage() {
 
 function AboutPage() {
   return (
-    <div style={{ background:T.bg, minHeight:"80vh" }}>
-      {/* Hero */}
-      <div style={{ background:"linear-gradient(135deg,#eff6ff,#f5f3ff)", padding:"3.5rem 1.5rem", textAlign:"center", borderBottom:"1px solid "+T.border }}>
-        <div style={{ width:"160px", height:"160px", borderRadius:"50%", overflow:"hidden", margin:"0 auto 1.25rem", border:"4px solid #fff", boxShadow:"0 4px 20px rgba(0,0,0,0.12)" }}>
-          <img src="https://raw.githubusercontent.com/kmfields28/The-sign-up-spot/main/public/IMG_7294.jpeg" alt="The Fields Family" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
-        </div>
-        <h1 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi, I'm Kristen</h1>
-        <p style={{ color:T.textSoft, fontSize:"1rem", maxWidth:"520px", margin:"0 auto", lineHeight:1.7 }}>
-          Mom of two, wife, dog mom, and the person who finally got tired of endless Google searches for kids' activities.
+    <div style={{ padding:"1.5rem", maxWidth:"720px", margin:"0 auto", background:T.bg, minHeight:"80vh" }}>
+      <div style={{ textAlign:"center", padding:"2rem 0 2.5rem" }}>
+        <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>📋</div>
+        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"2rem", marginBottom:"0.75rem" }}>
+          About The Sign Up Spot
+        </h2>
+        <p style={{ color:T.accent, fontSize:"1rem", fontStyle:"italic", fontFamily:"'Fraunces',serif" }}>
+          Connecting families to amazing experiences
         </p>
       </div>
-
-      {/* Story */}
-      <div style={{ maxWidth:"680px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
-        <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>Why I Built This</h2>
-          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            Every parent wants their kids to find their thing — the sport they love, the art class that lights them up, the team that becomes their people. But finding those opportunities? That's a whole other job.
-          </p>
-          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            For me it was endless Google searches, texts to the mom group, digging through Facebook pages, asking around at school pickup. By the time I'd tracked down the right program, half the session was already full. And don't even get me started on summer camps — the good ones fill up in January while you're still recovering from the holidays.
-          </p>
-          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            And then there's the registration chaos. Soccer season opens in February. Dance registration is in April. That STEM camp you heard about? It filled up three months ago and you didn't even know sign-ups had started. Every activity runs on its own schedule with its own deadline — and there's no central place to know when it's time to sign up.
-          </p>
-          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            Moms and dads are already managing everything at once. The Sign Up Spot takes one piece of that off your plate — so you can spend less time searching and more time cheering from the sidelines.
-          </p>
-          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85 }}>
-            When you have multiple kids in different activities, just knowing what the week looks like is its own challenge. We built the family calendar so you can see every child's schedule in one place, color-coded by kid, and actually know if it's manageable before you're already in it. Because our kids deserve every chance to find their passion, build strong friendships, and try something new — and you deserve to find it without the chaos.
-          </p>
-        </div>
-
-        {/* Family card */}
-        <div style={{ background:"linear-gradient(135deg,#eff6ff,#faf5ff)", border:"1px solid #c7d2fe", borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem" }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem" }}>Our Family</h2>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1rem" }}>
-            {[
-              { emoji:"👩", name:"Kristen", desc:"Founder & mom" },
-              { emoji:"👨", name:"Dan", desc:"Husband & co-pilot" },
-              { emoji:"👧", name:"Isabella", desc:"Age 6 · the bold one" },
-              { emoji:"🧒", name:"Lilia", desc:"Age 3 · the funny one" },
-              { emoji:"🐾", name:"Annie & Chase", desc:"The dogs · pure chaos" },
-            ].map(m => (
-              <div key={m.name} style={{ background:"rgba(255,255,255,0.7)", borderRadius:"14px", padding:"1rem", textAlign:"center", border:"1px solid rgba(199,210,254,0.5)" }}>
-                <div style={{ fontSize:"2rem", marginBottom:"0.35rem" }}>{m.emoji}</div>
-                <div style={{ color:T.text, fontWeight:700, fontSize:"0.88rem" }}>{m.name}</div>
-                <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>{m.desc}</div>
-              </div>
-            ))}
+      <div style={{ display:"flex", flexDirection:"column", gap:"1.25rem" }}>
+        {[
+          { icon:"💡", title:"Our Mission", text:"The Sign Up Spot was created by parents, for parents. We built this platform to bring local kids activities together in one trusted place." },
+          { icon:"🤖", title:"AI-Powered Search", text:"Our search uses AI to find real local businesses and programs near any ZIP code — sports academies, arts classes, music schools, STEM camps, outdoor adventures, theater programs, and tutoring centers." },
+          { icon:"🤝", title:"What We Do", text:"We help families discover, compare, and connect with local activity providers. Every result includes descriptions, ratings, contact info, and direct links to book or learn more." },
+          { icon:"🔒", title:"Trust & Safety", text:"We are committed to showing you real, accurate information. We never accept payment to alter rankings or fabricate listings." },
+          { icon:"📬", title:"Get in Touch", text:"Questions or want to feature your program? Reach us at hello@thesignupspot.com or follow us @thesignupspot." },
+        ].map(s => (
+          <div key={s.title} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.3rem", display:"flex", gap:"1rem", alignItems:"flex-start", boxShadow:"0 2px 8px "+T.shadow }}>
+            <span style={{ fontSize:"1.75rem", flexShrink:0 }}>{s.icon}</span>
+            <div>
+              <h3 style={{ color:T.text, fontFamily:"'Fraunces',serif", fontSize:"1.05rem", marginBottom:"0.45rem" }}>{s.title}</h3>
+              <p style={{ color:T.textSoft, fontSize:"0.84rem", lineHeight:1.7 }}>{s.text}</p>
+            </div>
           </div>
-          <p style={{ color:T.textSoft, fontSize:"0.82rem", marginTop:"1rem", textAlign:"center" }}>📍 Marvin, NC</p>
-        </div>
-
-        {/* Mission */}
-        <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We're Building</h2>
-          <div style={{ display:"flex", flexDirection:"column", gap:"0.85rem" }}>
-            {[
-              { icon:"🔍", text:"One place to find every kids' activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },
-              { icon:"⭐", text:"Real reviews from real parents you can actually trust" },
-              { icon:"📅", text:"A family calendar so you can see every child's schedule in one view — color-coded by kid" },
-              { icon:"📲", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" },
-            ].map((item, i) => (
-              <div key={i} style={{ display:"flex", gap:"0.85rem", alignItems:"flex-start" }}>
-                <span style={{ fontSize:"1.4rem", flexShrink:0 }}>{item.icon}</span>
-                <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.7, margin:0 }}>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Contact */}
-        <div style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", borderRadius:"20px", padding:"2rem", textAlign:"center", color:"#fff" }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", fontSize:"1.3rem", marginBottom:"0.5rem" }}>Get in Touch</h2>
-          <p style={{ fontSize:"0.88rem", opacity:0.9, marginBottom:"1.25rem", lineHeight:1.6 }}>
-            Have a business you'd like to list? A feature idea? Just want to say hi? I'd love to hear from you.
-          </p>
-          <a href="mailto:LiliBellebiz@gmail.com"
-            style={{ background:"#fff", color:T.accent, borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block", marginBottom:"0.75rem" }}>
-            ✉️ LiliBellebiz@gmail.com
-          </a>
-          <br/>
-          <a href="https://instagram.com/thesignupspot" target="_blank" rel="noreferrer"
-            style={{ background:"rgba(255,255,255,0.2)", color:"#fff", border:"2px solid rgba(255,255,255,0.6)", borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block", marginTop:"0.5rem" }}>
-            📸 @thesignupspot
-          </a>
-        </div>
+        ))}
       </div>
+      <div style={{ marginTop:"1.75rem" }}><NewsletterBanner/></div>
     </div>
   );
 }
-
 
 // ── Hamburger Menu ────────────────────────────────────────────────────────────
 // ── Kid Profile Colors ────────────────────────────────────────────────────────
@@ -1479,7 +1446,10 @@ function CalendarPage({ kids, kidSaves, events, setEvents }) {
         </div>
         <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
           <button onClick={exportICS} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>📅 Export .ics</button>
-          <button onClick={() => { if(events.length>0) exportGoogleCalendar(events[0]); }} style={{ background:"#4285f4", border:"none", color:"#fff", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Google Cal</button>
+          <button onClick={() => { if(events.length>0) exportGoogleCalendar(events[0]); }} style={{ background:"#fff", border:"1.5px solid #e8e8e8", color:"#444", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:"0.4rem" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Google Cal
+            </button>
           <button onClick={() => openAdd(1,9)} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", border:"none", color:"#fff", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>+ Add Activity</button>
         </div>
       </div>
@@ -1613,7 +1583,7 @@ function AdminPage() {
   const [approved, setApproved] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState("pending");
-  const ADMIN_PASSWORD = "Spot2024!";
+  const ADMIN_PASSWORD = "signupspot2024";
 
   async function loadListings() {
     setLoading(true);
@@ -1684,6 +1654,7 @@ function AdminPage() {
       )}
       <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
         {listings.map(function(biz) {
+          var cat = getCatMeta(biz.category);
           return (
             <div key={biz.id} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.25rem", boxShadow:"0 2px 8px "+T.shadow }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
@@ -1821,12 +1792,7 @@ export default function TheSignUpSpot() {
     try { localStorage.setItem("sss_events", JSON.stringify(updated)); } catch(e) {}
   }
 
-  function navigate(pg, props) { setPage(pg); setPageProps(props || {}); window.scrollTo(0,0); }
-
-  // Secret admin access via ?admin in URL
-  if (typeof window !== "undefined" && window.location.search.includes("admin") && page === "home") {
-    setTimeout(() => setPage("admin"), 100);
-  }
+  function navigate(pg, props) { setPage(pg); setPageProps(props || {}); }
   function toggleFav(id, place) {
     setFavorites(f => {
       const n = new Map(f);
@@ -1861,6 +1827,9 @@ export default function TheSignUpSpot() {
     setKids(prev => prev.map(k => k.id === id ? {...k, name} : k));
   }
 
+  const activeKidMap = kidSaves[activeKidId] || new Map();
+  const activeKidFavSet = new Set(activeKidMap.keys());
+  const activeKidFavPlaces = [...activeKidMap.values()];
   const favSet = new Set(favorites.keys());
   const favPlaces = [...favorites.values()];
 
@@ -1948,7 +1917,7 @@ export default function TheSignUpSpot() {
             </div>
           </div>
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
-            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"]].map(([l,p]) => (
+            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"],["Admin","admin"]].map(([l,p]) => (
               <button key={p} onClick={() => navigate(p)}
                 style={{ background:"none", border:"none", color:T.textSoft, cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
             ))}
