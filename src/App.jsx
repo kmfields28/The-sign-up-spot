@@ -1084,37 +1084,86 @@ function BusinessesPage() {
 
 function AboutPage() {
   return (
-    <div style={{ padding:"1.5rem", maxWidth:"720px", margin:"0 auto", background:T.bg, minHeight:"80vh" }}>
-      <div style={{ textAlign:"center", padding:"2rem 0 2.5rem" }}>
-        <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>📋</div>
-        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"2rem", marginBottom:"0.75rem" }}>
-          About The Sign Up Spot
-        </h2>
-        <p style={{ color:T.accent, fontSize:"1rem", fontStyle:"italic", fontFamily:"'Fraunces',serif" }}>
-          Connecting families to amazing experiences
+    <div style={{ background:T.bg, minHeight:"80vh" }}>
+      {/* Hero */}
+      <div style={{ background:"linear-gradient(135deg,#eff6ff,#f5f3ff)", padding:"3.5rem 1.5rem", textAlign:"center", borderBottom:"1px solid "+T.border }}>
+        <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>👋</div>
+        <h1 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi, I'm Kristen</h1>
+        <p style={{ color:T.textSoft, fontSize:"1rem", maxWidth:"520px", margin:"0 auto", lineHeight:1.7 }}>
+          Mom of two, wife, dog mom, and the person who finally got tired of endless Google searches for kids' activities.
         </p>
       </div>
-      <div style={{ display:"flex", flexDirection:"column", gap:"1.25rem" }}>
-        {[
-          { icon:"💡", title:"Our Mission", text:"The Sign Up Spot was created by parents, for parents. We built this platform to bring local kids activities together in one trusted place." },
-          { icon:"🤖", title:"AI-Powered Search", text:"Our search uses AI to find real local businesses and programs near any ZIP code — sports academies, arts classes, music schools, STEM camps, outdoor adventures, theater programs, and tutoring centers." },
-          { icon:"🤝", title:"What We Do", text:"We help families discover, compare, and connect with local activity providers. Every result includes descriptions, ratings, contact info, and direct links to book or learn more." },
-          { icon:"🔒", title:"Trust & Safety", text:"We are committed to showing you real, accurate information. We never accept payment to alter rankings or fabricate listings." },
-          { icon:"📬", title:"Get in Touch", text:"Questions or want to feature your program? Reach us at hello@thesignupspot.com or follow us @thesignupspot." },
-        ].map(s => (
-          <div key={s.title} style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"16px", padding:"1.3rem", display:"flex", gap:"1rem", alignItems:"flex-start", boxShadow:"0 2px 8px "+T.shadow }}>
-            <span style={{ fontSize:"1.75rem", flexShrink:0 }}>{s.icon}</span>
-            <div>
-              <h3 style={{ color:T.text, fontFamily:"'Fraunces',serif", fontSize:"1.05rem", marginBottom:"0.45rem" }}>{s.title}</h3>
-              <p style={{ color:T.textSoft, fontSize:"0.84rem", lineHeight:1.7 }}>{s.text}</p>
-            </div>
+
+      {/* Story */}
+      <div style={{ maxWidth:"680px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
+        <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>Why I Built This</h2>
+          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
+            I was exhausted. Every time one of my daughters needed a new activity, it was the same routine — endless Google searches, texts to the mom group, digging through Facebook pages, asking around at school pickup. There had to be a better way.
+          </p>
+          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
+            Moms are managing everything all at once. I wanted to make at least <em>one part</em> of that easier. One place to find all the activities, read reviews from real parents who actually went, and see everything your family has going on in a single weekly view.
+          </p>
+          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85 }}>
+            When you have multiple kids in different activities, the mental load of keeping it all straight is real. The Sign Up Spot is built for that — so you can look at the week ahead and actually know if it's manageable before you're already in it.
+          </p>
+        </div>
+
+        {/* Family card */}
+        <div style={{ background:"linear-gradient(135deg,#eff6ff,#faf5ff)", border:"1px solid #c7d2fe", borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem" }}>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem" }}>Our Family</h2>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1rem" }}>
+            {[
+              { emoji:"👩", name:"Kristen", desc:"Founder & mom" },
+              { emoji:"👨", name:"Dan", desc:"Husband & co-pilot" },
+              { emoji:"👧", name:"Isabella", desc:"Age 6 · the bold one" },
+              { emoji:"🧒", name:"Lilia", desc:"Age 3 · the funny one" },
+              { emoji:"🐾", name:"Annie & Chase", desc:"The dogs · pure chaos" },
+            ].map(m => (
+              <div key={m.name} style={{ background:"rgba(255,255,255,0.7)", borderRadius:"14px", padding:"1rem", textAlign:"center", border:"1px solid rgba(199,210,254,0.5)" }}>
+                <div style={{ fontSize:"2rem", marginBottom:"0.35rem" }}>{m.emoji}</div>
+                <div style={{ color:T.text, fontWeight:700, fontSize:"0.88rem" }}>{m.name}</div>
+                <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>{m.desc}</div>
+              </div>
+            ))}
           </div>
-        ))}
+          <p style={{ color:T.textSoft, fontSize:"0.82rem", marginTop:"1rem", textAlign:"center" }}>📍 Marvin, NC</p>
+        </div>
+
+        {/* Mission */}
+        <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
+          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We're Building</h2>
+          <div style={{ display:"flex", flexDirection:"column", gap:"0.85rem" }}>
+            {[
+              { icon:"🔍", text:"One place to find every kids' activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },
+              { icon:"⭐", text:"Real reviews from real parents you can actually trust" },
+              { icon:"📅", text:"A family calendar so you can see every child's schedule in one view — color-coded by kid" },
+              { icon:"📲", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" },
+            ].map((item, i) => (
+              <div key={i} style={{ display:"flex", gap:"0.85rem", alignItems:"flex-start" }}>
+                <span style={{ fontSize:"1.4rem", flexShrink:0 }}>{item.icon}</span>
+                <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.7, margin:0 }}>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", borderRadius:"20px", padding:"2rem", textAlign:"center", color:"#fff" }}>
+          <h2 style={{ fontFamily:"'Fraunces',serif", fontSize:"1.3rem", marginBottom:"0.5rem" }}>Get in Touch</h2>
+          <p style={{ fontSize:"0.88rem", opacity:0.9, marginBottom:"1.25rem", lineHeight:1.6 }}>
+            Have a business you'd like to list? A feature idea? Just want to say hi? I'd love to hear from you.
+          </p>
+          <a href="mailto:kristen@thesignupspot.com"
+            style={{ background:"#fff", color:T.accent, borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block" }}>
+            kristen@thesignupspot.com
+          </a>
+        </div>
       </div>
-      <div style={{ marginTop:"1.75rem" }}><NewsletterBanner/></div>
     </div>
   );
 }
+
 
 // ── Hamburger Menu ────────────────────────────────────────────────────────────
 // ── Kid Profile Colors ────────────────────────────────────────────────────────
