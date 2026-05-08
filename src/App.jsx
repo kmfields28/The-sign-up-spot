@@ -753,7 +753,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
             </div>
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
-                {sr.map(p => {
+                {window._sr.map(p => {
                   const cat = getCatMeta(p.category);
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
@@ -779,7 +779,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               </div>
             ) : (
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
-                {sr.map(p => (
+                {window._sr.map(p => (
                   <ActivityCard key={p.id} place={p} favorites={favorites}
                     onToggleFav={onToggleFav} onSelect={setSelectedPlace} onAddToCalendar={p2 => { onAddToCalendarPrompt && onAddToCalendarPrompt(p2); }}/>
                 ))}
