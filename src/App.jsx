@@ -635,6 +635,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [sortBy, setSortBy] = useState("rating");
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
@@ -659,6 +660,13 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     border: "1px solid "+(active ? "transparent" : T.border),
     borderRadius:"99px", padding:"0.3rem 0.9rem", fontSize:"0.75rem",
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
+  });
+
+  const sortedResults = results.slice().sort((a,b) => {
+    if(sortBy==="rating") return (b.rating||0)-(a.rating||0);
+    if(sortBy==="az") return a.name < b.name ? -1 : 1;
+    if(sortBy==="za") return a.name > b.name ? -1 : 1;
+    return 0;
   });
 
   return (
@@ -726,14 +734,19 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
 
         {!loading && results.length > 0 && (
           <div>
-            <div style={{ marginBottom:"1rem" }}>
+            <div style={{ marginBottom:"1rem", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.5rem" }}>
               <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+                <option value="rating">⭐ Highest Rated</option>
+                <option value="az">🔤 A to Z</option>
+                <option value="za">🔤 Z to A</option>
+              </select>
             </div>
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
-                {results.map(p => {
+                {sortedResults.map(p => {
                   const cat = getCatMeta(p.category);
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
@@ -759,7 +772,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               </div>
             ) : (
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
-                {results.map(p => (
+                {sortedResults.map(p => (
                   <ActivityCard key={p.id} place={p} favorites={favorites}
                     onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
                 ))}
