@@ -245,7 +245,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
         <div style={{ background:cat.bg, padding:"2rem 1.5rem 1.25rem", borderRadius:"22px 22px 0 0", textAlign:"center" }}>
           <span style={{ fontSize:"3rem" }}>{cat.icon}</span>
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem", marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
-          <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 10px", borderRadius:"99px", border:"1px solid "+cat.color+"44" }}>{cat.icon} {place.category}</span>
+          <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 10px", borderRadius:"99px", border:"1px solid "+cat.color+"44" }}>{place.category}</span>
         </div>
 
         <button onClick={onClose} style={{ position:"absolute", top:"0.9rem", right:"0.9rem", background:T.bgCard, border:"1px solid "+T.border, color:T.textSoft, width:"32px", height:"32px", borderRadius:"50%", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
@@ -315,7 +315,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
           <div style={{ display:"flex", gap:"0.5rem", marginBottom:"1.5rem" }}>
             <button onClick={() => onToggleFav(place.id, place)}
               style={{ background: isFav ? T.goldBg : T.bgDeep, border:"1px solid "+(isFav ? T.gold : T.border), color: isFav ? T.gold : T.textSoft, borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-              {isFav ? "♥ Saved" : "♡ Save"}
+              {isFav ? "Saved" : "Save"}
             </button>
             {place.website ? (
               <a href={place.website} target="_blank" rel="noreferrer"
@@ -439,7 +439,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
         </div>
 
         <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>
-          {cat.icon} {place.category}{place.ageRange ? " · Ages "+place.ageRange : ""}
+          {place.category}{place.ageRange ? " · Ages "+place.ageRange : ""}
         </div>
 
         {place.address && (
@@ -463,7 +463,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               {place.website && (
                 <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.7rem", fontSize:"0.7rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
               )}
-              <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>📅</button>
+              <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}></button>
         </div>
       </div>
     </div>
@@ -703,7 +703,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
           <button onClick={() => setCategory("")} style={selBtn(!category)}>All</button>
           {CATEGORIES.map(c => (
             <button key={c.label} onClick={() => setCategory(c.label)} style={selBtn(category === c.label)}>
-              {c.icon} {c.label}
+              {c.label}
             </button>
           ))}
         </div>
@@ -739,15 +739,15 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
               <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
-                <option value="rating">⭐ Highest Rated</option>
-                <option value="az">🔤 A to Z</option>
-                <option value="za">🔤 Z to A</option>
+                <option value="rating">Highest Rated</option>
+                <option value="az">A to Z</option>
+                <option value="za">Z to A</option>
               </select>
             </div>
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
                 {sortedResults.map(p => {
-                  const cat = getCatMeta(p.category);
+                  const cat = getCatMeta(p.category); // eslint-disable-line no-unused-vars
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
                       style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"12px", padding:"0.9rem 1.1rem", display:"flex", gap:"1rem", alignItems:"center", flexWrap:"wrap", cursor:"pointer", boxShadow:"0 2px 8px "+T.shadow }}
@@ -773,7 +773,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
             ) : (
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
                 {sortedResults.map(p => (
-                  <ActivityCard key={p.id} place={p} favorites={favorites}
+                  <ActivityCard onAddToCalendar={p2 => onAddToCalendarPrompt && onAddToCalendarPrompt(p2)} key={p.id} place={p} favorites={favorites}
                     onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
                 ))}
               </div>
@@ -819,11 +819,11 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
       <div style={{ display:"flex", gap:"0.4rem", marginBottom:"1.25rem", flexWrap:"wrap" }}>
         <button onClick={() => setTab("all")}
           style={{ background: tab==="all" ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: tab==="all" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="all"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-          ♥ All Saved ({favPlaces.length})
+          All Saved ({favPlaces.length})
         </button>
         <button onClick={() => setTab("calendar")}
           style={{ background: tab==="calendar" ? "#16a34a" : T.bgDeep, color: tab==="calendar" ? "#fff" : T.textSoft, border:"1px solid "+(tab==="calendar"?"transparent":T.border), borderRadius:"99px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-          📅 Calendar
+          Calendar
         </button>
         {kids.map(kid => {
           const count = (kidSaves[kid.id]||new Map()).size;
@@ -845,7 +845,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           <CalendarPage kids={kids} kidSaves={kidSaves} events={calendarEvents || []} setEvents={onAddCalendarEvent}/>
         ) : (
           <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
-            <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>📅</div>
+            <div style={{ fontSize:"3rem", marginBottom:"1rem" }}></div>
             <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Your Family Calendar</h3>
             <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>
               Create a free account to access your weekly calendar, track each child's schedule, and export to Google Calendar or Apple Calendar.
@@ -926,7 +926,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
       <div style={{ padding:"2rem 1.5rem",         borderTop:"1px solid "+T.border, borderBottom:"1px solid "+T.border, background:"#f8f8f8"}}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1.5rem", maxWidth:"660px", margin:"0 auto", textAlign:"center" }}>
-          {[{n:"✦",l:"AI Powered Search",c:"#7a5c48"},{n:"9",l:"Categories",c:"#6a6058"},{n:"Any ZIP",l:"Nationwide",c:"#587068"},{n:"Free",l:"Always",c:"#8a6a40"}].map(s => (
+          {[{n:"",l:"AI Powered Search",c:"#7a5c48"},{n:"9",l:"Categories",c:"#6a6058"},{n:"Any ZIP",l:"Nationwide",c:"#587068"},{n:"Free",l:"Always",c:"#8a6a40"}].map(s => (
             <div key={s.l}>
               <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.75rem", fontWeight:900, color:s.c }}>{s.n}</div>
               <div style={{ color:T.textSoft, fontSize:"0.8rem", marginTop:"0.2rem" }}>{s.l}</div>
@@ -972,7 +972,7 @@ function ListYourBusinessForm() {
             <div><label style={lbl}>Category</label>
               <select value={form.category} onChange={e=>set("category",e.target.value)} style={{...inp}}>
                 <option value="">Select category…</option>
-                {CATEGORIES.map(c => <option key={c.label} value={c.label}>{c.icon} {c.label}</option>)}
+                {CATEGORIES.map(c => <option key={c.label} value={c.label}>{c.label}</option>)}
               </select>
             </div>
             <div><label style={lbl}>Contact Email *</label><input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="you@yourbusiness.com" style={inp}/></div>
@@ -1121,7 +1121,7 @@ function AboutPage() {
         <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We Are Building</h2>
           <div style={{ display:"flex", flexDirection:"column", gap:"0.85rem" }}>
-            {[{ icon:"🔍", text:"One place to find every kids activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },{ icon:"⭐", text:"Real reviews from real parents you can actually trust" },{ icon:"📅", text:"A family calendar so you can see every child schedule in one view — color-coded by kid" },{ icon:"📲", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" }].map((item, i) => (
+            {[{ icon:"🔍", text:"One place to find every kids activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },{ icon:"⭐", text:"Real reviews from real parents you can actually trust" },{ icon:"", text:"A family calendar so you can see every child schedule in one view — color-coded by kid" },{ icon:"📲", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" }].map((item, i) => (
               <div key={i} style={{ display:"flex", gap:"0.85rem", alignItems:"flex-start" }}>
                 <span style={{ fontSize:"1.4rem", flexShrink:0 }}>{item.icon}</span>
                 <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.7, margin:0 }}>{item.text}</p>
@@ -1249,7 +1249,7 @@ function AddToCalendarModal({ place, kids, user, onOpenAuth, onClose, onSaveEven
   if (!user) return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"2rem", maxWidth:"380px", width:"100%", textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
-        <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>📅</div>
+        <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}></div>
         <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Add to Your Calendar</h3>
         <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>Create a free account to add <strong>{place.name}</strong> to your family calendar and track each child's schedule.</p>
         <button onClick={() => { onClose(); onOpenAuth(); }}
@@ -1430,7 +1430,7 @@ function CalendarPage({ kids, kidSaves, events, setEvents }) {
           <p style={{ color:T.textSoft, fontSize:"0.82rem" }}>This week · tap a time slot to add an activity</p>
         </div>
         <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
-          <button onClick={exportICS} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>📅 Export .ics</button>
+          <button onClick={exportICS} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}> Export .ics</button>
           <button onClick={() => { if(events.length>0) exportGoogleCalendar(events[0]); }} style={{ background:"#fff", border:"1.5px solid #e8e8e8", color:"#444", borderRadius:"8px", padding:"0.4rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:"0.4rem" }}>
               <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
               Google Cal
@@ -1648,7 +1648,7 @@ function AdminPage() {
                     {biz.featured_interest && <span style={{ background:T.goldBg, color:T.gold, fontSize:"0.65rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>Featured Interest</span>}
                   </div>
                   <div style={{ display:"flex", gap:"0.35rem", flexWrap:"wrap", marginBottom:"0.5rem" }}>
-                    {(biz.categories || [biz.category]).filter(Boolean).map(function(c) { var cm=getCatMeta(c); return <span key={c} style={{ background:cm.bg, color:cm.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>{cm.icon} {c}</span>; })}
+                    {(biz.categories || [biz.category]).filter(Boolean).map(function(c) { var cm=getCatMeta(c); return <span key={c} style={{ background:cm.bg, color:cm.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>{c}</span>; })}
                     {biz.age_min != null && biz.age_max != null && <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.68rem", padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>Ages {biz.age_min}-{biz.age_max}</span>}
                   </div>
                   {biz.description && <p style={{ color:T.textSoft, fontSize:"0.8rem", lineHeight:1.55, marginBottom:"0.5rem" }}>{biz.description.slice(0,150)}</p>}
@@ -1675,11 +1675,11 @@ function AdminPage() {
 
 function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth, user, kids, activeKidId, setActiveKidId, onOpenKidsManager }) {
   const navItems = [
-    { page:"home",       icon:"🏠", label:"Home" },
-    { page:"browse",     icon:"🔍", label:"Browse Activities" },
-    { page:"businesses", icon:"🏢", label:"Local Businesses" },
-    { page:"favorites",  icon:"♥",  label:"Saved ("+favCount+")" },
-    { page:"about",      icon:"ℹ️", label:"About Us" },
+    { page:"home",       icon:"", label:"Home" },
+    { page:"browse",     icon:"", label:"Browse Activities" },
+    { page:"businesses", icon:"", label:"Local Businesses" },
+    { page:"favorites",  icon:"", label:"Saved ("+favCount+")" },
+    { page:"about",      icon:"", label:"About Us" },
     { page:"admin",      icon:"🔐", label:"Admin" },
   ];
   return (
