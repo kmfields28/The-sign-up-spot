@@ -448,7 +448,6 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
           </div>
         )}
 
-        <p style={{ color:T.textSoft, fontSize:"0.78rem", lineHeight:1.5, marginBottom:"0.65rem", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>{place.description}</p>
 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
