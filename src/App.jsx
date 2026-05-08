@@ -1154,9 +1154,14 @@ function AboutPage() {
           <p style={{ fontSize:"0.88rem", opacity:0.9, marginBottom:"1.25rem", lineHeight:1.6 }}>
             Have a business you'd like to list? A feature idea? Just want to say hi? I'd love to hear from you.
           </p>
-          <a href="mailto:kristen@thesignupspot.com"
-            style={{ background:"#fff", color:T.accent, borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block" }}>
-            kristen@thesignupspot.com
+          <a href="mailto:LiliBellebiz@gmail.com"
+            style={{ background:"#fff", color:T.accent, borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block", marginBottom:"0.75rem" }}>
+            ✉️ LiliBellebiz@gmail.com
+          </a>
+          <br/>
+          <a href="https://instagram.com/thesignupspot" target="_blank" rel="noreferrer"
+            style={{ background:"rgba(255,255,255,0.2)", color:"#fff", border:"2px solid rgba(255,255,255,0.6)", borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-block", marginTop:"0.5rem" }}>
+            📸 @thesignupspot
           </a>
         </div>
       </div>
