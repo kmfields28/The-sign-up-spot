@@ -1533,7 +1533,7 @@ function AdminPage() {
   const [approved, setApproved] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState("pending");
-  const ADMIN_PASSWORD = "signupspot2024";
+  const ADMIN_PASSWORD = "Spot2024!";
 
   async function loadListings() {
     setLoading(true);
@@ -1863,7 +1863,7 @@ export default function TheSignUpSpot() {
             </div>
           </div>
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
-            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"],["Admin","admin"]].map(([l,p]) => (
+            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"]].map(([l,p]) => (
               <button key={p} onClick={() => navigate(p)}
                 style={{ background:"none", border:"none", color:T.textSoft, cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
             ))}
