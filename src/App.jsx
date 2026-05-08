@@ -154,6 +154,27 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
 
 
 // ── Shared UI ────────────────────────────────────────────────────────────────
+const SUPABASE_URL = "https://owehkzrhtwyjgccjpptq.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93ZWhrenJodHd5amdjY2pwcHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODMwNjgsImV4cCI6MjA5MzY1OTA2OH0.OAOwSAReUlaG7MOkGvx0bhRO0EjNfRzmkEkuINuZinU";
+
+async function sbGet(path) {
+  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
+    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
+  });
+  if (!res.ok) throw new Error("Database error " + res.status);
+  return res.json();
+}
+
+async function sbPost(path, body) { // eslint-disable-line no-unused-vars
+  const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
+    method: "POST",
+    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error("Database error " + res.status);
+  return res.status === 204 ? null : res.json();
+}
+
 function Stars({ rating, size }) {
   return (
     <span style={{ fontSize: size === "lg" ? "1.2rem" : "0.88rem", letterSpacing: "1px" }}>
@@ -376,7 +397,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
 }
 
 // ── Activity Card ─────────────────────────────────────────────────────────────
-function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav }) {
+function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav, onAddToCalendar }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   return (
