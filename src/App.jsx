@@ -671,6 +671,13 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
   });
 
+  const sortedResults = results.slice().sort((a,b) => {
+    if(sortBy==="rating") return (b.rating||0)-(a.rating||0);
+    if(sortBy==="az") return a.name < b.name ? -1 : 1;
+    if(sortBy==="za") return a.name > b.name ? -1 : 1;
+    return 0;
+  });
+
   return (
     <div>
       {/* Search bar */}
@@ -753,7 +760,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
             </div>
             {viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
-                {window._sr.map(p => {
+                {sortedResults.map(p => {
                   const cat = getCatMeta(p.category);
                   return (
                     <div key={p.id} onClick={() => setSelectedPlace(p)}
@@ -779,7 +786,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               </div>
             ) : (
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
-                {window._sr.map(p => (
+                {sortedResults.map(p => (
                   <ActivityCard key={p.id} place={p} favorites={favorites}
                     onToggleFav={onToggleFav} onSelect={setSelectedPlace} onAddToCalendar={p2 => { onAddToCalendarPrompt && onAddToCalendarPrompt(p2); }}/>
                 ))}
