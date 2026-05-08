@@ -1741,7 +1741,12 @@ export default function TheSignUpSpot() {
     try { localStorage.setItem("sss_events", JSON.stringify(updated)); } catch(e) {}
   }
 
-  function navigate(pg, props) { setPage(pg); setPageProps(props || {}); }
+  function navigate(pg, props) { setPage(pg); setPageProps(props || {}); window.scrollTo(0,0); }
+
+  // Secret admin access via ?admin in URL
+  if (typeof window !== "undefined" && window.location.search.includes("admin") && page === "home") {
+    setTimeout(() => setPage("admin"), 100);
+  }
   function toggleFav(id, place) {
     setFavorites(f => {
       const n = new Map(f);
