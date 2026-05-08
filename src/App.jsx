@@ -111,7 +111,6 @@ function placeToActivity(place, category) {
 
 async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   const location = await geocodeZip(zip);
-  const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
   let searchPairs = [];
   if (keyword && keyword.trim()) {
     // Direct keyword search — search exactly what user typed across all/selected categories
