@@ -1099,13 +1099,19 @@ function AboutPage() {
         <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>Why I Built This</h2>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            I was exhausted. Every time one of my daughters needed a new activity, it was the same routine — endless Google searches, texts to the mom group, digging through Facebook pages, asking around at school pickup. There had to be a better way.
+            Every parent wants their kids to find their thing — the sport they love, the art class that lights them up, the team that becomes their people. But finding those opportunities? That's a whole other job.
           </p>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
-            Moms are managing everything all at once. I wanted to make at least <em>one part</em> of that easier. One place to find all the activities, read reviews from real parents who actually went, and see everything your family has going on in a single weekly view.
+            For me it was endless Google searches, texts to the mom group, digging through Facebook pages, asking around at school pickup. By the time I'd tracked down the right program, half the session was already full. And don't even get me started on summer camps — the good ones fill up in January while you're still recovering from the holidays.
+          </p>
+          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
+            And then there's the registration chaos. Soccer season opens in February. Dance registration is in April. That STEM camp you heard about? It filled up three months ago and you didn't even know sign-ups had started. Every activity runs on its own schedule with its own deadline — and there's no central place to know when it's time to sign up.
+          </p>
+          <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>
+            Moms and dads are already managing everything at once. The Sign Up Spot takes one piece of that off your plate — so you can spend less time searching and more time cheering from the sidelines.
           </p>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85 }}>
-            When you have multiple kids in different activities, the mental load of keeping it all straight is real. The Sign Up Spot is built for that — so you can look at the week ahead and actually know if it's manageable before you're already in it.
+            When you have multiple kids in different activities, just knowing what the week looks like is its own challenge. We built the family calendar so you can see every child's schedule in one place, color-coded by kid, and actually know if it's manageable before you're already in it. Because our kids deserve every chance to find their passion, build strong friendships, and try something new — and you deserve to find it without the chaos.
           </p>
         </div>
 
