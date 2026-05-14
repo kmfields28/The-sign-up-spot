@@ -58,8 +58,8 @@ const CATEGORY_KEYWORDS = {
   "Outdoors":   ["summer camp kids","outdoor camp","nature camp children","adventure camp kids"],
   "Theater":    ["theater camp kids","drama class children","acting class kids","musical theater kids"],
   "Tutoring":   ["tutoring center","learning center kids","academic enrichment"],
-  "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup"],
-  "Summer Camps": ["summer camp kids","day camp children","summer program kids","kids camp activities"],
+  "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup","parent child class","baby gym","toddler yoga","infant class"],
+  "Summer Camps": ["summer camp kids","day camp children","summer program kids","kids camp","youth summer camp","academic summer camp","sports summer camp","arts summer camp","stem summer camp","overnight camp","christian summer camp","school summer camp"],
 };
 
 async function geocodeZip(zip) {
@@ -117,7 +117,7 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   const terms = keyword && keyword.trim()
     ? [keyword.trim()]
     : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
-  const unique = [...new Set(terms)].slice(0, 8);
+  const unique = [...new Set(terms)].slice(0, 12);
 
   const allResults = await Promise.all(
     unique.map(async kw => {
