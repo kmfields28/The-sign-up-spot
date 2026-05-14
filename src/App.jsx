@@ -676,7 +676,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
       setError(e.message || "Search failed. Please try again.");
     }
     setLoading(false); setLoadingMsg("");
-  }, [zip, radius, category, search]);
+  }, [zip, radius, category, search, subCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
