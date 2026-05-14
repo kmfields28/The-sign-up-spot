@@ -426,8 +426,14 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
       onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+T.shadow; }}>
 
       {/* Color header band */}
-      <div style={{ width:"100%", height:"70px", background:cat.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.5rem" }}>
-        
+      <div style={{ width:"100%", height:"160px", background:cat.bg, overflow:"hidden", position:"relative" }}>
+        {place.photo ? (
+          <img src={place.photo} alt={place.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => { e.target.style.display="none"; e.target.parentNode.style.background=cat.bg; }}/>
+        ) : (
+          <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <span style={{ color:cat.color, fontSize:"0.8rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px" }}>{place.category}</span>
+          </div>
+        )}
       </div>
 
       {/* Per-kid save dropdown */}
