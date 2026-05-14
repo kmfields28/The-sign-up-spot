@@ -853,7 +853,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
 
       {selectedPlace && (
         <DetailModal place={selectedPlace} favorites={favorites}
-          onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)}/>
+          onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)} user={user} onOpenAuth={onOpenAuth}/>
       )}
     </div>
   );
