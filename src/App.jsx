@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const T = {
   bg:"#ffffff",
@@ -677,6 +677,8 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     }
     setLoading(false); setLoadingMsg("");
   }, [zip, radius, category, search, subCategory]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => { if (hasSearched && zip.length === 5) doSearch(); }, [subCategory, category]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
