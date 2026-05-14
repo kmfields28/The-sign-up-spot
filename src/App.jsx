@@ -631,7 +631,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // eslint-disable-line no-unused-vars
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
@@ -943,7 +943,7 @@ function ListYourBusinessForm() {
   const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // eslint-disable-line no-unused-vars
   const set = (k, v) => setForm(f => ({...f, [k]:v}));
   const inp = { width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.65rem 0.9rem", fontSize:"0.85rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", display:"block" };
   const lbl = { display:"block", color:T.textMid, fontSize:"0.75rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase", letterSpacing:"0.8px" };
