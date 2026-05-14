@@ -240,7 +240,7 @@ function ErrorBox({ message, onDismiss }) {
 }
 
 // ── Detail Modal ─────────────────────────────────────────────────────────────
-function DetailModal({ place, favorites, onToggleFav, onClose }) {
+function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   const [reviews, setReviews] = useState([]);
@@ -405,6 +405,13 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             {!reviewDone ? (
               <div style={{ background:T.bgDeep, borderRadius:"14px", padding:"1rem", border:"1px solid "+T.border, marginTop:"0.75rem" }}>
                 <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.82rem", marginBottom:"0.75rem" }}>Write a Review</div>
+                {!user && (
+                  <div style={{ textAlign:"center", padding:"1rem 0" }}>
+                    <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"0.85rem" }}>Sign in to leave a review — so other parents know it is from a real family.</p>
+                    <button onClick={onOpenAuth} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.83rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In to Review</button>
+                  </div>
+                )}
+                {user && (
                 <input value={reviewAuthor} onChange={e => setReviewAuthor(e.target.value)}
                   placeholder="Your name"
                   style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.6rem", display:"block" }}/>
@@ -937,7 +944,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           ))}
         </div>
       )}
-      {selectedPlace && <DetailModal place={selectedPlace} favorites={favorites} onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)}/>}
+      {selectedPlace && <DetailModal place={selectedPlace} favorites={favorites} onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)} user={user} onOpenAuth={() => setAuthOpen(true)}/>}
     </div>
   );
 }
