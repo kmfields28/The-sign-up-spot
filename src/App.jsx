@@ -944,7 +944,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           ))}
         </div>
       )}
-      {selectedPlace && <DetailModal place={selectedPlace} favorites={favorites} onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)} user={user} onOpenAuth={onOpenAuth}/>
+      {selectedPlace && <DetailModal place={selectedPlace} favorites={favorites} onToggleFav={onToggleFav} onClose={() => setSelectedPlace(null)} user={user} onOpenAuth={onOpenAuth}/>}
     </div>
   );
 }
