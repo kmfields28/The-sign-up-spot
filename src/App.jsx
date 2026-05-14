@@ -1143,9 +1143,8 @@ function AboutPage() {
         <div style={{ background:"linear-gradient(135deg,#eff6ff,#faf5ff)", border:"1px solid #c7d2fe", borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem" }}>
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem" }}>Our Family</h2>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:"1rem" }}>
-            {[{ emoji:"👩", name:"Kristen", desc:"Founder & mom" },{ emoji:"👨", name:"Dan", desc:"Husband & co-pilot" },{ emoji:"👧", name:"Isabella", desc:"Age 6" },{ emoji:"🧒", name:"Lilia", desc:"Age 3" },{ emoji:"🐾", name:"Annie & Chase", desc:"Pure chaos" }].map(m => (
+            {[{ emoji:"", name:"Kristen", desc:"Founder & mom" },{ emoji:"", name:"Dan", desc:"Husband & co-pilot" },{ emoji:"", name:"Isabella", desc:"Age 6" },{ emoji:"", name:"Lilia", desc:"Age 3" },{ emoji:"", name:"Annie & Chase", desc:"Pure chaos" }].map(m => (
               <div key={m.name} style={{ background:"rgba(255,255,255,0.7)", borderRadius:"14px", padding:"1rem", textAlign:"center", border:"1px solid rgba(199,210,254,0.5)" }}>
-                <div style={{ fontSize:"2rem", marginBottom:"0.35rem" }}>{m.emoji}</div>
                 <div style={{ color:T.text, fontWeight:700, fontSize:"0.88rem" }}>{m.name}</div>
                 <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>{m.desc}</div>
               </div>
@@ -1156,7 +1155,7 @@ function AboutPage() {
         <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We Are Building</h2>
           <div style={{ display:"flex", flexDirection:"column", gap:"0.85rem" }}>
-            {[{ icon:"🔍", text:"One place to find every kids activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },{ icon:"⭐", text:"Real reviews from real parents you can actually trust" },{ icon:"", text:"A family calendar so you can see every child schedule in one view — color-coded by kid" },{ icon:"📲", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" }].map((item, i) => (
+            {[{ icon:"", text:"One place to find every kids activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },{ icon:"", text:"Real reviews from real parents you can actually trust" },{ icon:"", text:"A family calendar so you can see every child schedule in one view — color-coded by kid" },{ icon:"", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" }].map((item, i) => (
               <div key={i} style={{ display:"flex", gap:"0.85rem", alignItems:"flex-start" }}>
                 <span style={{ fontSize:"1.4rem", flexShrink:0 }}>{item.icon}</span>
                 <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.7, margin:0 }}>{item.text}</p>
@@ -1870,7 +1869,7 @@ export default function TheSignUpSpot() {
               </div>
             </button>
           </div>
-          <div style={{ display:"flex", gap:"0.5rem", marginLeft:"auto", alignItems:"center" }}>
+          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center" }}>
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
