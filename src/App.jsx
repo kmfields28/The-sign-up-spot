@@ -37,6 +37,7 @@ const CATEGORIES = [
   { label:"Theater",    icon:"🎭", color:"#9333ea", bg:"#faf5ff" },
   { label:"Tutoring",   icon:"📚", color:"#2563eb", bg:"#eff6ff" },
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
+  { label:"Summer Camps", icon:"⛺", color:"#d97706", bg:"#fffbeb" },
 ];
 
 
@@ -58,6 +59,7 @@ const CATEGORY_KEYWORDS = {
   "Theater":    ["theater camp kids","drama class children","acting class kids","musical theater kids"],
   "Tutoring":   ["tutoring center","learning center kids","academic enrichment"],
   "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup"],
+  "Summer Camps": ["summer camp kids","day camp children","summer program kids","kids camp activities"],
 };
 
 async function geocodeZip(zip) {
