@@ -947,10 +947,45 @@ function ListYourBusinessForm() {
   const inp = { width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.65rem 0.9rem", fontSize:"0.85rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", display:"block" };
   const lbl = { display:"block", color:T.textMid, fontSize:"0.75rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase", letterSpacing:"0.8px" };
 
-  function handleSubmit() {
-    if (!form.name.trim() || !form.email.trim()) return;
-    setLoading(true);
-    setTimeout(() => { setSubmitted(true); setLoading(false); }, 900);
+  async function handleSubmit() {
+    if (!form.name.trim() || !form.email.trim() || form.categories.length === 0) {
+      setError("Please fill in business name, email, and at least one category.");
+      return;
+    }
+    setLoading(true); setError("");
+    try {
+      const payload = {
+        name: form.name.trim(),
+        category: form.categories[0] || "Sports",
+        categories: form.categories,
+        address: form.address.trim(),
+        phone: form.phone.trim(),
+        website: form.website.trim(),
+        description: form.description.trim(),
+        hours: form.hours.trim(),
+        price: form.price,
+        age_range: form.age_min && form.age_max ? form.age_min+"-"+form.age_max : "",
+        age_min: form.age_min ? parseInt(form.age_min) : null,
+        age_max: form.age_max ? parseInt(form.age_max) : null,
+        class_types: form.class_types ? form.class_types.split(",").map(s=>s.trim()).filter(Boolean) : [],
+        featured_interest: form.featured_interest,
+        status: "pending",
+        rating: 0,
+        review_count: 0,
+      };
+      await sbPost("activities", payload);
+      try {
+        await fetch("/api/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...payload, email: form.email })
+        });
+      } catch(e) { console.log("Notification failed:", e); }
+      setSubmitted(true);
+    } catch(e) {
+      setError("Submission failed: " + e.message);
+    }
+    setLoading(false);
   }
 
   return (
