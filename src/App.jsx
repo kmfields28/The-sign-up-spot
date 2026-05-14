@@ -432,8 +432,8 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                   style={{ background: reviewAuthor.trim() && reviewRating && reviewText.trim() ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : T.bgDeep, color: reviewAuthor.trim() && reviewRating && reviewText.trim() ? "#fff" : T.textMuted, border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
                   {reviewSubmitting ? "Submitting…" : "Submit Review"}
                 </button>
-              </div>
             </>)}
+            </div>
             ) : (
               <div style={{ background:T.accentBg, borderRadius:"12px", padding:"1rem", textAlign:"center", border:"1px solid "+T.accentSoft }}>
                 <div style={{ fontSize:"1.75rem", marginBottom:"0.3rem" }}>🎉</div>
