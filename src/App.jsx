@@ -1935,11 +1935,9 @@ export default function TheSignUpSpot() {
           {/* Centered logo */}
           <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)", display:"flex", justifyContent:"center" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
-              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
-                The Sign Up Spot
-              </div>
-              <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"1px" }}>
-                Family Activity Hub
+              <img src="/logo.png" alt="The Sign Up Spot" style={{ height:"32px", width:"auto", display:"block" }}/>
+              <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>
+                All their activities. One spot.
               </div>
             </button>
           </div>
