@@ -1855,11 +1855,11 @@ export default function TheSignUpSpot() {
       {/* Nav — centered logo row + links row */}
       <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border, boxShadow:"0 2px 12px "+T.shadow }}>
         {/* Top row: hamburger | centered logo | actions */}
-        <div style={{ display:"flex", alignItems:"center", padding:"0 1.25rem", height:"52px", gap:"0.75rem" }}>
+        <div style={{ display:"flex", alignItems:"center", padding:"0 1.25rem", height:"52px", gap:"0.75rem", position:"relative" }}>
           <button onClick={() => setMenuOpen(true)}
             style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, width:"34px", height:"34px", borderRadius:"8px", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
           {/* Centered logo */}
-          <div style={{ flex:1, display:"flex", justifyContent:"center", position:"relative" }}>
+          <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)", display:"flex", justifyContent:"center" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
               <div style={{ fontFamily:"'Fraunces',serif", fontWeight:900, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
                 The Sign Up Spot
