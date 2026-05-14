@@ -293,7 +293,6 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
             )}
             {place.website && (
               <div style={{ display:"flex", gap:"0.5rem" }}>
-                <span>🌐</span>
                 <a href={place.website} target="_blank" rel="noreferrer"
                   style={{ color:T.accent, fontSize:"0.83rem", wordBreak:"break-all" }}>
                   {place.website.replace(/^https?:\/\//,"").split("/")[0]}
