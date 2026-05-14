@@ -859,6 +859,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   );
 }
 
+}
 
 // ── Favorites Page ────────────────────────────────────────────────────────────
 function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, setActiveKidId, kidSaves, onToggleKidFav, onOpenKidsManager, user, onOpenAuth, calendarEvents, onAddCalendarEvent }) {
