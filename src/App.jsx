@@ -433,6 +433,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                   {reviewSubmitting ? "Submitting…" : "Submit Review"}
                 </button>
               </div>
+            )}
             ) : (
               <div style={{ background:T.accentBg, borderRadius:"12px", padding:"1rem", textAlign:"center", border:"1px solid "+T.accentSoft }}>
                 <div style={{ fontSize:"1.75rem", marginBottom:"0.3rem" }}>🎉</div>
