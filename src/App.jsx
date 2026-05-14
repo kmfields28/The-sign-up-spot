@@ -189,6 +189,12 @@ async function sbPost(path, body) { // eslint-disable-line no-unused-vars
   return res.status === 204 ? null : res.json();
 }
 
+const SPORT_SUBCATEGORIES = {
+  "Sports": ["All Sports","Baseball","Basketball","Cheerleading","Football","Gymnastics","Golf","Hockey","Lacrosse","Martial Arts","Soccer","Softball","Swimming","Tennis","Track & Field","Volleyball","Wrestling","Other"],
+  "Dance": ["All Dance","Ballet","Contemporary","Hip Hop","Jazz","Tap","Ballroom","Competitive","Other"],
+  "Summer Camps": ["All Camps","Academic","Arts","Outdoor/Nature","Sports","STEM","Theater","Multi-Sport","Other"],
+};
+
 function Stars({ rating, size }) {
   return (
     <span style={{ fontSize: size === "lg" ? "1.2rem" : "0.88rem", letterSpacing: "1px" }}>
@@ -651,6 +657,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
+  const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
     const z = zip.trim();
@@ -658,7 +665,9 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     setError(""); setLoading(true); setHasSearched(true); setResults([]);
     try {
       setLoadingMsg("Searching for activities near " + z + "…");
-      const data = await searchActivitiesWithClaude(z, radius, category, search.trim());
+      const subCat = subCategory && !subCategory.startsWith("All") ? subCategory : "";
+      const searchKeyword = subCat || search.trim();
+      const data = await searchActivitiesWithClaude(z, radius, category, searchKeyword);
       // Add unique IDs if missing
       const normalized = data.map((p, i) => ({ ...p, id: p.id || (p.name + i).replace(/\s/g,"_") }));
       setResults(normalized);
@@ -753,7 +762,12 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+              {SPORT_SUBCATEGORIES[category] && (
+              <select value={subCategory} onChange={e => { setSubCategory(e.target.value); }} style={{ background:"#fff", border:"1.5px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.accent, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+                {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            )}
+            <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 <option value="rating">Highest Rated</option>
                 <option value="az">A to Z</option>
                 <option value="za">Z to A</option>
