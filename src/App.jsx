@@ -110,6 +110,7 @@ function placeToActivity(place, category) {
     activityType: "recreational",
     photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
     bookingUrl: "/api/go?placeId=" + place.place_id + "&name=" + encodeURIComponent(place.name) + "&dest=" + encodeURIComponent(place.website || "https://www.google.com/maps/place/?q=place_id:" + place.place_id),
+    _types: place.types || [],
   };
 }
 
@@ -135,10 +136,15 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
     })
   );
 
+  // Filter out irrelevant business types
+  const EXCLUDED_TYPES = ["restaurant","food","bar","cafe","lodging","gas_station","grocery_or_supermarket","supermarket","store","pharmacy","hospital","bank","atm","car_dealer","car_repair","beauty_salon","hair_care","spa","laundry","moving_company","storage"];
+
   const seen = new Set();
   const deduped = allResults.flat().filter(p => {
     if (seen.has(p.id)) return false;
-    seen.add(p.id); return true;
+    seen.add(p.id);
+    if (p._types && p._types.some(t => EXCLUDED_TYPES.includes(t))) return false;
+    return true;
   });
   deduped.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   if (deduped.length === 0) throw new Error("No activities found near " + zip + ". Try a larger radius.");
