@@ -115,15 +115,21 @@ function placeToActivity(place, category) {
 
 async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
   const location = await geocodeZip(zip);
-  const categories = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
-  const terms = keyword && keyword.trim()
-    ? [keyword.trim()]
-    : categories.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2));
-  const unique = [...new Set(terms)].slice(0, 8);
+  let searchPairs = [];
+  if (keyword && keyword.trim()) {
+    const searchTerm = keyword.trim().toLowerCase();
+    const hasContext = ["kids","children","youth","camp","class","lesson","school","program","academy"].some(w => searchTerm.includes(w));
+    const kw = hasContext ? searchTerm : searchTerm + " kids";
+    const cats = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
+    searchPairs = cats.map(c => ({ kw, cat: c }));
+  } else {
+    const cats = category ? [category] : Object.keys(CATEGORY_KEYWORDS);
+    searchPairs = cats.flatMap(c => (CATEGORY_KEYWORDS[c] || []).slice(0, 2).map(kw => ({ kw, cat: c })));
+  }
+  const unique = searchPairs.slice(0, 8);
 
   const allResults = await Promise.all(
-    unique.map(async kw => {
-      const cat = category || Object.keys(CATEGORY_KEYWORDS).find(c => CATEGORY_KEYWORDS[c].includes(kw)) || "Sports";
+    unique.map(async ({ kw, cat }) => {
       const places = await searchNearby(location, kw, radiusMiles);
       return places.map(p => placeToActivity(p, cat));
     })
