@@ -243,7 +243,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose }) {
 
         {/* Header */}
         <div style={{ background:cat.bg, padding:"2rem 1.5rem 1.25rem", borderRadius:"22px 22px 0 0", textAlign:"center" }}>
-          <span style={{ fontSize:"3rem" }}>{cat.icon}</span>
+
           <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem", marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
           <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 10px", borderRadius:"99px", border:"1px solid "+cat.color+"44" }}>{place.category}</span>
         </div>
@@ -406,7 +406,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
 
       {/* Color header band */}
       <div style={{ width:"100%", height:"70px", background:cat.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.5rem" }}>
-        {cat.icon}
+        
       </div>
 
       {/* Per-kid save dropdown */}
@@ -753,7 +753,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                       style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"12px", padding:"0.9rem 1.1rem", display:"flex", gap:"1rem", alignItems:"center", flexWrap:"wrap", cursor:"pointer", boxShadow:"0 2px 8px "+T.shadow }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = T.accent}
                       onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
-                      <span style={{ fontSize:"1.8rem", background:cat.bg, padding:"0.45rem", borderRadius:"10px", flexShrink:0 }}>{cat.icon}</span>
+
                       <div style={{ flex:1, minWidth:"180px" }}>
                         <div style={{ color:T.text, fontWeight:600, fontFamily:"'Fraunces',serif" }}>{p.name}</div>
                         <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>📍 {p.address}</div>
@@ -917,7 +917,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
               style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor=cat.color; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 8px 24px "+cat.color+"44"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor=cat.color+"44"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+cat.color+"22"; }}>
-              <span style={{ fontSize:"1.7rem" }}>{cat.icon}</span>
+
               <span style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px" }}>{cat.label}</span>
             </button>
           ))}
