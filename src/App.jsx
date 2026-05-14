@@ -411,7 +411,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                     <button onClick={onOpenAuth} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.83rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In to Review</button>
                   </div>
                 )}
-                {user && (
+                {user && (<>
                 <input value={reviewAuthor} onChange={e => setReviewAuthor(e.target.value)}
                   placeholder="Your name"
                   style={{ width:"100%", background:T.bgInput, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.6rem", display:"block" }}/>
@@ -433,7 +433,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                   {reviewSubmitting ? "Submitting…" : "Submit Review"}
                 </button>
               </div>
-            )}
+            </>)}
             ) : (
               <div style={{ background:T.accentBg, borderRadius:"12px", padding:"1rem", textAlign:"center", border:"1px solid "+T.accentSoft }}>
                 <div style={{ fontSize:"1.75rem", marginBottom:"0.3rem" }}>🎉</div>
