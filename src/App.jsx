@@ -157,6 +157,7 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
       ...p,
       website,
       phone,
+      googleReviews: details.reviews || [],
       bookingUrl: "/api/go?placeId=" + p.placeId + "&name=" + encodeURIComponent(p.name) + "&dest=" + encodeURIComponent(website || "https://www.google.com/maps/place/?q=place_id:" + p.placeId),
     };
   }));
