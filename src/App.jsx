@@ -967,7 +967,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
             <span style={{ background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Favorite Activity</span>
           </h1>
           <p style={{ color:T.textSoft, fontSize:"1.05rem", maxWidth:"460px", margin:"0 auto 2rem", lineHeight:1.75 }}>
-            All their activities. One app.
+            All their activities. One spot.
           </p>
           <div style={{ display:"flex", gap:"0.75rem", justifyContent:"center", flexWrap:"wrap" }}>
             <button onClick={() => onNavigate("browse")}
