@@ -810,7 +810,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
               </span>
               {SPORT_SUBCATEGORIES[category] && (
-              <select value={subCategory} onChange={e => { setSubCategory(e.target.value); }} style={{ background:"#fff", border:"1.5px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.accent, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+              <select value={subCategory} onChange={e => { setSubCategory(e.target.value); setTimeout(() => doSearch(), 50); }} style={{ background:"#fff", border:"1.5px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.accent, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             )}
