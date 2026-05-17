@@ -700,6 +700,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
+  const [searchLocation, setSearchLocation] = useState(null);
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
@@ -826,7 +827,9 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                   height="100%"
                   style={{ border:0 }}
                   loading="lazy"
-                  src={"https://www.google.com/maps/embed/v1/search?key=" + GOOGLE_API_KEY + "&q=" + encodeURIComponent(sortedResults.slice(0,10).map(p=>p.name).join(" OR ") + " near " + zip) + "&zoom=11"}
+                  src={searchLocation
+                    ? "https://www.google.com/maps/embed/v1/search?key=" + GOOGLE_API_KEY + "&q=" + encodeURIComponent((subCategory && !subCategory.startsWith("All") ? subCategory : category || "kids activities") + " near " + zip) + "&center=" + searchLocation.lat + "," + searchLocation.lng + "&zoom=12"
+                    : "https://www.google.com/maps/embed/v1/search?key=" + GOOGLE_API_KEY + "&q=" + encodeURIComponent("kids activities near " + zip) + "&zoom=12"}
                 />
               </div>
             ) : viewMode === "list" ? (
