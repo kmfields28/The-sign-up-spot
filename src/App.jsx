@@ -845,7 +845,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 })}
               </div>
             ) : (
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(270px,100%),1fr))", gap:"1rem" }}>
                 {sortedResults.map(p => (
                   <ActivityCard onAddToCalendar={p2 => onAddToCalendarPrompt && onAddToCalendarPrompt(p2)} key={p.id} place={p} favorites={favorites}
                     onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
@@ -940,7 +940,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
           </p>
         </div>
       ) : (
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:"1rem" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(270px,100%),1fr))", gap:"1rem" }}>
           {displayPlaces.map(p => (
             <ActivityCard key={p.id} place={p} favorites={favorites}
               onToggleFav={onToggleFav} onSelect={setSelectedPlace}
@@ -987,7 +987,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
         <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", maxWidth:"900px", margin:"0 auto", justifyContent:"center" }}>
           {CATEGORIES.map((cat, i) => (
             <button key={cat.label} onClick={() => onNavigate("browse", { category:cat.label })}
-              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit", width:"110px", flexShrink:0 }}
+              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit", width:"calc(33% - 0.5rem)", minWidth:"90px", maxWidth:"130px", flexShrink:0 }}
               onMouseEnter={e => { e.currentTarget.style.borderColor=cat.color; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 8px 24px "+cat.color+"44"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor=cat.color+"44"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+cat.color+"22"; }}>
 
@@ -1794,7 +1794,17 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
     <>
       <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(80,40,10,0.35)", zIndex:900, backdropFilter:"blur(4px)" }}/>
       <div style={{ position:"fixed", top:0, left:0, bottom:0, width:"280px", background:T.bgCard, borderRight:"1px solid "+T.border, zIndex:901, display:"flex", flexDirection:"column", animation:"slideIn 0.22s ease", boxShadow:"4px 0 32px "+T.shadow }}>
-        <style>{"@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}"}</style>
+        <style>{`
+          @keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+          * { box-sizing: border-box; }
+          body { margin: 0; overflow-x: hidden; }
+          input, select, textarea, button { font-size: 16px !important; }
+          @media (max-width: 480px) {
+            .sss-card-grid { grid-template-columns: 1fr !important; }
+            .sss-hide-mobile { display: none !important; }
+            .sss-search-bar { flex-direction: column !important; }
+          }
+        `}</style>
         <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border, display:"flex", alignItems:"center", justifyContent:"space-between", background:"#f8f8f8" }}>
           <div>
             <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem" }}>
@@ -1931,7 +1941,7 @@ export default function TheSignUpSpot() {
         {/* Top row: hamburger | centered logo | actions */}
         <div style={{ display:"flex", alignItems:"center", padding:"0 1.25rem", height:"52px", gap:"0.75rem", position:"relative" }}>
           <button onClick={() => setMenuOpen(true)}
-            style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, width:"34px", height:"34px", borderRadius:"8px", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
+            style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, width:"40px", height:"40px", borderRadius:"8px", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
           {/* Centered logo */}
           <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)", display:"flex", justifyContent:"center" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
