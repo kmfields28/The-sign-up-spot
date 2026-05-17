@@ -1967,6 +1967,13 @@ export default function TheSignUpSpot() {
           )}
           </div>
         </div>
+        {/* Row 2: centered logo */}
+        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", padding:"0.4rem 0" }}>
+          <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0, textAlign:"center" }}>
+            <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.5rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
+            <div style={{ color:T.textMuted, fontSize:"0.52rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>All their activities. One spot.</div>
+          </button>
+        </div>
         {/* Bottom row: page nav links */}
         <div style={{ display:"flex", justifyContent:"center", gap:"0.25rem", borderTop:"1px solid "+T.border+"88", padding:"0 1rem 0" }}>
           {[{p:"home",l:"Home"},{p:"browse",l:"Browse"},{p:"businesses",l:"Businesses"},{p:"favorites",l:"Saved"+(favSet.size>0?" ("+favSet.size+")":"")},{p:"about",l:"About"}].map(({p,l}) => (
