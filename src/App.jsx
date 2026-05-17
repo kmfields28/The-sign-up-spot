@@ -984,10 +984,10 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
       <div style={{ padding:"2.25rem 1.5rem", background:T.bg }}>
         <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:"0.75rem", maxWidth:"900px", margin:"0 auto" }}>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", maxWidth:"900px", margin:"0 auto", justifyContent:"center" }}>
           {CATEGORIES.map((cat, i) => (
             <button key={cat.label} onClick={() => onNavigate("browse", { category:cat.label })}
-              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit" }}
+              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit", width:"110px", flexShrink:0 }}
               onMouseEnter={e => { e.currentTarget.style.borderColor=cat.color; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 8px 24px "+cat.color+"44"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor=cat.color+"44"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+cat.color+"22"; }}>
 
