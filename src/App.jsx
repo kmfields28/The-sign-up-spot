@@ -1951,11 +1951,11 @@ export default function TheSignUpSpot() {
             <div style={{ color:T.textMuted, fontSize:"0.5rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>All their activities. One spot.</div>
           </button>
           {/* Right: actions */}
-          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center", justifyContent:"flex-end" }}>
+          <div style={{ display:"flex", gap:"0.3rem", alignItems:"center", justifyContent:"flex-end", flexWrap:"nowrap" }}>
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
-              style={{ background: kids.find(k=>k.id===activeKidId)?.color+"22" || T.bgDeep, border:"1px solid "+(kids.find(k=>k.id===activeKidId)?.color||T.border)+"55", borderRadius:"99px", padding:"0.28rem 0.7rem", fontSize:"0.75rem", fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", gap:"0.35rem", fontFamily:"inherit", color:T.textMid }}>
+              style={{ background: kids.find(k=>k.id===activeKidId)?.color+"22" || T.bgDeep, border:"1px solid "+(kids.find(k=>k.id===activeKidId)?.color||T.border)+"55", borderRadius:"99px", padding:"0.28rem 0.4rem", fontSize:"0.72rem", fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", gap:"0.25rem", fontFamily:"inherit", color:T.textMid }}>
               <span style={{ width:"18px", height:"18px", borderRadius:"50%", background:kids.find(k=>k.id===activeKidId)?.color||T.accent, color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:"0.65rem", fontWeight:700 }}>
                 {(kids.find(k=>k.id===activeKidId)?.name||"K").charAt(0).toUpperCase()}
               </span>
