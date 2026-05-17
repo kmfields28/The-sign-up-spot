@@ -1945,7 +1945,7 @@ export default function TheSignUpSpot() {
           {/* Centered logo */}
           <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)", display:"flex", justifyContent:"center" }}>
             <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
-              <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.6rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
+              <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.25rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
               <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>
                 All their activities. One spot.
               </div>
