@@ -777,7 +777,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
           ))}
         </div>
         <div style={{ display:"flex", background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"8px", overflow:"hidden" }}>
-          {[{m:"grid",i:"⊞"},{m:"list",i:"☰"}].map(({m,i}) => (
+          {[{m:"grid",i:"⊞"},{m:"list",i:"☰"},{m:"map",i:"🗺"}].map(({m,i}) => (
             <button key={m} onClick={() => setViewMode(m)}
               style={{ background:viewMode===m?T.bgCard:"transparent", border:"none", color:viewMode===m?T.accent:T.textMuted, padding:"0.3rem 0.65rem", cursor:"pointer", fontFamily:"inherit", fontSize:"0.9rem" }}>{i}</button>
           ))}
@@ -818,7 +818,18 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <option value="za">Z to A</option>
               </select>
             </div>
-            {viewMode === "list" ? (
+            {viewMode === "map" ? (
+              <div style={{ borderRadius:"16px", overflow:"hidden", border:"1px solid "+T.border, height:"70vh" }}>
+                <iframe
+                  title="Activity Map"
+                  width="100%"
+                  height="100%"
+                  style={{ border:0 }}
+                  loading="lazy"
+                  src={"https://www.google.com/maps/embed/v1/search?key=" + GOOGLE_API_KEY + "&q=" + encodeURIComponent(sortedResults.slice(0,10).map(p=>p.name).join(" OR ") + " near " + zip) + "&zoom=11"}
+                />
+              </div>
+            ) : viewMode === "list" ? (
               <div style={{ display:"flex", flexDirection:"column", gap:"0.6rem" }}>
                 {sortedResults.map(p => {
                   const cat = getCatMeta(p.category); // eslint-disable-line no-unused-vars
