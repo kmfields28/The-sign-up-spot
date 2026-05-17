@@ -1951,7 +1951,7 @@ export default function TheSignUpSpot() {
               </div>
             </button>
           </div>
-          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center" }}>
+          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center", minWidth:"40px", justifyContent:"flex-end" }}>
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
