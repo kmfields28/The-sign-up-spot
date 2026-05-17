@@ -1939,7 +1939,7 @@ export default function TheSignUpSpot() {
       {/* Nav — centered logo row + links row */}
       <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border, boxShadow:"0 2px 12px "+T.shadow }}>
         {/* Top row: hamburger | centered logo | actions */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr", alignItems:"center", padding:"0 1rem", height:"56px" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"auto 1fr auto", alignItems:"center", padding:"0 1rem", height:"56px" }}>
           {/* Left: hamburger */}
           <div style={{ display:"flex", alignItems:"center" }}>
           <button onClick={() => setMenuOpen(true)}
@@ -1951,7 +1951,7 @@ export default function TheSignUpSpot() {
             <div style={{ color:T.textMuted, fontSize:"0.5rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>All their activities. One spot.</div>
           </button>
           {/* Right: actions */}
-          <div style={{ display:"flex", gap:"0.3rem", alignItems:"center", justifyContent:"flex-end", flexWrap:"nowrap" }}>
+          <div style={{ display:"flex", gap:"0.3rem", alignItems:"center", justifyContent:"flex-end", flexWrap:"nowrap", overflow:"hidden" }}>
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
