@@ -1998,7 +1998,7 @@ export default function TheSignUpSpot() {
       <div style={{ background:"#f8f8f8", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
         <div style={{ maxWidth:"900px", margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"1rem" }}>
           <div>
-            <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem", marginBottom:"0.25rem" }}>The Sign Up Spot</div>
+            <img src="/logo.png" alt="The Sign Up Spot" style={{ height:"30px", width:"150px", objectFit:"contain", display:"block", margin:"0 auto 0.25rem" }}/>
             <div style={{ color:T.textMuted, fontSize:"0.75rem" }}>
               © 2026 · Connecting families to amazing experiences
             </div>
