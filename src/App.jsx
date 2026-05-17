@@ -1939,19 +1939,19 @@ export default function TheSignUpSpot() {
       {/* Nav — centered logo row + links row */}
       <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border, boxShadow:"0 2px 12px "+T.shadow }}>
         {/* Top row: hamburger | centered logo | actions */}
-        <div style={{ display:"flex", alignItems:"center", padding:"0 1.25rem", height:"52px", gap:"0.75rem", position:"relative" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr", alignItems:"center", padding:"0 1rem", height:"56px" }}>
+          {/* Left: hamburger */}
+          <div style={{ display:"flex", alignItems:"center" }}>
           <button onClick={() => setMenuOpen(true)}
             style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, width:"40px", height:"40px", borderRadius:"8px", cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>☰</button>
-          {/* Centered logo */}
-          <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)", display:"flex", justifyContent:"center" }}>
-            <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
-              <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.25rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
-              <div style={{ color:T.textMuted, fontSize:"0.6rem", fontWeight:600, letterSpacing:"2px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>
-                All their activities. One spot.
-              </div>
-            </button>
           </div>
-          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center", marginLeft:"auto", justifyContent:"flex-end", flexShrink:0 }}>
+          {/* Center: logo */}
+          <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0, textAlign:"center" }}>
+            <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.2rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px", whiteSpace:"nowrap" }}>thesignupspot</div>
+            <div style={{ color:T.textMuted, fontSize:"0.5rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>All their activities. One spot.</div>
+          </button>
+          {/* Right: actions */}
+          <div style={{ display:"flex", gap:"0.5rem", alignItems:"center", justifyContent:"flex-end" }}>
           {/* Active kid chip */}
           {kids.length > 0 && (
             <button onClick={() => setKidsManagerOpen(true)}
