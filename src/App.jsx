@@ -2002,7 +2002,7 @@ export default function TheSignUpSpot() {
               thesignupspot
             </div>
             <div style={{ color:T.textMuted, fontSize:"0.75rem" }}>
-              © 2025 Lilibelle LLC · All their activities. One spot.
+              © 2026 Lilibelle LLC · All their activities. One spot.
             </div>
           </div>
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
