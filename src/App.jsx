@@ -1002,13 +1002,13 @@ function HomePage({ onNavigate, onOpenAuth }) {
         <div style={{ display:"flex", gap:"0.75rem", overflowX:"auto", paddingLeft:"1.5rem", paddingRight:"1.5rem", scrollbarWidth:"none", msOverflowStyle:"none" }}>
           {[
             { url:"https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=300&h=200&fit=crop", label:"Soccer" },
-            { url:"https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&h=200&fit=crop", label:"Dance" },
+            { url:"https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?w=300&h=200&fit=crop", label:"Ballet" },
             { url:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=200&fit=crop", label:"Arts" },
             { url:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop", label:"Music" },
-            { url:"https://images.unsplash.com/photo-1594381898411-846e7d193883?w=300&h=200&fit=crop", label:"Gymnastics" },
-            { url:"https://images.unsplash.com/photo-1551958219-acbc608c6377?w=300&h=200&fit=crop", label:"Swimming" },
-            { url:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=300&h=200&fit=crop", label:"Basketball" },
-            { url:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop", label:"Yoga" },
+            { url:"https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=300&h=200&fit=crop", label:"Gymnastics" },
+            { url:"https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=300&h=200&fit=crop", label:"Swimming" },
+            { url:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop", label:"Basketball" },
+            { url:"https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=300&h=200&fit=crop", label:"Baseball" },
           ].map((p, i) => (
             <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"200px", height:"140px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
               <img src={p.url} alt={p.label} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => e.target.style.display="none"}/>
