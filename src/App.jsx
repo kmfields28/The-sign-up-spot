@@ -997,6 +997,28 @@ function HomePage({ onNavigate, onOpenAuth }) {
         </div>
       </div>
 
+      {/* Activity photo strip */}
+      <div style={{ padding:"1.5rem 0", background:"#fff", borderBottom:"1px solid "+T.border, overflow:"hidden" }}>
+        <div style={{ display:"flex", gap:"0.75rem", overflowX:"auto", paddingLeft:"1.5rem", paddingRight:"1.5rem", scrollbarWidth:"none", msOverflowStyle:"none" }}>
+          {[
+            { url:"https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=300&h=200&fit=crop", label:"Soccer" },
+            { url:"https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&h=200&fit=crop", label:"Dance" },
+            { url:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=200&fit=crop", label:"Arts" },
+            { url:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop", label:"Music" },
+            { url:"https://images.unsplash.com/photo-1594381898411-846e7d193883?w=300&h=200&fit=crop", label:"Gymnastics" },
+            { url:"https://images.unsplash.com/photo-1551958219-acbc608c6377?w=300&h=200&fit=crop", label:"Swimming" },
+            { url:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=300&h=200&fit=crop", label:"Basketball" },
+            { url:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop", label:"Yoga" },
+          ].map((p, i) => (
+            <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"200px", height:"140px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
+              <img src={p.url} alt={p.label} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => e.target.style.display="none"}/>
+              <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }}/>
+              <span style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", color:"#fff", fontSize:"0.78rem", fontWeight:700 }}>{p.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div style={{ padding:"2.25rem 1.5rem", background:T.bg }}>
         <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
         <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", maxWidth:"900px", margin:"0 auto", justifyContent:"center" }}>
