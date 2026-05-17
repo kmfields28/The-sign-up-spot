@@ -711,6 +711,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
       setLoadingMsg("Searching for activities near " + z + "…");
       const subCat = subCategory && !subCategory.startsWith("All") ? subCategory : "";
       const searchKeyword = subCat || search.trim();
+      try { const loc = await geocodeZip(z); setSearchLocation(loc); } catch(e) {}
       const data = await searchActivitiesWithClaude(z, radius, category, searchKeyword);
       // Add unique IDs if missing
       const normalized = data.map((p, i) => ({ ...p, id: p.id || (p.name + i).replace(/\s/g,"_") }));
