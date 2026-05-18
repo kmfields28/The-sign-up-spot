@@ -310,10 +310,21 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                 </a>
               </div>
             )}
-            {place.hours && (
-              <div style={{ display:"flex", gap:"0.5rem" }}>
-                <span>🕐</span>
-                <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>{place.hours}</span>
+            {place.hours && place.hours.length > 0 && (
+              <div style={{ marginTop:"0.5rem" }}>
+                <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.78rem", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"0.4rem" }}>Hours</div>
+                {Array.isArray(place.hours) ? (
+                  <div style={{ display:"flex", flexDirection:"column", gap:"0.2rem" }}>
+                    {place.hours.map((h, i) => (
+                      <div key={i} style={{ fontSize:"0.8rem", color:T.textSoft, display:"flex", gap:"0.5rem" }}>
+                        <span style={{ fontWeight:600, minWidth:"90px", color:T.textMid }}>{h.split(": ")[0]}</span>
+                        <span>{h.split(": ")[1] || h}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>{place.hours}</span>
+                )}
               </div>
             )}
             {place.website && (
