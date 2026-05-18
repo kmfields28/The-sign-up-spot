@@ -153,11 +153,13 @@ async function searchActivitiesWithClaude(zip, radiusMiles, category, keyword) {
     const details = await getPlaceDetails(p.placeId);
     const website = details.website || "";
     const phone = details.formatted_phone_number || "";
+    const hours = details.opening_hours ? details.opening_hours.weekday_text : [];
     return {
       ...p,
       website,
       phone,
       googleReviews: details.reviews || [],
+      hours: hours.length > 0 ? hours : p.hours,
       bookingUrl: "/api/go?placeId=" + p.placeId + "&name=" + encodeURIComponent(p.name) + "&dest=" + encodeURIComponent(website || "https://www.google.com/maps/place/?q=place_id:" + p.placeId),
     };
   }));
