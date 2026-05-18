@@ -1064,7 +1064,8 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
 // ── About Page ────────────────────────────────────────────────────────────────
 function ListYourBusinessForm() {
-  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"" });
+  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"", classes:[] });
+  const [newClass, setNewClass] = useState({ day:"Monday", time:"4:00pm", name:"", ageRange:"" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); // eslint-disable-line no-unused-vars
@@ -1088,6 +1089,7 @@ function ListYourBusinessForm() {
         website: form.website.trim(),
         description: form.description.trim(),
         hours: form.hours.trim(),
+        classes: form.classes,
         price: form.price,
         age_range: form.age_min && form.age_max ? form.age_min+"-"+form.age_max : "",
         age_min: form.age_min ? parseInt(form.age_min) : null,
@@ -1140,7 +1142,56 @@ function ListYourBusinessForm() {
             <div><label style={lbl}>Age Range Served</label><input value={form.ageRange} onChange={e=>set("ageRange",e.target.value)} placeholder="e.g. 3-14" style={inp}/></div>
           </div>
           <div style={{ marginBottom:"1rem" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
-          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-5pm" style={inp}/></div>
+          <div style={{ marginBottom:"1rem" }}><label style={lbl}>Business Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-5pm" style={inp}/></div>
+
+          {/* Class Schedule */}
+          <div style={{ marginBottom:"1.25rem" }}>
+            <label style={lbl}>Class Schedule</label>
+            <p style={{ color:T.textMuted, fontSize:"0.75rem", marginBottom:"0.75rem" }}>Add your specific classes so parents can see exactly when and what you offer.</p>
+            
+            {/* Existing classes */}
+            {form.classes.length > 0 && (
+              <div style={{ marginBottom:"0.75rem", display:"flex", flexDirection:"column", gap:"0.4rem" }}>
+                {form.classes.map((cls, i) => (
+                  <div key={i} style={{ background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"8px", padding:"0.5rem 0.75rem", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <span style={{ fontSize:"0.82rem", color:T.textMid }}><strong>{cls.day}</strong> {cls.time} · {cls.name} {cls.ageRange ? "("+cls.ageRange+")" : ""}</span>
+                    <button onClick={() => set("classes", form.classes.filter((_,j) => j!==i))} style={{ background:"none", border:"none", color:T.textMuted, cursor:"pointer", fontSize:"1rem" }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add new class */}
+            <div style={{ background:T.bgDeep, border:"1px solid "+T.border, borderRadius:"10px", padding:"0.85rem" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.5rem", marginBottom:"0.5rem" }}>
+                <div>
+                  <label style={{...lbl, marginBottom:"0.2rem"}}>Day</label>
+                  <select value={newClass.day} onChange={e => setNewClass(c=>({...c,day:e.target.value}))} style={{...inp, padding:"0.45rem 0.6rem"}}>
+                    {["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"].map(d => <option key={d}>{d}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={{...lbl, marginBottom:"0.2rem"}}>Time</label>
+                  <input value={newClass.time} onChange={e => setNewClass(c=>({...c,time:e.target.value}))} placeholder="4:00pm" style={{...inp, padding:"0.45rem 0.6rem"}}/>
+                </div>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.5rem", marginBottom:"0.65rem" }}>
+                <div>
+                  <label style={{...lbl, marginBottom:"0.2rem"}}>Class Name</label>
+                  <input value={newClass.name} onChange={e => setNewClass(c=>({...c,name:e.target.value}))} placeholder="Beginner Ballet" style={{...inp, padding:"0.45rem 0.6rem"}}/>
+                </div>
+                <div>
+                  <label style={{...lbl, marginBottom:"0.2rem"}}>Age Range</label>
+                  <input value={newClass.ageRange} onChange={e => setNewClass(c=>({...c,ageRange:e.target.value}))} placeholder="Ages 5-7" style={{...inp, padding:"0.45rem 0.6rem"}}/>
+                </div>
+              </div>
+              <button onClick={() => {
+                if (!newClass.name.trim()) return;
+                set("classes", [...form.classes, {...newClass}]);
+                setNewClass({ day:"Monday", time:"4:00pm", name:"", ageRange:"" });
+              }} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"8px", padding:"0.45rem 1rem", fontSize:"0.8rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>+ Add Class</button>
+            </div>
+          </div>
           <div style={{ marginBottom:"1.5rem" }}>
             <label style={lbl}>Tell us about your program</label>
             <textarea value={form.description} onChange={e=>set("description",e.target.value)} rows={4}
