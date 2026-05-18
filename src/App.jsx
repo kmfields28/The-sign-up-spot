@@ -327,6 +327,31 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                 )}
               </div>
             )}
+
+            {/* Class Schedule */}
+            {place.classes && place.classes.length > 0 && (
+              <div style={{ marginTop:"1rem", borderTop:"1px solid "+T.border, paddingTop:"1rem" }}>
+                <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.78rem", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"0.6rem" }}>Class Schedule</div>
+                {["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"].map(day => {
+                  const dayclasses = place.classes.filter(c => c.day === day);
+                  if (!dayclasses.length) return null;
+                  return (
+                    <div key={day} style={{ marginBottom:"0.6rem" }}>
+                      <div style={{ fontSize:"0.78rem", fontWeight:700, color:T.accent, marginBottom:"0.25rem" }}>{day}</div>
+                      {dayclasses.map((cls, i) => (
+                        <div key={i} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", background:T.bgDeep, borderRadius:"8px", padding:"0.4rem 0.65rem", marginBottom:"0.25rem" }}>
+                          <div>
+                            <span style={{ fontSize:"0.82rem", fontWeight:600, color:T.text }}>{cls.name}</span>
+                            {cls.ageRange && <span style={{ fontSize:"0.73rem", color:T.textMuted, marginLeft:"0.4rem" }}>{cls.ageRange}</span>}
+                          </div>
+                          <span style={{ fontSize:"0.78rem", color:T.textSoft, fontWeight:500 }}>{cls.time}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             {place.website && (
               <div style={{ display:"flex", gap:"0.5rem" }}>
                 <a href={place.website} target="_blank" rel="noreferrer"
