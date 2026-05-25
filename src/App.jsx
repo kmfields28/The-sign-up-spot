@@ -1567,11 +1567,13 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
         <div style={{ display:"flex", gap:"0.5rem" }}>
           <input value={newName} onChange={e=>setNewName(e.target.value)}
             placeholder="Child's name…"
-            onKeyDown={e => { if(e.key==="Enter" && newName.trim()){ addKid(newName.trim(), newColor); setNewName(""); setNewColor(KID_COLORS[(kids.length+1)%KID_COLORS.length]); }}}
             style={{ flex:1, background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.62rem 0.9rem", fontSize:"0.87rem", color:T.text, fontFamily:"inherit" }}/>
-          <button onClick={() => { if(newName.trim()){ addKid(newName.trim(), newColor); setNewName(""); setNewColor(KID_COLORS[(kids.length+1)%KID_COLORS.length]); }}}
+          <input value={newAge} onChange={e=>setNewAge(e.target.value)} placeholder="Age"
+            type="number" min="1" max="18"
+            style={{ width:"65px", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.62rem 0.5rem", fontSize:"0.87rem", color:T.text, fontFamily:"inherit", textAlign:"center" }}/>
+          <button onClick={() => { if(newName.trim()){ addKid(newName.trim(), newColor, newAge ? parseInt(newAge) : null); setNewName(""); setNewAge(""); setNewColor(KID_COLORS[(kids.length+1)%KID_COLORS.length]); }}}
             style={{ background:"#f8f8f8", color:"#2e1a08", border:"none", borderRadius:"10px", padding:"0.62rem 1rem", fontSize:"0.87rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap", boxShadow:"0 2px 10px "+T.shadow }}>
-            + Add Child
+            + Add
           </button>
         </div>
 
