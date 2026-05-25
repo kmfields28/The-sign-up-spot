@@ -1089,7 +1089,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
 // ── About Page ────────────────────────────────────────────────────────────────
 function ListYourBusinessForm() {
-  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"", classes:[] });
+  const [form, setForm] = useState({ name:"", category:"", address:"", phone:"", website:"", email:"", description:"", ageRange:"", hours:"", classes:[], reg_open:"", reg_close:"", reg_url:"" });
   const [newClass, setNewClass] = useState({ day:"Monday", time:"4:00pm", name:"", ageRange:"" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -1115,6 +1115,9 @@ function ListYourBusinessForm() {
         description: form.description.trim(),
         hours: form.hours.trim(),
         classes: form.classes,
+        reg_open: form.reg_open,
+        reg_close: form.reg_close,
+        reg_url: form.reg_url,
         price: form.price,
         age_range: form.age_min && form.age_max ? form.age_min+"-"+form.age_max : "",
         age_min: form.age_min ? parseInt(form.age_min) : null,
@@ -1168,6 +1171,25 @@ function ListYourBusinessForm() {
           </div>
           <div style={{ marginBottom:"1rem" }}><label style={lbl}>Address</label><input value={form.address} onChange={e=>set("address",e.target.value)} placeholder="123 Main St, City, ST 00000" style={inp}/></div>
           <div style={{ marginBottom:"1rem" }}><label style={lbl}>Business Hours</label><input value={form.hours} onChange={e=>set("hours",e.target.value)} placeholder="Mon-Fri 9am-5pm" style={inp}/></div>
+
+          <div style={{ marginBottom:"1rem", background:T.accentBg, border:"1px solid "+T.accentSoft, borderRadius:"12px", padding:"1rem" }}>
+            <label style={{...lbl, color:T.accent, marginBottom:"0.6rem", display:"block"}}>Registration Dates</label>
+            <p style={{ color:T.textSoft, fontSize:"0.75rem", marginBottom:"0.75rem" }}>Help parents know when to sign up — one of the biggest pain points for families.</p>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.65rem", marginBottom:"0.65rem" }}>
+              <div>
+                <label style={lbl}>Registration Opens</label>
+                <input type="date" value={form.reg_open} onChange={e=>set("reg_open",e.target.value)} style={inp}/>
+              </div>
+              <div>
+                <label style={lbl}>Registration Closes</label>
+                <input type="date" value={form.reg_close} onChange={e=>set("reg_close",e.target.value)} style={inp}/>
+              </div>
+            </div>
+            <div>
+              <label style={lbl}>Registration Link</label>
+              <input value={form.reg_url} onChange={e=>set("reg_url",e.target.value)} placeholder="https://..." style={inp}/>
+            </div>
+          </div>
 
           {/* Class Schedule */}
           <div style={{ marginBottom:"1.25rem" }}>
