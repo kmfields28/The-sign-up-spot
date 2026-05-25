@@ -87,6 +87,16 @@ async function searchNearby(location, keyword, radius) {
   return data.results || [];
 }
 
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 3959; // miles
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+    Math.sin(dLon/2)*Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
 function placeToActivity(place, category) {
   const price = (place.price_level !== undefined && place.price_level !== null) ? { 0:"Free", 1:"$", 2:"$$", 3:"$$$", 4:"$$$$" }[place.price_level] : null;
   const typeLabels = { "gym":"Fitness & gym facility", "school":"Educational program", "health":"Health & wellness", "park":"Outdoor & nature" };
@@ -111,6 +121,8 @@ function placeToActivity(place, category) {
     photo: place.photos && place.photos[0] ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + place.photos[0].photo_reference + "&key=" + GOOGLE_API_KEY : null,
     bookingUrl: "/api/go?placeId=" + place.place_id + "&name=" + encodeURIComponent(place.name) + "&dest=" + encodeURIComponent(place.website || "https://www.google.com/maps/place/?q=place_id:" + place.place_id),
     _types: place.types || [],
+    lat: place.geometry && place.geometry.location ? place.geometry.location.lat : null,
+    lng: place.geometry && place.geometry.location ? place.geometry.location.lng : null,
   };
 }
 
@@ -620,7 +632,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
 
         {place.address && (
           <div style={{ color:T.textSoft, fontSize:"0.74rem", marginBottom:"0.5rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-            📍 {place.address}
+            📍 {place.address}{place.distance ? " · "+place.distance.toFixed(1)+" mi" : ""}
           </div>
         )}
 
@@ -870,10 +882,16 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     return true;
   }) : results;
 
-  const sortedResults = filteredResults.slice().sort((a,b) => {
+  const resultsWithDistance = filteredResults.map(p => ({
+    ...p,
+    distance: searchLocation && p.lat && p.lng ? calcDistance(searchLocation.lat, searchLocation.lng, p.lat, p.lng) : null
+  }));
+
+  const sortedResults = resultsWithDistance.slice().sort((a,b) => {
     if(sortBy==="rating") return (b.rating||0)-(a.rating||0);
     if(sortBy==="az") return a.name < b.name ? -1 : 1;
     if(sortBy==="za") return a.name > b.name ? -1 : 1;
+    if(sortBy==="distance") return (a.distance||999)-(b.distance||999);
     return 0;
   });
 
@@ -960,6 +978,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <option value="rating">Highest Rated</option>
                 <option value="az">A to Z</option>
                 <option value="za">Z to A</option>
+                <option value="distance">Nearest First</option>
               </select>
             </div>
             {viewMode === "map" ? (
