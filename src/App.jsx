@@ -818,6 +818,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
   const [searchLocation, setSearchLocation] = useState(null);
+  const [ageFilter, setAgeFilter] = useState("");
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
@@ -850,7 +851,18 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
   });
 
-  const sortedResults = results.slice().sort((a,b) => {
+  const filteredResults = ageFilter ? results.filter(p => {
+    if (!p.ageRange && !p.age_min && !p.age_max) return true; // no age data, show it
+    const age = parseInt(ageFilter);
+    if (p.age_min && p.age_max) return age >= p.age_min && age <= p.age_max;
+    if (p.ageRange) {
+      const parts = p.ageRange.split("-").map(Number);
+      if (parts.length === 2) return age >= parts[0] && age <= parts[1];
+    }
+    return true;
+  }) : results;
+
+  const sortedResults = filteredResults.slice().sort((a,b) => {
     if(sortBy==="rating") return (b.rating||0)-(a.rating||0);
     if(sortBy==="az") return a.name < b.name ? -1 : 1;
     if(sortBy==="za") return a.name > b.name ? -1 : 1;
