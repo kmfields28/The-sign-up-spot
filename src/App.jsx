@@ -286,6 +286,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
               ({(place.reviewCount || 0).toLocaleString()} reviews)
             </span>
             {place.price && <PriceBadge price={place.price}/>}
+            <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
             {place.ageRange && (
               <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.72rem", padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>
                 Ages {place.ageRange}
@@ -486,6 +487,36 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
 }
 
 // ── Activity Card ─────────────────────────────────────────────────────────────
+function RegBadge({ reg_open, reg_close, reg_url }) {
+  if (!reg_open && !reg_close) return null;
+  const today = new Date();
+  const open = reg_open ? new Date(reg_open) : null;
+  const close = reg_close ? new Date(reg_close) : null;
+  const daysUntilClose = close ? Math.ceil((close - today) / (1000*60*60*24)) : null;
+  const daysUntilOpen = open ? Math.ceil((open - today) / (1000*60*60*24)) : null;
+
+  let label, bg, color;
+  if (close && today > close) {
+    label = "Registration Closed"; bg = "#fee2e2"; color = "#dc2626";
+  } else if (close && daysUntilClose <= 7) {
+    label = "Closes in "+daysUntilClose+"d"; bg = "#fef3c7"; color = "#d97706";
+  } else if (open && today >= open && (!close || today <= close)) {
+    label = "Registration Open"; bg = "#f0fdf4"; color = "#16a34a";
+  } else if (open && daysUntilOpen <= 30) {
+    label = "Opens in "+daysUntilOpen+"d"; bg = "#eff6ff"; color = "#2563eb";
+  } else if (open) {
+    label = "Opens "+open.toLocaleDateString("en-US",{month:"short",day:"numeric"}); bg = "#eff6ff"; color = "#2563eb";
+  } else {
+    return null;
+  }
+
+  return (
+    <span style={{ background:bg, color:color, fontSize:"0.65rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px", border:"1px solid "+color+"33", whiteSpace:"nowrap" }}>
+      {label}
+    </span>
+  );
+}
+
 function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav, onAddToCalendar }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
@@ -533,6 +564,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:"0.5rem", marginBottom:"0.25rem" }}>
           <div style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
           {place.price && <PriceBadge price={place.price}/>}
+            <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
         </div>
 
         <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>
