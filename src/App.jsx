@@ -951,7 +951,12 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             )}
-            <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+            <select value={ageFilter} onChange={e => setAgeFilter(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color: ageFilter ? T.accent : T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
+                <option value="">All Ages</option>
+                {kids.filter(k=>k.age).map(k => <option key={k.id} value={k.age}>{k.name} (age {k.age})</option>)}
+                {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].map(a => <option key={a} value={a}>Age {a}</option>)}
+              </select>
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 <option value="rating">Highest Rated</option>
                 <option value="az">A to Z</option>
                 <option value="za">Z to A</option>
