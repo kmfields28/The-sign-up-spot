@@ -818,7 +818,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
   const [searchLocation, setSearchLocation] = useState(null);
-  const [ageFilter, setAgeFilter] = useState("");
+  const [ageFilter, setAgeFilter] = useState(""); // eslint-disable-line no-unused-vars
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
