@@ -1502,6 +1502,7 @@ const KID_COLORS = ["#dc2626","#ea580c","#16a34a","#2563eb","#7c3aed","#db2777",
 // ── Kids Manager Modal ────────────────────────────────────────────────────────
 function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, renameKid, kidSaves, onClose }) {
   const [newName, setNewName] = useState("");
+  const [newAge, setNewAge] = useState("");
   const [newColor, setNewColor] = useState(KID_COLORS[kids.length % KID_COLORS.length]);
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
@@ -1535,7 +1536,7 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
                     style={{ flex:1, background:T.bgInput, border:"1px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.65rem", fontSize:"0.88rem", color:T.text, fontFamily:"inherit" }}/>
                 ) : (
                   <div style={{ flex:1, cursor:"pointer" }} onClick={() => setActiveKidId(kid.id)}>
-                    <div style={{ color:T.text, fontWeight: isActive?700:500, fontSize:"0.9rem" }}>{kid.name}</div>
+                    <div style={{ color:T.text, fontWeight: isActive?700:500, fontSize:"0.9rem" }}>{kid.name}{kid.age ? " · Age "+kid.age : ""}</div>
                     <div style={{ color:T.textMuted, fontSize:"0.72rem" }}>{saves} saved activit{saves===1?"y":"ies"}</div>
                   </div>
                 )}
@@ -2151,9 +2152,9 @@ export default function TheSignUpSpot() {
     });
   }
 
-  function addKid(name, color) {
+  function addKid(name, color, age) {
     const id = "k" + Date.now();
-    setKids(prev => [...prev, { id, name, color }]);
+    setKids(prev => [...prev, { id, name, color, age: age || null }]);
     setKidSaves(prev => ({ ...prev, [id]: new Map() }));
     setActiveKidId(id);
   }
