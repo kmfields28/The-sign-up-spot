@@ -287,6 +287,9 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
             </span>
             {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
+            {place.reg_open && new Date(place.reg_open) > new Date() && (
+              <NotifyMeButton place={place} user={user}/>
+            )}
             {place.ageRange && (
               <span style={{ background:T.bgDeep, color:T.textSoft, fontSize:"0.72rem", padding:"2px 8px", borderRadius:"99px", border:"1px solid "+T.border }}>
                 Ages {place.ageRange}
@@ -487,6 +490,50 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
 }
 
 // ── Activity Card ─────────────────────────────────────────────────────────────
+function NotifyMeButton({ place, user }) {
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  const [email, setEmail] = useState(user || "");
+
+  async function saveAlert() {
+    if (!email.trim()) return;
+    setLoading(true);
+    try {
+      await sbPost("registration_alerts", {
+        activity_id: place.placeId || place.id,
+        activity_name: place.name,
+        user_email: email.trim(),
+        reg_open: place.reg_open,
+      });
+      setSent(true);
+    } catch(e) { console.error(e); }
+    setLoading(false);
+  }
+
+  if (sent) return (
+    <span style={{ fontSize:"0.65rem", color:"#16a34a", fontWeight:700 }}>✓ We will notify you!</span>
+  );
+
+  if (showInput) return (
+    <div style={{ display:"flex", gap:"0.3rem", alignItems:"center" }} onClick={e=>e.stopPropagation()}>
+      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="your@email.com"
+        style={{ fontSize:"0.7rem", padding:"0.2rem 0.5rem", border:"1px solid "+T.border, borderRadius:"6px", width:"130px", fontFamily:"inherit" }}/>
+      <button onClick={saveAlert} disabled={loading}
+        style={{ background:T.accent, color:"#fff", border:"none", borderRadius:"6px", padding:"0.2rem 0.5rem", fontSize:"0.68rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+        {loading ? "..." : "Notify Me"}
+      </button>
+    </div>
+  );
+
+  return (
+    <button onClick={e => { e.stopPropagation(); setShowInput(true); }}
+      style={{ background:"#eff6ff", color:"#2563eb", border:"1px solid #bfdbfe", borderRadius:"99px", padding:"2px 8px", fontSize:"0.65rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap" }}>
+      🔔 Notify Me
+    </button>
+  );
+}
+
 function RegBadge({ reg_open, reg_close, reg_url }) {
   if (!reg_open && !reg_close) return null;
   const today = new Date();
@@ -517,7 +564,7 @@ function RegBadge({ reg_open, reg_close, reg_url }) {
   );
 }
 
-function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav, onAddToCalendar }) {
+function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKidId, kidSaves, onToggleKidFav, onAddToCalendar, user }) {
   const cat = getCatMeta(place.category);
   const isFav = favorites.has(place.id);
   return (
@@ -933,7 +980,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(270px,100%),1fr))", gap:"1rem" }}>
                 {sortedResults.map(p => (
                   <ActivityCard onAddToCalendar={p2 => onAddToCalendarPrompt && onAddToCalendarPrompt(p2)} key={p.id} place={p} favorites={favorites}
-                    onToggleFav={onToggleFav} onSelect={setSelectedPlace}/>
+                    onToggleFav={onToggleFav} onSelect={setSelectedPlace} user={user}/>
                 ))}
               </div>
             )}
