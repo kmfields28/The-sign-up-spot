@@ -818,7 +818,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [sortBy, setSortBy] = useState("rating");
   const [searchLocation, setSearchLocation] = useState(null);
-  const [ageFilter, setAgeFilter] = useState(""); // eslint-disable-line no-unused-vars
+  const [ageFilter, setAgeFilter] = useState("");
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
@@ -842,6 +842,14 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   }, [zip, radius, category, search, subCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { if (hasSearched && zip.length === 5) doSearch(); }, [subCategory, category]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-set age filter from active kid
+  useEffect(() => {
+    const activeKid = kids.find(k => k.id === activeKidId);
+    if (activeKid && activeKid.age) {
+      setAgeFilter(String(activeKid.age));
+    }
+  }, [activeKidId, kids]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selBtn = active => ({
     background: active ? "linear-gradient(135deg,"+T.accent+","+T.accentAlt+")" : "transparent",
