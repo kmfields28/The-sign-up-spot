@@ -1170,7 +1170,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
             { url:"https://images.unsplash.com/photo-1655842556432-ece48a4f2c1a?w=300&h=200&fit=crop", label:"Gymnastics" },
             { url:"https://images.unsplash.com/photo-1574744918163-6cef6f4a31b0?w=300&h=200&fit=crop", label:"Swimming" },
             { url:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop", label:"Basketball" },
-            { url:"https://images.unsplash.com/photo-1529768167801-9173d94c2a42?w=300&h=200&fit=crop", label:"Baseball" },
+            { url:"https://images.unsplash.com/photo-1508802449768-a389d1acbfcd?w=300&h=200&fit=crop", label:"Baseball" },
           ].map((p, i) => (
             <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"200px", height:"140px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
               <img src={p.url} alt={p.label} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => e.target.style.display="none"}/>
