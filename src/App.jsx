@@ -1164,11 +1164,11 @@ function HomePage({ onNavigate, onOpenAuth }) {
         <div style={{ display:"flex", gap:"0.75rem", overflowX:"auto", paddingLeft:"1.5rem", paddingRight:"1.5rem", scrollbarWidth:"none", msOverflowStyle:"none" }}>
           {[
             { url:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=300&h=200&fit=crop", label:"Soccer" },
-            { url:"https://images.unsplash.com/photo-1640396348064-b6c4b64a1f50?w=300&h=200&fit=crop", label:"Ballet" },
+            { url:"https://images.unsplash.com/photo-1677603142061-d19e9cbd5e4f?w=300&h=200&fit=crop", label:"Ballet" },
             { url:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=200&fit=crop", label:"Arts" },
             { url:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop", label:"Music" },
-            { url:"https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?w=300&h=200&fit=crop", label:"Gymnastics" },
-            { url:"https://images.unsplash.com/photo-1560090995-dbaac52037df?w=300&h=200&fit=crop", label:"Swimming" },
+            { url:"https://images.unsplash.com/photo-1655842556432-ece48a4f2c1a?w=300&h=200&fit=crop", label:"Gymnastics" },
+            { url:"https://images.unsplash.com/photo-1574744918163-6cef6f4a31b0?w=300&h=200&fit=crop", label:"Swimming" },
             { url:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop", label:"Basketball" },
             { url:"https://images.unsplash.com/photo-1471295253337-3ceaaedca402?w=300&h=200&fit=crop", label:"Baseball" },
           ].map((p, i) => (
