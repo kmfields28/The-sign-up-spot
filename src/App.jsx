@@ -1164,13 +1164,13 @@ function HomePage({ onNavigate, onOpenAuth }) {
         <div style={{ display:"flex", gap:"0.75rem", overflowX:"auto", paddingLeft:"1.5rem", paddingRight:"1.5rem", scrollbarWidth:"none", msOverflowStyle:"none" }}>
           {[
             { url:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=300&h=200&fit=crop", label:"Soccer" },
-            { url:"https://images.unsplash.com/photo-t0gpVFi6UmI?w=300&h=200&fit=crop", label:"Ballet" },
+            { url:"https://images.unsplash.com/photo-1640396348064-b6c4b64a1f50?w=300&h=200&fit=crop", label:"Ballet" },
             { url:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=200&fit=crop", label:"Arts" },
             { url:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop", label:"Music" },
-            { url:"https://images.unsplash.com/photo-IW3_4JTH39o?w=300&h=200&fit=crop", label:"Gymnastics" },
-            { url:"https://images.unsplash.com/photo-ttzU0sZmkpA?w=300&h=200&fit=crop", label:"Swimming" },
+            { url:"https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?w=300&h=200&fit=crop", label:"Gymnastics" },
+            { url:"https://images.unsplash.com/photo-1560090995-dbaac52037df?w=300&h=200&fit=crop", label:"Swimming" },
             { url:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop", label:"Basketball" },
-            { url:"https://images.unsplash.com/photo-NIrRqqrs0Fs?w=300&h=200&fit=crop", label:"Baseball" },
+            { url:"https://images.unsplash.com/photo-1471295253337-3ceaaedca402?w=300&h=200&fit=crop", label:"Baseball" },
           ].map((p, i) => (
             <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"200px", height:"140px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
               <img src={p.url} alt={p.label} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => e.target.style.display="none"}/>
