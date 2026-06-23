@@ -1161,7 +1161,14 @@ function HomePage({ onNavigate, onOpenAuth }) {
       {/* Hero — full width photo background */}
       <div style={{ position:"relative", minHeight:"480px", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
         {/* Background photo */}
-        <div style={{ position:"absolute", inset:0, backgroundImage:"url(https://images.unsplash.com/photo-1526916122-3cdf4f02c08f?w=1400&h=700&fit=crop)", backgroundSize:"cover", backgroundPosition:"center" }}/>
+        {SLIDES.map((s, i) => (
+          <div key={i} style={{ position:"absolute", inset:0, backgroundImage:"url("+s.url+")", backgroundSize:"cover", backgroundPosition:"center", opacity: i===slide ? 1 : 0, transition:"opacity 1.2s ease-in-out" }}/>
+        ))}
+        <div style={{ position:"absolute", bottom:"1.25rem", left:"50%", transform:"translateX(-50%)", display:"flex", gap:"0.4rem", zIndex:2 }}>
+          {SLIDES.map((_, i) => (
+            <button key={i} onClick={() => setSlide(i)} style={{ width: i===slide?"20px":"8px", height:"8px", borderRadius:"99px", background: i===slide?"#fff":"rgba(255,255,255,0.5)", border:"none", cursor:"pointer", transition:"all 0.3s", padding:0 }}/>
+          ))}
+        </div>
         {/* Dark overlay */}
         <div style={{ position:"absolute", inset:0, background:"linear-gradient(135deg, rgba(15,30,80,0.82) 0%, rgba(37,99,235,0.65) 100%)" }}/>
         {/* Content */}
