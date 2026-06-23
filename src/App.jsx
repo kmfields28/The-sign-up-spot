@@ -1219,14 +1219,19 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
       <div style={{ padding:"2.25rem 1.5rem", background:T.bg }}>
         <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", maxWidth:"900px", margin:"0 auto", justifyContent:"center" }}>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:"1rem", maxWidth:"960px", margin:"0 auto", justifyContent:"center" }}>
           {CATEGORIES.map((cat, i) => (
             <button key={cat.label} onClick={() => onNavigate("browse", { category:cat.label })}
-              style={{ background:cat.bg, border:"1.5px solid "+cat.color+"44", borderRadius:"14px", padding:"1.1rem 0.75rem", cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", gap:"0.4rem", boxShadow:"0 2px 12px "+cat.color+"22", fontFamily:"inherit", width:"calc(33% - 0.5rem)", minWidth:"90px", maxWidth:"130px", flexShrink:0 }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor=cat.color; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 8px 24px "+cat.color+"44"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor=cat.color+"44"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 12px "+cat.color+"22"; }}>
-
-              <span style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px" }}>{cat.label}</span>
+              style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"18px", padding:0, cursor:"pointer", textAlign:"center", transition:"all 0.2s", display:"flex", flexDirection:"column", alignItems:"center", boxShadow:"0 2px 16px rgba(0,0,0,0.06)", fontFamily:"inherit", width:"calc(33% - 0.75rem)", minWidth:"100px", maxWidth:"140px", flexShrink:0, overflow:"hidden" }}
+              onMouseEnter={e => { e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow="0 12px 32px "+cat.color+"33"; e.currentTarget.style.borderColor=cat.color+"66"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderColor=T.border; }}>
+              <div style={{ width:"100%", height:"6px", background:cat.color, borderRadius:"18px 18px 0 0" }}/>
+              <div style={{ padding:"1rem 0.75rem 1.1rem" }}>
+                <div style={{ width:"40px", height:"40px", borderRadius:"12px", background:cat.bg, margin:"0 auto 0.6rem", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <div style={{ width:"20px", height:"20px", borderRadius:"50%", background:cat.color }}/>
+                </div>
+                <span style={{ color:T.text, fontSize:"0.72rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px", lineHeight:1.3 }}>{cat.label}</span>
+              </div>
             </button>
           ))}
         </div>
