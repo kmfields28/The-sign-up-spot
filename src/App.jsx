@@ -411,7 +411,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                 style={{ flex:1,                   color:"#2e1a08", borderRadius:"99px", padding:"0.65rem 1rem", fontSize:"0.85rem", textDecoration:"none", fontWeight:800, textAlign:"center", display:"block", background:"#f8f8f8"}}>
                 Search on Google →
               </a>
-            </>)}
+            )}
           </div>
 
           {/* Reviews */}
