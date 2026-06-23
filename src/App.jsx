@@ -1227,10 +1227,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
               onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 2px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderColor=T.border; }}>
               <div style={{ width:"100%", height:"6px", background:cat.color, borderRadius:"18px 18px 0 0" }}/>
               <div style={{ padding:"1rem 0.75rem 1.1rem" }}>
-                <div style={{ width:"40px", height:"40px", borderRadius:"12px", background:cat.bg, margin:"0 auto 0.6rem", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <div style={{ width:"20px", height:"20px", borderRadius:"50%", background:cat.color }}/>
-                </div>
-                <span style={{ color:T.text, fontSize:"0.72rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px", lineHeight:1.3 }}>{cat.label}</span>
+<span style={{ color:T.text, fontSize:"0.75rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"0.5px", lineHeight:1.3 }}>{cat.label}</span>
               </div>
             </button>
           ))}
