@@ -1145,6 +1145,17 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 
 // ── Home Page ─────────────────────────────────────────────────────────────────
 function HomePage({ onNavigate, onOpenAuth }) {
+  const [slide, setSlide] = useState(0);
+  const SLIDES = [
+    { url:"https://images.unsplash.com/photo-1622659097509-4d56de14539e?w=1400&h=700&fit=crop", label:"Soccer" },
+    { url:"https://images.unsplash.com/photo-1574744918163-6cef6f4a31b0?w=1400&h=700&fit=crop", label:"Swimming" },
+    { url:"https://images.unsplash.com/photo-1780751379328-9271686e4e06?w=1400&h=700&fit=crop", label:"Arts" },
+  ];
+  useEffect(() => {
+    const timer = setInterval(() => setSlide(s => (s+1) % SLIDES.length), 5000);
+    return () => clearInterval(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div>
       {/* Hero — full width photo background */}
