@@ -82,7 +82,7 @@ async function geocodeZip(zip) {
 
 async function getPlaceDetails(placeId) {
   try {
-    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number,url");
+    const res = await fetch("/api/places?endpoint=place/details&place_id=" + placeId + "&fields=website,formatted_phone_number,url,reviews,opening_hours");
     const data = await res.json();
     return data.result || {};
   } catch(e) { return {}; }
