@@ -1147,24 +1147,30 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 function HomePage({ onNavigate, onOpenAuth }) {
   return (
     <div>
-      <div style={{         padding:"3.5rem 1.5rem 2.5rem", textAlign:"center", borderBottom:"1px solid "+T.border, position:"relative", overflow:"hidden", background:"#f8f8f8"}}>
-        <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(ellipse at 20% 80%, rgba(255,180,220,0.25) 0%, transparent 45%), radial-gradient(ellipse at 80% 20%, rgba(160,180,255,0.2) 0%, transparent 45%)", pointerEvents:"none" }}/>
-        <div style={{ position:"relative" }}>
-          <span style={{ background:"#f8f8f8", border:"none", color:"#2e1a08", fontSize:"0.72rem", fontWeight:800, padding:"4px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", boxShadow:"0 2px 12px "+T.shadow }}>Your Family Activity Hub</span>
-          <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.6rem)", fontWeight:900, lineHeight:1.08, margin:"1rem 0", color:T.text }}>
-            Find Their Next<br/>
-            <span style={{ background:"linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Favorite Activity</span>
+      {/* Hero — full width photo background */}
+      <div style={{ position:"relative", minHeight:"480px", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
+        {/* Background photo */}
+        <div style={{ position:"absolute", inset:0, backgroundImage:"url(https://images.unsplash.com/photo-1526916122-3cdf4f02c08f?w=1400&h=700&fit=crop)", backgroundSize:"cover", backgroundPosition:"center" }}/>
+        {/* Dark overlay */}
+        <div style={{ position:"absolute", inset:0, background:"linear-gradient(135deg, rgba(15,30,80,0.82) 0%, rgba(37,99,235,0.65) 100%)" }}/>
+        {/* Content */}
+        <div style={{ position:"relative", textAlign:"center", padding:"3.5rem 1.5rem", maxWidth:"680px", margin:"0 auto" }}>
+          <span style={{ background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", color:"#fff", fontSize:"0.72rem", fontWeight:700, padding:"5px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", border:"1px solid rgba(255,255,255,0.3)" }}>
+            Your Family Activity Hub
+          </span>
+          <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.8rem)", fontWeight:900, lineHeight:1.1, margin:"1.25rem 0 1rem", color:"#fff" }}>
+            Find Their Next<br/>Favorite Activity
           </h1>
-          <p style={{ color:T.textSoft, fontSize:"1.05rem", maxWidth:"460px", margin:"0 auto 2rem", lineHeight:1.75 }}>
+          <p style={{ color:"rgba(255,255,255,0.85)", fontSize:"1.1rem", maxWidth:"420px", margin:"0 auto 2.25rem", lineHeight:1.75 }}>
             All their activities. One spot.
           </p>
           <div style={{ display:"flex", gap:"0.75rem", justifyContent:"center", flexWrap:"wrap" }}>
             <button onClick={() => onNavigate("browse")}
-              style={{                 color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 20px "+T.shadow, background:"#f8f8f8"}}>
+              style={{ background:"#fff", color:T.accent, border:"none", borderRadius:"99px", padding:"0.85rem 2.25rem", fontSize:"1rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 24px rgba(0,0,0,0.2)" }}>
               Find Activities Near Me →
             </button>
             <button onClick={onOpenAuth}
-              style={{ background:T.bgCard, color:T.accent, border:"1.5px solid "+T.accent+"55", borderRadius:"99px", padding:"0.75rem 2rem", fontSize:"0.95rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+              style={{ background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", color:"#fff", border:"1.5px solid rgba(255,255,255,0.5)", borderRadius:"99px", padding:"0.85rem 2.25rem", fontSize:"1rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
               Sign In / Sign Up
             </button>
           </div>
