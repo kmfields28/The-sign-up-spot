@@ -288,7 +288,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
         {/* Header */}
         <div style={{ background:cat.bg, padding:"2rem 1.5rem 1.25rem", borderRadius:"22px 22px 0 0", textAlign:"center" }}>
 
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem", marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.3rem", marginTop:"0.5rem", lineHeight:1.2 }}>{place.name}</h2>
           <span style={{ background:cat.color+"22", color:cat.color, fontSize:"0.68rem", fontWeight:700, padding:"2px 10px", borderRadius:"99px", border:"1px solid "+cat.color+"44" }}>{place.category}</span>
         </div>
 
@@ -417,7 +417,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
           {/* Reviews */}
           <div style={{ borderTop:"1px solid "+T.border, paddingTop:"1.25rem" }}>
 
-            <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1rem", marginBottom:"0.85rem" }}>Reviews</h3>
+            <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.85rem" }}>Reviews</h3>
 
             {/* Google Reviews */}
             {place.googleReviews && place.googleReviews.length > 0 && (<>
@@ -633,7 +633,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
 
       <div style={{ padding:"1rem" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:"0.5rem", marginBottom:"0.25rem" }}>
-          <div style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
+          <div style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
           {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
         </div>
@@ -679,7 +679,7 @@ function NewsletterBanner() {
       <div style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 20% 50%, rgba(255,255,255,0.18) 0%, transparent 55%)", pointerEvents:"none" }}/>
       <div style={{ position:"relative", maxWidth:"480px", margin:"0 auto" }}>
         <div style={{ fontSize:"1.6rem", marginBottom:"0.5rem" }}>📬</div>
-        <h3 style={{ fontFamily:"'Fraunces',serif", color:"#2e1a08", fontSize:"1.4rem", marginBottom:"0.4rem" }}>
+        <h3 style={{ fontFamily:"'Playfair Display',serif", color:"#2e1a08", fontSize:"1.4rem", marginBottom:"0.4rem" }}>
           Stay in the Loop
         </h3>
         <p style={{ color:T.textSoft, fontSize:"0.87rem", marginBottom:"1.25rem", lineHeight:1.65 }}>
@@ -728,7 +728,7 @@ function AuthModal({ onClose, onSignIn }) {
         style={{ background:T.bgCard, borderRadius:"24px", padding:"2.25rem", maxWidth:"420px", width:"100%", boxShadow:"0 32px 64px "+T.shadow, border:"1px solid "+T.border, position:"relative", maxHeight:"92vh", overflowY:"auto" }}>
         <button onClick={onClose} style={{ position:"absolute", top:"1.1rem", right:"1.1rem", background:T.bgDeep, border:"1px solid "+T.border, color:T.textSoft, width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
         <div style={{ textAlign:"center", marginBottom:"1.75rem" }}>
-          <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontSize:"1.4rem", fontWeight:900, marginBottom:"0.2rem" }}>The Sign Up Spot</div>
+          <div style={{ fontFamily:"'Playfair Display',serif", color:T.accent, fontSize:"1.4rem", fontWeight:900, marginBottom:"0.2rem" }}>The Sign Up Spot</div>
           <div style={{ color:T.textMuted, fontSize:"0.75rem", textTransform:"uppercase", letterSpacing:"1.5px" }}>
             {mode === "signin" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset password"}
           </div>
@@ -763,7 +763,7 @@ function AuthModal({ onClose, onSignIn }) {
         {mode === "forgot" && done && (
           <div style={{ textAlign:"center", padding:"1rem 0" }}>
             <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>📧</div>
-            <p style={{ color:T.text, fontWeight:700, marginBottom:"0.3rem", fontFamily:"'Fraunces',serif" }}>Check your inbox!</p>
+            <p style={{ color:T.text, fontWeight:700, marginBottom:"0.3rem", fontFamily:"'Playfair Display',serif" }}>Check your inbox!</p>
             <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Reset link sent to {email}.</p>
             <button onClick={() => { setMode("signin"); setDone(false); }}
               style={{ background:"#f8f8f8", color:"#2e1a08", border:"none", borderRadius:"99px", padding:"0.6rem 1.4rem", fontSize:"0.85rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit" }}>
@@ -959,7 +959,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
         {!hasSearched && !loading && (
           <div style={{ textAlign:"center", padding:"5rem 1rem" }}>
             <div style={{ fontSize:"3.5rem", marginBottom:"1rem" }}>🔍</div>
-            <p style={{ color:T.textMid, fontWeight:600, fontFamily:"'Fraunces',serif", fontSize:"1.15rem", marginBottom:"0.5rem" }}>
+            <p style={{ color:T.textMid, fontWeight:600, fontFamily:"'Playfair Display',serif", fontSize:"1.15rem", marginBottom:"0.5rem" }}>
               Enter a ZIP code to find activities near you
             </p>
             <p style={{ color:T.textMuted, fontSize:"0.85rem" }}>
@@ -1018,7 +1018,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                       onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
 
                       <div style={{ flex:1, minWidth:"180px" }}>
-                        <div style={{ color:T.text, fontWeight:600, fontFamily:"'Fraunces',serif" }}>{p.name}</div>
+                        <div style={{ color:T.text, fontWeight:600, fontFamily:"'Playfair Display',serif" }}>{p.name}</div>
                         <div style={{ color:T.textSoft, fontSize:"0.75rem", marginTop:"0.15rem" }}>📍 {p.address}</div>
                         <div style={{ display:"flex", gap:"0.4rem", alignItems:"center", marginTop:"0.25rem" }}>
                           <Stars rating={p.rating}/>
@@ -1068,7 +1068,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
     <div style={{ padding:"1.5rem", background:T.bg, minHeight:"80vh" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"1rem", flexWrap:"wrap", gap:"0.75rem" }}>
         <div>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Saved Activities</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Saved Activities</h2>
           <p style={{ color:T.textSoft, fontSize:"0.83rem" }}>{displayPlaces.length} saved{activeKid ? " for "+activeKid.name : ""}</p>
         </div>
         <button onClick={onOpenKidsManager}
@@ -1108,7 +1108,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
         ) : (
           <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
             <div style={{ fontSize:"3rem", marginBottom:"1rem" }}></div>
-            <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Your Family Calendar</h3>
+            <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Your Family Calendar</h3>
             <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>
               Create a free account to access your weekly calendar, track each child's schedule, and export to Google Calendar or Apple Calendar.
             </p>
@@ -1121,7 +1121,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
       ) : displayPlaces.length === 0 ? (
         <div style={{ textAlign:"center", padding:"4rem 1rem", background:T.bgCard, borderRadius:"18px", border:"1px solid "+T.border }}>
           <div style={{ fontSize:"3rem", marginBottom:"1rem" }}>🌻</div>
-          <p style={{ color:T.textSoft, fontFamily:"'Fraunces',serif" }}>
+          <p style={{ color:T.textSoft, fontFamily:"'Playfair Display',serif" }}>
             {tab === "all" ? "No saved activities yet." : "Nothing saved for "+activeKid?.name+" yet."}
           </p>
           <p style={{ color:T.textMuted, fontSize:"0.85rem", marginTop:"0.4rem" }}>
@@ -1176,7 +1176,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
           <span style={{ background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", color:"#fff", fontSize:"0.72rem", fontWeight:700, padding:"5px 16px", borderRadius:"99px", textTransform:"uppercase", letterSpacing:"2px", border:"1px solid rgba(255,255,255,0.3)" }}>
             Your Family Activity Hub
           </span>
-          <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.2rem,5.5vw,3.8rem)", fontWeight:900, lineHeight:1.1, margin:"1.25rem 0 1rem", color:"#fff" }}>
+          <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(2.2rem,5.5vw,3.8rem)", fontWeight:900, lineHeight:1.1, margin:"1.25rem 0 1rem", color:"#fff" }}>
             Find Their Next<br/>Favorite Activity
           </h1>
           <p style={{ color:"rgba(255,255,255,0.85)", fontSize:"1.1rem", maxWidth:"420px", margin:"0 auto 2.25rem", lineHeight:1.75 }}>
@@ -1208,7 +1208,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
             { url:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=200&fit=crop", label:"Basketball" },
             { url:"https://images.unsplash.com/photo-1508802449768-a389d1acbfcd?w=300&h=200&fit=crop", label:"Baseball" },
           ].map((p, i) => (
-            <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"200px", height:"140px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
+            <div key={i} onClick={() => onNavigate("browse")} style={{ position:"relative", flexShrink:0, width:"220px", height:"160px", borderRadius:"16px", overflow:"hidden", cursor:"pointer" }}>
               <img src={p.url} alt={p.label} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e => e.target.style.display="none"}/>
               <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }}/>
               <span style={{ position:"absolute", bottom:"0.6rem", left:"0.75rem", color:"#fff", fontSize:"0.78rem", fontWeight:700 }}>{p.label}</span>
@@ -1218,7 +1218,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
       </div>
 
       <div style={{ padding:"2.25rem 1.5rem", background:T.bg }}>
-        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem", textAlign:"center" }}>Browse by Category</h2>
         <div style={{ display:"flex", flexWrap:"wrap", gap:"1rem", maxWidth:"960px", margin:"0 auto", justifyContent:"center" }}>
           {CATEGORIES.map((cat, i) => (
             <button key={cat.label} onClick={() => onNavigate("browse", { category:cat.label })}
@@ -1236,9 +1236,9 @@ function HomePage({ onNavigate, onOpenAuth }) {
 
       <div style={{ padding:"2rem 1.5rem",         borderTop:"1px solid "+T.border, borderBottom:"1px solid "+T.border, background:"#f8f8f8"}}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"1.5rem", maxWidth:"660px", margin:"0 auto", textAlign:"center" }}>
-          {[{n:"",l:"AI Powered Search",c:"#7a5c48"},{n:"9",l:"Categories",c:"#6a6058"},{n:"Any ZIP",l:"Nationwide",c:"#587068"},{n:"Free",l:"Always",c:"#8a6a40"}].map(s => (
+          {[{n:"10+",l:"Categories",c:T.accent},{n:"Free",l:"Always",c:"#16a34a"},{n:"Real",l:"Parent Reviews",c:"#7c3aed"},{n:"1 Spot",l:"All Activities",c:"#db2777"}].map(s => (
             <div key={s.l}>
-              <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.75rem", fontWeight:900, color:s.c }}>{s.n}</div>
+              <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.75rem", fontWeight:900, color:s.c }}>{s.n}</div>
               <div style={{ color:T.textSoft, fontSize:"0.8rem", marginTop:"0.2rem" }}>{s.l}</div>
             </div>
           ))}
@@ -1307,13 +1307,13 @@ function ListYourBusinessForm() {
 
   return (
     <div id="list-biz-form" style={{ marginTop:"2rem", background:T.bgCard, border:"1px solid "+T.border, borderRadius:"18px", padding:"1.75rem", boxShadow:"0 2px 12px "+T.shadow }}>
-      <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.25rem" }}>List Your Business</h3>
+      <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.25rem" }}>List Your Business</h3>
       <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Fill out the form below and our team will be in touch within 2 business days.</p>
 
       {submitted ? (
         <div style={{ textAlign:"center", padding:"2rem" }}>
           <div style={{ fontSize:"3rem", marginBottom:"0.75rem" }}>🎉</div>
-          <h4 style={{ fontFamily:"'Fraunces',serif", color:T.text, marginBottom:"0.4rem" }}>Application Received!</h4>
+          <h4 style={{ fontFamily:"'Playfair Display',serif", color:T.text, marginBottom:"0.4rem" }}>Application Received!</h4>
           <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Thanks for reaching out. We'll contact you at {form.email} within 2 business days.</p>
         </div>
       ) : (
@@ -1433,7 +1433,7 @@ function BusinessesPage() {
     <div style={{ padding:"1.5rem", background:T.bg, minHeight:"80vh" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"1rem", marginBottom:"1.5rem" }}>
         <div>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Local Businesses</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Local Businesses</h2>
           <p style={{ color:T.textSoft, fontSize:"0.85rem" }}>Support great local programs in your community</p>
         </div>
         <div style={{ background:T.goldBg, border:"1px solid "+T.gold+"55", borderRadius:"14px", padding:"1rem 1.25rem", maxWidth:"260px" }}>
@@ -1444,7 +1444,7 @@ function BusinessesPage() {
       </div>
 
       {/* Featured businesses */}
-      <h3 style={{ color:T.gold, fontFamily:"'Fraunces',serif", fontSize:"1.05rem", marginBottom:"0.85rem" }}>⭐ Featured Partners</h3>
+      <h3 style={{ color:T.gold, fontFamily:"'Playfair Display',serif", fontSize:"1.05rem", marginBottom:"0.85rem" }}>⭐ Featured Partners</h3>
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(320px,1fr))", gap:"1rem", marginBottom:"2rem" }}>
         {[
           { name:"Jump Zone Trampoline Park", category:"Sports", address:"123 Spring St, New York, NY 10001", phone:"(212) 555-0101", website:"https://jumpzone.com", description:"NYC premier indoor trampoline park with foam pits, dodgeball courts, and ninja courses.", rating:4.6, reviewCount:312, tier:"gold", icon:"🦘", amenities:["Party Rooms","Café","Free Parking"] },
@@ -1461,7 +1461,7 @@ function BusinessesPage() {
               <div style={{ display:"flex", gap:"0.75rem", alignItems:"flex-start", marginTop:"0.75rem" }}>
                 <span style={{ fontSize:"1.9rem", background:cat.bg, padding:"0.55rem", borderRadius:"12px", flexShrink:0 }}>{biz.icon}</span>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ color:T.text, fontWeight:700, fontSize:"0.98rem", fontFamily:"'Fraunces',serif" }}>{biz.name}</div>
+                  <div style={{ color:T.text, fontWeight:700, fontSize:"0.98rem", fontFamily:"'Playfair Display',serif" }}>{biz.name}</div>
                   <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>{biz.category}</div>
                   <p style={{ color:T.textSoft, fontSize:"0.8rem", lineHeight:1.6, marginBottom:"0.75rem" }}>{biz.description}</p>
                   <div style={{ display:"flex", gap:"0.3rem", flexWrap:"wrap", marginBottom:"0.75rem" }}>
@@ -1489,7 +1489,7 @@ function BusinessesPage() {
       {/* List your business CTA */}
       <div style={{ background:"#f8f8f8", borderRadius:"18px", padding:"2rem", textAlign:"center", marginTop:"1rem" }}>
         <div style={{ fontSize:"2rem", marginBottom:"0.5rem" }}>🏢</div>
-        <h3 style={{ fontFamily:"'Fraunces',serif", color:"#2e1a08", fontSize:"1.3rem", marginBottom:"0.5rem" }}>List Your Business</h3>
+        <h3 style={{ fontFamily:"'Playfair Display',serif", color:"#2e1a08", fontSize:"1.3rem", marginBottom:"0.5rem" }}>List Your Business</h3>
         <p style={{ color:T.textSoft, fontSize:"0.87rem", marginBottom:"1.25rem", maxWidth:"380px", margin:"0 auto 1.25rem", lineHeight:1.65 }}>
           Reach thousands of local parents looking for exactly what you offer. Get started today.
         </p>
@@ -1512,12 +1512,12 @@ function AboutPage() {
         <div style={{ width:"160px", height:"160px", borderRadius:"50%", overflow:"hidden", margin:"0 auto 1.25rem", border:"4px solid #fff", boxShadow:"0 4px 20px rgba(0,0,0,0.12)" }}>
           <img src="https://raw.githubusercontent.com/kmfields28/The-sign-up-spot/main/public/IMG_7294.jpeg" alt="The Fields Family" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
         </div>
-        <h1 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi, I am Kristen</h1>
+        <h1 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi, I am Kristen</h1>
         <p style={{ color:T.textSoft, fontSize:"1rem", maxWidth:"520px", margin:"0 auto", lineHeight:1.7 }}>Mom of two, wife, dog mom, and the person who finally got tired of endless Google searches for kids activities.</p>
       </div>
       <div style={{ maxWidth:"680px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
         <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>Why I Built This</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>Why I Built This</h2>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>Every parent wants their kids to find their thing — the sport they love, the art class that lights them up, the team that becomes their people. But finding those opportunities? That is a whole other job.</p>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>For me it was endless Google searches, texts to the mom group, digging through Facebook pages, asking around at school pickup. By the time I had tracked down the right program, half the session was already full. And do not even get me started on summer camps — the good ones fill up in January while you are still recovering from the holidays.</p>
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85, marginBottom:"1rem" }}>And then there is the registration chaos. Soccer season opens in February. Dance registration is in April. That STEM camp you heard about? It filled up three months ago and you did not even know sign-ups had started. Every activity runs on its own schedule with its own deadline — and there is no central place to know when it is time to sign up.</p>
@@ -1525,7 +1525,7 @@ function AboutPage() {
           <p style={{ color:T.textSoft, fontSize:"0.92rem", lineHeight:1.85 }}>When you have multiple kids in different activities, just knowing what the week looks like is its own challenge. We built the family calendar so you can see every child schedule in one place, color-coded by kid, and actually know if it is manageable before you are already in it. Because our kids deserve every chance to find their passion, build strong friendships, and try something new — and you deserve to find it without the chaos.</p>
         </div>
         <div style={{ background:"linear-gradient(135deg,#eff6ff,#faf5ff)", border:"1px solid #c7d2fe", borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem" }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem" }}>Our Family</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1.25rem" }}>Our Family</h2>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:"1rem" }}>
             {[{ emoji:"", name:"Kristen", desc:"Founder & mom" },{ emoji:"", name:"Dan", desc:"Husband & co-pilot" },{ emoji:"", name:"Isabella", desc:"Age 6" },{ emoji:"", name:"Lilia", desc:"Age 3" },{ emoji:"", name:"Annie & Chase", desc:"Pure chaos" }].map(m => (
               <div key={m.name} style={{ background:"rgba(255,255,255,0.7)", borderRadius:"14px", padding:"1rem", textAlign:"center", border:"1px solid rgba(199,210,254,0.5)" }}>
@@ -1537,7 +1537,7 @@ function AboutPage() {
           <p style={{ color:T.textSoft, fontSize:"0.82rem", marginTop:"1rem", textAlign:"center" }}>Marvin, NC</p>
         </div>
         <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"20px", padding:"2rem", marginBottom:"1.5rem", boxShadow:"0 2px 12px "+T.shadow }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We Are Building</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"1rem" }}>What We Are Building</h2>
           <div style={{ display:"flex", flexDirection:"column", gap:"0.85rem" }}>
             {[{ icon:"", text:"One place to find every kids activity near you — sports, arts, music, dance, STEM, theater, tutoring, and more" },{ icon:"", text:"Real reviews from real parents you can actually trust" },{ icon:"", text:"A family calendar so you can see every child schedule in one view — color-coded by kid" },{ icon:"", text:"An experience built for how moms and dads actually live — on their phones, in between everything else" }].map((item, i) => (
               <div key={i} style={{ display:"flex", gap:"0.85rem", alignItems:"flex-start" }}>
@@ -1548,7 +1548,7 @@ function AboutPage() {
           </div>
         </div>
         <div style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", borderRadius:"20px", padding:"2rem", textAlign:"center", color:"#fff" }}>
-          <h2 style={{ fontFamily:"'Fraunces',serif", fontSize:"1.3rem", marginBottom:"0.5rem" }}>Get in Touch</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"1.3rem", marginBottom:"0.5rem" }}>Get in Touch</h2>
           <p style={{ fontSize:"0.88rem", opacity:0.9, marginBottom:"1.25rem", lineHeight:1.6 }}>Have a business you would like to list? A feature idea? Just want to say hi? I would love to hear from you.</p>
           <a href="mailto:LiliBellebiz@gmail.com" style={{ background:"#fff", color:T.accent, borderRadius:"99px", padding:"0.7rem 1.75rem", fontSize:"0.9rem", fontWeight:700, textDecoration:"none", display:"inline-flex", alignItems:"center", gap:"0.5rem", marginBottom:"0.75rem" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1583,7 +1583,7 @@ function KidsManager({ kids, activeKidId, setActiveKidId, addKid, removeKid, ren
       <div onClick={e=>e.stopPropagation()} style={{ background:T.bgCard, borderRadius:"24px", padding:"2rem", maxWidth:"440px", width:"100%", boxShadow:"0 32px 64px "+T.shadow, border:"1px solid "+T.border, position:"relative", maxHeight:"90vh", overflowY:"auto" }}>
         <button onClick={onClose} style={{ position:"absolute", top:"1rem", right:"1rem", background:T.bgDeep, border:"1px solid "+T.border, color:T.textSoft, width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer", fontSize:"0.9rem", display:"flex", alignItems:"center", justifyContent:"center" }}>✕</button>
 
-        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.3rem", marginBottom:"0.25rem" }}>My Kids</h2>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.3rem", marginBottom:"0.25rem" }}>My Kids</h2>
         <p style={{ color:T.textSoft, fontSize:"0.82rem", marginBottom:"1.5rem" }}>Save activities for each child separately</p>
 
         {/* Kid list */}
@@ -1671,7 +1671,7 @@ function AddToCalendarModal({ place, kids, user, onOpenAuth, onClose, onSaveEven
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"2rem", maxWidth:"380px", width:"100%", textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
         <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}></div>
-        <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Add to Your Calendar</h3>
+        <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.2rem", marginBottom:"0.5rem" }}>Add to Your Calendar</h3>
         <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.25rem", lineHeight:1.6 }}>Create a free account to add <strong>{place.name}</strong> to your family calendar and track each child's schedule.</p>
         <button onClick={() => { onClose(); onOpenAuth(); }}
           style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", marginBottom:"0.5rem" }}>
@@ -1700,7 +1700,7 @@ function AddToCalendarModal({ place, kids, user, onOpenAuth, onClose, onSaveEven
   return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.5)", zIndex:2000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"1.75rem", maxWidth:"400px", width:"100%", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
-        <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.1rem", marginBottom:"0.25rem" }}>Add to Calendar</h3>
+        <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.1rem", marginBottom:"0.25rem" }}>Add to Calendar</h3>
         <p style={{ color:T.textSoft, fontSize:"0.82rem", marginBottom:"1.25rem" }}>{place.name}</p>
 
         {kids.length > 0 && (
@@ -1847,7 +1847,7 @@ function CalendarPage({ kids, kidSaves, events, setEvents }) {
       {/* Header */}
       <div style={{ padding:"1.25rem 1.5rem", borderBottom:"1px solid "+T.border, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.75rem", background:"#fff" }}>
         <div>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.15rem" }}>Weekly Schedule</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.15rem" }}>Weekly Schedule</h2>
           <p style={{ color:T.textSoft, fontSize:"0.82rem" }}>This week · tap a time slot to add an activity</p>
         </div>
         <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
@@ -1923,7 +1923,7 @@ function CalendarPage({ kids, kidSaves, events, setEvents }) {
       {showAdd && (
         <div onClick={() => setShowAdd(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.4)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:"1rem" }}>
           <div onClick={e => e.stopPropagation()} style={{ background:"#fff", borderRadius:"20px", padding:"1.75rem", maxWidth:"400px", width:"100%", boxShadow:"0 20px 60px rgba(0,0,0,0.15)" }}>
-            <h3 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.15rem", marginBottom:"1.25rem" }}>{editEvent ? "Edit Activity" : "Add Activity"}</h3>
+            <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.15rem", marginBottom:"1.25rem" }}>{editEvent ? "Edit Activity" : "Add Activity"}</h3>
 
             <div style={{ marginBottom:"0.85rem" }}>
               <label style={{ display:"block", color:T.textMid, fontSize:"0.73rem", fontWeight:700, marginBottom:"0.3rem", textTransform:"uppercase" }}>Activity Name</label>
@@ -2027,7 +2027,7 @@ function AdminPage() {
     <div style={{ minHeight:"80vh", display:"flex", alignItems:"center", justifyContent:"center", background:T.bg, padding:"1.5rem" }}>
       <div style={{ background:T.bgCard, border:"1px solid "+T.border, borderRadius:"20px", padding:"2.5rem", maxWidth:"360px", width:"100%", boxShadow:"0 8px 32px "+T.shadow, textAlign:"center" }}>
         <div style={{ fontSize:"2.5rem", marginBottom:"0.75rem" }}>🔐</div>
-        <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.5rem" }}>Admin Access</h2>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.4rem", marginBottom:"0.5rem" }}>Admin Access</h2>
         <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"1.5rem" }}>Enter your admin password to manage listings</p>
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && password === ADMIN_PASSWORD) { setAuthed(true); loadListings(); }}} placeholder="Password" style={{ width:"100%", background:T.bgInput, border:"1.5px solid "+T.border, borderRadius:"10px", padding:"0.7rem 1rem", fontSize:"0.9rem", color:T.text, boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.75rem", display:"block" }}/>
         <button onClick={() => { if (password === ADMIN_PASSWORD) { setAuthed(true); loadListings(); } else { alert("Incorrect password"); }}} style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.7rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In</button>
@@ -2041,7 +2041,7 @@ function AdminPage() {
     <div style={{ padding:"1.5rem", background:T.bg, minHeight:"80vh" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1.5rem", flexWrap:"wrap", gap:"1rem" }}>
         <div>
-          <h2 style={{ fontFamily:"'Fraunces',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Admin Dashboard</h2>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.5rem", marginBottom:"0.25rem" }}>Admin Dashboard</h2>
           <p style={{ color:T.textSoft, fontSize:"0.83rem" }}>{pending.length} pending · {approved.length} approved</p>
         </div>
         <button onClick={loadListings} style={{ background:T.bgDeep, border:"1px solid "+T.border, color:T.textMid, borderRadius:"99px", padding:"0.45rem 1rem", fontSize:"0.8rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Refresh</button>
@@ -2065,7 +2065,7 @@ function AdminPage() {
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:"0.75rem" }}>
                 <div style={{ flex:1 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:"0.5rem", marginBottom:"0.35rem", flexWrap:"wrap" }}>
-                    <span style={{ fontFamily:"'Fraunces',serif", color:T.text, fontWeight:700, fontSize:"1rem" }}>{biz.name}</span>
+                    <span style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontWeight:700, fontSize:"1rem" }}>{biz.name}</span>
                     {biz.featured_interest && <span style={{ background:T.goldBg, color:T.gold, fontSize:"0.65rem", fontWeight:700, padding:"2px 8px", borderRadius:"99px" }}>Featured Interest</span>}
                   </div>
                   <div style={{ display:"flex", gap:"0.35rem", flexWrap:"wrap", marginBottom:"0.5rem" }}>
@@ -2120,7 +2120,7 @@ function HamburgerMenu({ currentPage, onNavigate, onClose, favCount, onOpenAuth,
         `}</style>
         <div style={{ padding:"1.25rem", borderBottom:"1px solid "+T.border, display:"flex", alignItems:"center", justifyContent:"space-between", background:"#f8f8f8" }}>
           <div>
-            <div style={{ fontFamily:"'Fraunces',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem" }}>
+            <div style={{ fontFamily:"'Playfair Display',serif", color:T.accent, fontWeight:900, fontSize:"1.1rem" }}>
               The Sign Up Spot
             </div>
             <div style={{ color:T.textMuted, fontSize:"0.67rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", marginTop:"0.2rem" }}>
@@ -2246,8 +2246,8 @@ export default function TheSignUpSpot() {
   const favPlaces = [...favorites.values()];
 
   return (
-    <div style={{ minHeight:"100vh", background:T.bg, fontFamily:"'DM Sans','Segoe UI',sans-serif", color:T.text }}>
-      <style>{"@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:"+T.bgDeep+";}::-webkit-scrollbar-thumb{background:"+T.borderMid+";border-radius:3px;}input,select,textarea{outline:none;font-family:inherit;color:"+T.text+";}input::placeholder,textarea::placeholder{color:"+T.textMuted+";}select option{background:"+T.bgCard+";}"}</style>
+    <div style={{ minHeight:"100vh", background:T.bg, fontFamily:"'Inter','Segoe UI',sans-serif", color:T.text }}>
+      <style>{"@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap');*{box-sizing:border-box;margin:0;padding:0;}::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:"+T.bgDeep+";}::-webkit-scrollbar-thumb{background:"+T.borderMid+";border-radius:3px;}input,select,textarea{outline:none;font-family:inherit;color:"+T.text+";}input::placeholder,textarea::placeholder{color:"+T.textMuted+";}select option{background:"+T.bgCard+";}"}</style>
 
       {/* Nav — centered logo row + links row */}
       <div style={{ position:"sticky", top:0, zIndex:100, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(12px)", borderBottom:"1px solid "+T.border, boxShadow:"0 2px 12px "+T.shadow }}>
@@ -2283,7 +2283,7 @@ export default function TheSignUpSpot() {
         {/* Row 2: centered logo */}
         <div style={{ display:"flex", justifyContent:"center", alignItems:"center", padding:"0.4rem 0" }}>
           <button onClick={() => navigate("home")} style={{ background:"none", border:"none", cursor:"pointer", padding:0, textAlign:"center" }}>
-            <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.5rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
+            <div style={{ fontFamily:"'Inter', sans-serif", fontWeight:800, fontSize:"1.5rem", lineHeight:1, background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px" }}>thesignupspot</div>
             <div style={{ color:T.textMuted, fontSize:"0.52rem", fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase", textAlign:"center", marginTop:"2px" }}>All their activities. One spot.</div>
           </button>
         </div>
@@ -2320,7 +2320,7 @@ export default function TheSignUpSpot() {
       <div style={{ background:"#f8f8f8", borderTop:"1px solid "+T.border, padding:"2rem 1.5rem" }}>
         <div style={{ maxWidth:"900px", margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"1rem" }}>
           <div>
-            <div style={{ fontFamily:"'DM Sans', sans-serif", fontWeight:800, fontSize:"1.1rem", background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px", marginBottom:"0.25rem" }}>
+            <div style={{ fontFamily:"'Inter', sans-serif", fontWeight:800, fontSize:"1.1rem", background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text", letterSpacing:"-0.5px", marginBottom:"0.25rem" }}>
               thesignupspot
             </div>
             <div style={{ color:T.textMuted, fontSize:"0.75rem" }}>
