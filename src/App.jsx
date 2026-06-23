@@ -1512,7 +1512,8 @@ function AboutPage() {
         <div style={{ width:"160px", height:"160px", borderRadius:"50%", overflow:"hidden", margin:"0 auto 1.25rem", border:"4px solid #fff", boxShadow:"0 4px 20px rgba(0,0,0,0.12)" }}>
           <img src="https://raw.githubusercontent.com/kmfields28/The-sign-up-spot/main/public/IMG_7294.jpeg" alt="The Fields Family" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
         </div>
-        <h1 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi, I am Kristen</h1>
+        <h1 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"2rem", marginBottom:"0.5rem" }}>Hi! I'm Kristen!</h1>
+        <h2 style={{ fontFamily:"'Playfair Display',serif", color:T.textSoft, fontSize:"1.2rem", fontWeight:400, fontStyle:"italic", marginBottom:"0.5rem" }}>I'm so glad you're here.</h2>
         <p style={{ color:T.textSoft, fontSize:"1rem", maxWidth:"520px", margin:"0 auto", lineHeight:1.7 }}>Mom of two, wife, dog mom, and the person who finally got tired of endless Google searches for kids activities.</p>
       </div>
       <div style={{ maxWidth:"680px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
