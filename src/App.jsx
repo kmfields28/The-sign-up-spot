@@ -1146,7 +1146,7 @@ function FavoritesPage({ favPlaces, favorites, onToggleFav, kids, activeKidId, s
 }
 
 // ── Home Page ─────────────────────────────────────────────────────────────────
-function HomePage({ onNavigate, onOpenAuth }) {
+function HomePage({ onNavigate, onOpenAuth, user }) {
   const [slide, setSlide] = useState(0);
   const SLIDES = [
     { url:"https://images.unsplash.com/photo-1622659097509-4d56de14539e?w=1400&h=700&fit=crop", label:"Soccer" },
@@ -1191,7 +1191,7 @@ function HomePage({ onNavigate, onOpenAuth }) {
             </button>
             <button onClick={onOpenAuth}
               style={{ background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", color:"#fff", border:"1.5px solid rgba(255,255,255,0.5)", borderRadius:"99px", padding:"0.85rem 2.25rem", fontSize:"1rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
-              Sign In / Sign Up
+              {user ? "My Account" : "Sign In / Sign Up"}
             </button>
           </div>
         </div>
@@ -2300,7 +2300,7 @@ export default function TheSignUpSpot() {
       </div>
 
       <div style={{ minHeight:"calc(100vh - 108px)" }}>
-        {page === "home"       && <HomePage onNavigate={navigate} onOpenAuth={() => setAuthOpen(true)}/>}
+        {page === "home"       && <HomePage onNavigate={navigate} onOpenAuth={() => setAuthOpen(true)} user={user}/>}
         {page === "browse"     && <BrowsePage initialCategory={pageProps.category}
                                    favorites={favSet} onToggleFav={toggleFav}
                                    kids={kids} activeKidId={activeKidId}
