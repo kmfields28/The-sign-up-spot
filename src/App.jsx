@@ -853,7 +853,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     try {
       setLoadingMsg("Searching for activities near " + z + "…");
       const subCat = subCategory && !subCategory.startsWith("All") ? subCategory : "";
-      const searchKeyword = subCat || search.trim();
+      const searchKeyword = homeschoolOnly ? "homeschool kids" : (subCat || search.trim());
       try { const loc = await geocodeZip(z); setSearchLocation(loc); } catch(e) {}
       const data = await searchActivitiesWithClaude(z, radius, category, searchKeyword);
       // Add unique IDs if missing
@@ -986,8 +986,10 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
             )}
             <select value={ageFilter} onChange={e => setAgeFilter(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color: ageFilter ? T.accent : T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 <option value="">All Ages</option>
-                {kids.filter(k=>k.age).map(k => <option key={k.id} value={k.age}>{k.name} (age {k.age})</option>)}
-                {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].map(a => <option key={a} value={a}>Age {a}</option>)}
+                <option value="toddler">Toddler / Preschool (0-5)</option>
+                <option value="elementary">Elementary (6-10)</option>
+                <option value="middle">Middle School (11-13)</option>
+                <option value="high">High School (14-18)</option>
               </select>
               <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 <option value="rating">Highest Rated</option>
