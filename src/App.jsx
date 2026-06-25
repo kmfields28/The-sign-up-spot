@@ -883,7 +883,9 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
   });
 
-  const filteredResults = ageFilter ? results.filter(p => {
+  const filteredResults = results.filter(p => {
+    if (homeschoolOnly && !(p.tags&&p.tags.includes("homeschool"))&&!(p.description&&p.description.toLowerCase().includes("homeschool"))) return false;
+    if (!ageFilter) return true;
     if (!p.ageRange && !p.age_min && !p.age_max) return true; // no age data, show it
     const age = parseInt(ageFilter);
     if (p.age_min && p.age_max) return age >= p.age_min && age <= p.age_max;
@@ -892,7 +894,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
       if (parts.length === 2) return age >= parts[0] && age <= parts[1];
     }
     return true;
-  }) : results;
+  });
 
   const resultsWithDistance = filteredResults.map(p => ({
     ...p,
@@ -993,6 +995,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <option value="distance">Nearest First</option>
                 <option value="distance">Nearest First</option>
               </select>
+              <button onClick={() => setHomeschoolOnly(h => !h)} style={{ background: homeschoolOnly ? "#059669" : "#fff", color: homeschoolOnly ? "#fff" : "#444", border:"1.5px solid "+(homeschoolOnly?"#059669":"#e8e8e8"), borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap" }}>Homeschool</button>
             </div>
             {viewMode === "map" ? (
               <div style={{ borderRadius:"16px", overflow:"hidden", border:"1px solid "+T.border, height:"70vh" }}>
