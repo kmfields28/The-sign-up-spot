@@ -884,15 +884,18 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
     fontWeight:600, cursor:"pointer", fontFamily:"inherit",
   });
 
+  const AGE_RANGE_MAP = { toddler:[0,5], elementary:[6,10], middle:[11,13], high:[14,18] };
   const filteredResults = results.filter(p => {
-    if (homeschoolOnly && !(p.tags&&p.tags.includes("homeschool"))&&!(p.description&&p.description.toLowerCase().includes("homeschool"))) return false;
-    if (!ageFilter) return true;
-    if (!p.ageRange && !p.age_min && !p.age_max) return true; // no age data, show it
-    const age = parseInt(ageFilter);
-    if (p.age_min && p.age_max) return age >= p.age_min && age <= p.age_max;
-    if (p.ageRange) {
-      const parts = p.ageRange.split("-").map(Number);
-      if (parts.length === 2) return age >= parts[0] && age <= parts[1];
+    if (!ageFilter && !homeschoolOnly) return true;
+    if (ageFilter) {
+      const range = AGE_RANGE_MAP[ageFilter];
+      if (range && (p.age_min != null || p.age_max != null || p.ageRange)) {
+        if (p.age_min != null && p.age_max != null) { if (!(p.age_max >= range[0] && p.age_min <= range[1])) return false; }
+        else if (p.ageRange) {
+          const parts = p.ageRange.split("-").map(Number);
+          if (parts.length === 2 && !(parts[1] >= range[0] && parts[0] <= range[1])) return false;
+        }
+      }
     }
     return true;
   });
