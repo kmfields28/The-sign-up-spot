@@ -46,7 +46,6 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
   { label:"Summer Camps", icon:"⛺", color:"#d97706", bg:"#fffbeb" },
   { label:"Daycare & Preschool", icon:"🏫", color:"#0891b2", bg:"#ecfeff" },
-  { label:"Homeschool", icon:"📚", color:"#059669", bg:"#ecfdf5" },
 ];
 
 
@@ -70,7 +69,6 @@ const CATEGORY_KEYWORDS = {
   "Mommy & Me": ["mommy and me class","parent toddler class","baby music class","toddler playgroup","parent child class","baby gym","toddler yoga","infant class"],
   "Summer Camps": ["kids summer camp","youth summer camp","children summer program","summer day camp kids","academic summer camp","sports camp kids","arts summer camp children","stem summer camp kids"],
   "Daycare & Preschool": ["daycare center","preschool","early childhood education","childcare center","nursery school","pre-k program","toddler program","infant daycare"],
-  "Homeschool": ["homeschool co-op","homeschool enrichment","homeschool classes","homeschool program kids","homeschool group activities"],
 };
 
 async function geocodeZip(zip) {
