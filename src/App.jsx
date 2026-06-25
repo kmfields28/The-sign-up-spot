@@ -843,6 +843,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [sortBy, setSortBy] = useState("rating");
   const [searchLocation, setSearchLocation] = useState(null);
   const [ageFilter, setAgeFilter] = useState("");
+  const [homeschoolOnly, setHomeschoolOnly] = useState(false);
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
