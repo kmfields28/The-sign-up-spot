@@ -844,6 +844,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
   const [searchLocation, setSearchLocation] = useState(null);
   const [ageFilter, setAgeFilter] = useState("");
   const [homeschoolOnly, setHomeschoolOnly] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [subCategory, setSubCategory] = useState("All Sports");
 
   const doSearch = useCallback(async () => {
@@ -978,10 +979,53 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
 
         {!loading && results.length > 0 && (
           <div>
-            <div style={{ marginBottom:"1rem", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:"0.5rem" }}>
-              <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>
-                <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
-              </span>
+            <div style={{ marginBottom:"1rem" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:"0.5rem", marginBottom:"0.5rem" }}>
+                <span style={{ color:T.textSoft, fontSize:"0.83rem" }}>
+                  <span style={{ color:T.accent, fontWeight:700 }}>{results.length}</span> activities found near {zip}
+                </span>
+                <button onClick={() => setShowFilters(f => !f)} style={{ background: (ageFilter||homeschoolOnly||sortBy!=="rating") ? T.accent : "#fff", color: (ageFilter||homeschoolOnly||sortBy!=="rating") ? "#fff" : T.textMid, border:"1.5px solid "+(ageFilter||homeschoolOnly||sortBy!=="rating" ? T.accent : T.border), borderRadius:"8px", padding:"0.35rem 0.9rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+                  Filters {(ageFilter||homeschoolOnly||(sortBy&&sortBy!=="rating")) ? "●" : ""}
+                </button>
+              </div>
+              {showFilters && (
+                <div style={{ background:"#fff", border:"1px solid "+T.border, borderRadius:"14px", padding:"1rem", display:"flex", flexWrap:"wrap", gap:"0.75rem", boxShadow:"0 4px 20px rgba(0,0,0,0.08)", marginBottom:"0.75rem" }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:"0.25rem", minWidth:"140px" }}>
+                    <label style={{ fontSize:"0.7rem", fontWeight:700, color:T.textMuted, textTransform:"uppercase" }}>Age Group</label>
+                    <select value={ageFilter} onChange={e => setAgeFilter(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color: ageFilter ? T.accent : T.textMid, cursor:"pointer", fontFamily:"inherit" }}>
+                      <option value="">All Ages</option>
+                      <option value="toddler">Toddler / Preschool (0-5)</option>
+                      <option value="elementary">Elementary (6-10)</option>
+                      <option value="middle">Middle School (11-13)</option>
+                      <option value="high">High School (14-18)</option>
+                    </select>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:"0.25rem", minWidth:"140px" }}>
+                    <label style={{ fontSize:"0.7rem", fontWeight:700, color:T.textMuted, textTransform:"uppercase" }}>Sort By</label>
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit" }}>
+                      <option value="rating">Highest Rated</option>
+                      <option value="az">A to Z</option>
+                      <option value="za">Z to A</option>
+                      <option value="distance">Nearest First</option>
+                    </select>
+                  </div>
+                  {SPORT_SUBCATEGORIES[category] && (
+                    <div style={{ display:"flex", flexDirection:"column", gap:"0.25rem", minWidth:"140px" }}>
+                      <label style={{ fontSize:"0.7rem", fontWeight:700, color:T.textMuted, textTransform:"uppercase" }}>Specialty</label>
+                      <select value={subCategory} onChange={e => { setSubCategory(e.target.value); setTimeout(() => doSearch(), 50); }} style={{ background:"#fff", border:"1.5px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.accent, cursor:"pointer", fontFamily:"inherit" }}>
+                        {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  )}
+                  <div style={{ display:"flex", flexDirection:"column", gap:"0.25rem", justifyContent:"flex-end" }}>
+                    <label style={{ fontSize:"0.7rem", fontWeight:700, color:T.textMuted, textTransform:"uppercase" }}>Options</label>
+                    <button onClick={() => setHomeschoolOnly(h => !h)} style={{ background: homeschoolOnly ? "#059669" : "#fff", color: homeschoolOnly ? "#fff" : "#444", border:"1.5px solid "+(homeschoolOnly?"#059669":"#e8e8e8"), borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>Homeschool Friendly</button>
+                  </div>
+                  <div style={{ display:"flex", alignItems:"flex-end" }}>
+                    <button onClick={() => { setAgeFilter(""); setSortBy("rating"); setHomeschoolOnly(false); }} style={{ background:"none", border:"none", color:T.textMuted, fontSize:"0.75rem", cursor:"pointer", fontFamily:"inherit", textDecoration:"underline" }}>Clear all</button>
+                  </div>
+                </div>
+              )}
               {SPORT_SUBCATEGORIES[category] && (
               <select value={subCategory} onChange={e => { setSubCategory(e.target.value); setTimeout(() => doSearch(), 50); }} style={{ background:"#fff", border:"1.5px solid "+T.accent, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.accent, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
                 {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
