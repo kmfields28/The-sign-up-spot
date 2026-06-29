@@ -1031,21 +1031,6 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 {SPORT_SUBCATEGORIES[category].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             )}
-            <select value={ageFilter} onChange={e => setAgeFilter(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color: ageFilter ? T.accent : T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
-                <option value="">All Ages</option>
-                <option value="toddler">Toddler / Preschool (0-5)</option>
-                <option value="elementary">Elementary (6-10)</option>
-                <option value="middle">Middle School (11-13)</option>
-                <option value="high">High School (14-18)</option>
-              </select>
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", color:T.textMid, cursor:"pointer", fontFamily:"inherit", fontWeight:600 }}>
-                <option value="rating">Highest Rated</option>
-                <option value="az">A to Z</option>
-                <option value="za">Z to A</option>
-                <option value="distance">Nearest First</option>
-                <option value="distance">Nearest First</option>
-              </select>
-
             </div>
             {viewMode === "map" ? (
               <div style={{ borderRadius:"16px", overflow:"hidden", border:"1px solid "+T.border, height:"70vh" }}>
