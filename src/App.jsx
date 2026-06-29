@@ -674,11 +674,39 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
 function NewsletterBanner() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubscribe() {
+    if (!email.includes("@")) return;
+    setLoading(true); setError("");
+    try {
+      // Save to Supabase
+      const res = await fetch(SUPABASE_URL + "/rest/v1/newsletter_subscribers", {
+        method: "POST",
+        headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
+        body: JSON.stringify({ email: email.trim(), source: "website" })
+      });
+      if (!res.ok && res.status !== 409) throw new Error("Failed to subscribe");
+
+      // Send welcome email via Resend
+      await fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ _type: "welcome", email: email.trim() })
+      });
+
+      setDone(true);
+    } catch(e) {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  }
+
   return (
     <div style={{ background:"#f8f8f8", padding:"2.25rem 1.5rem", textAlign:"center", position:"relative", overflow:"hidden" }}>
       <div style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 20% 50%, rgba(255,255,255,0.18) 0%, transparent 55%)", pointerEvents:"none" }}/>
       <div style={{ position:"relative", maxWidth:"480px", margin:"0 auto" }}>
-        <div style={{ fontSize:"1.6rem", marginBottom:"0.5rem" }}>📬</div>
         <h3 style={{ fontFamily:"'Playfair Display',serif", color:"#2e1a08", fontSize:"1.4rem", marginBottom:"0.4rem" }}>
           Stay in the Loop
         </h3>
@@ -686,27 +714,26 @@ function NewsletterBanner() {
           New activity listings, seasonal camp guides, and local family events — no spam, ever.
         </p>
         {!done ? (
-          <div style={{ display:"flex", gap:"0.5rem", maxWidth:"480px", margin:"0 auto", flexWrap:"wrap", justifyContent:"center" }}>
-            <input
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              type="email"
-              style={{ flex:"1 1 200px", background:"rgba(255,255,255,0.75)", border:"1.5px solid "+T.borderMid, borderRadius:"99px", padding:"0.65rem 1.1rem", fontSize:"0.87rem", color:T.text, fontFamily:"inherit" }}
-            />
-            <button
-              onClick={() => email.includes("@") && setDone(true)}
-              style={{ background:T.highlight, color:"#fff", border:"none", borderRadius:"99px", padding:"0.65rem 1.4rem", fontSize:"0.87rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
-              Subscribe →
-            </button>
+          <div style={{ display:"flex", flexDirection:"column", gap:"0.5rem", maxWidth:"400px", margin:"0 auto" }}>
+            <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap", justifyContent:"center" }}>
+              <input value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.com" type="email"
+                onKeyDown={e => e.key==="Enter" && handleSubscribe()}
+                style={{ flex:"1 1 200px", background:"#fff", border:"1.5px solid "+T.border, borderRadius:"99px", padding:"0.65rem 1.1rem", fontSize:"0.87rem", color:T.text, fontFamily:"inherit" }}/>
+              <button onClick={handleSubscribe} disabled={loading}
+                style={{ background:T.accent, color:"#fff", border:"none", borderRadius:"99px", padding:"0.65rem 1.4rem", fontSize:"0.87rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", opacity:loading?0.7:1 }}>
+                {loading ? "Subscribing..." : "Subscribe →"}
+              </button>
+            </div>
+            {error && <p style={{ color:"#dc2626", fontSize:"0.78rem" }}>{error}</p>}
           </div>
         ) : (
-          <div style={{ background:"rgba(255,255,255,0.75)", borderRadius:"12px", padding:"0.9rem 1.5rem", display:"inline-block" }}>
-            <span style={{ color:T.text, fontWeight:700 }}>🎉 You're in! Check your inbox.</span>
+          <div style={{ background:"#fff", borderRadius:"12px", padding:"0.9rem 1.5rem", display:"inline-block", border:"1px solid "+T.border }}>
+            <span style={{ color:T.accent, fontWeight:700 }}>You are in! Welcome to The Sign Up Spot family.</span>
           </div>
         )}
         <p style={{ color:T.textMuted, fontSize:"0.72rem", marginTop:"0.8rem" }}>
-          Join 12,000+ local parents · Unsubscribe anytime
+          No spam, ever. Unsubscribe anytime.
         </p>
       </div>
     </div>
