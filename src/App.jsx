@@ -681,20 +681,12 @@ function NewsletterBanner() {
     if (!email.includes("@")) return;
     setLoading(true); setError("");
     try {
-      // Save to Supabase
-      const res = await fetch(SUPABASE_URL + "/rest/v1/newsletter_subscribers", {
-        method: "POST",
-        headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-        body: JSON.stringify({ email: email.trim(), source: "website" })
-      });
-      if (!res.ok && res.status !== 409) throw new Error("Failed to subscribe");
-
-      // Send welcome email via Resend
-      await fetch("/api/notify", {
+      const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), zip: "", kidCount: "", ageRanges: [] })
       });
+      if (!res.ok) throw new Error("Failed to subscribe");
 
       setDone(true);
     } catch(e) {
