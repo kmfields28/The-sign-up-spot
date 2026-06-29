@@ -1001,7 +1001,7 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
                 <option value="distance">Nearest First</option>
                 <option value="distance">Nearest First</option>
               </select>
-              <button onClick={() => setHomeschoolOnly(h => !h)} style={{ background: homeschoolOnly ? "#059669" : "#fff", color: homeschoolOnly ? "#fff" : "#444", border:"1.5px solid "+(homeschoolOnly?"#059669":"#e8e8e8"), borderRadius:"8px", padding:"0.35rem 0.75rem", fontSize:"0.78rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap" }}>Homeschool</button>
+
             </div>
             {viewMode === "map" ? (
               <div style={{ borderRadius:"16px", overflow:"hidden", border:"1px solid "+T.border, height:"70vh" }}>
