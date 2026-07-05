@@ -2048,7 +2048,7 @@ function LegalPage() {
   return (
     <div style={{ maxWidth:"720px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
       <h1 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.8rem", marginBottom:"0.5rem" }}>Legal</h1>
-      <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.5rem" }}>Last updated: July 2025 · Lilibelle LLC</p>
+      <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.5rem" }}>Last updated: July 2026 · Lilibelle LLC</p>
       <div style={{ display:"flex", gap:"0.5rem", marginBottom:"2rem" }}>
         <button onClick={() => setTab("terms")} style={btnStyle(tab==="terms")}>Terms of Use</button>
         <button onClick={() => setTab("privacy")} style={btnStyle(tab==="privacy")}>Privacy Policy</button>
