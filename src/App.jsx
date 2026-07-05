@@ -2040,6 +2040,58 @@ function CalendarPage({ kids, kidSaves, events, setEvents }) {
   );
 }
 
+// ── Legal Page ────────────────────────────────────────────────────────────────
+function LegalPage() {
+  const [tab, setTab] = useState("terms");
+  const btnStyle = active => ({ background: active ? T.accent : T.bgDeep, color: active ? "#fff" : T.textMid, border:"1px solid "+(active?T.accent:T.border), borderRadius:"99px", padding:"0.4rem 1.1rem", fontSize:"0.82rem", fontWeight:600, cursor:"pointer", fontFamily:"inherit" });
+
+  return (
+    <div style={{ maxWidth:"720px", margin:"0 auto", padding:"2.5rem 1.5rem" }}>
+      <h1 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1.8rem", marginBottom:"0.5rem" }}>Legal</h1>
+      <p style={{ color:T.textSoft, fontSize:"0.85rem", marginBottom:"1.5rem" }}>Last updated: July 2025 · Lilibelle LLC</p>
+      <div style={{ display:"flex", gap:"0.5rem", marginBottom:"2rem" }}>
+        <button onClick={() => setTab("terms")} style={btnStyle(tab==="terms")}>Terms of Use</button>
+        <button onClick={() => setTab("privacy")} style={btnStyle(tab==="privacy")}>Privacy Policy</button>
+      </div>
+
+      {tab === "terms" && (
+        <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
+          {[
+            { title:"About The Sign Up Spot", body:"The Sign Up Spot is operated by Lilibelle LLC. By using thesignupspot.com you agree to these terms." },
+            { title:"Information Accuracy", body:"Activity listings on The Sign Up Spot are sourced from Google Places and business submissions. We do not guarantee the accuracy, completeness, or timeliness of any listing including hours, prices, availability, or registration dates. Always verify details directly with the business before registering or making payments." },
+            { title:"Third Party Links", body:"Our site contains links to third party websites and booking platforms. We are not responsible for the content, accuracy, or practices of any third party site. Clicking Book or Visit Website takes you to an external site governed by their own terms." },
+            { title:"Reviews", body:"Reviews submitted by users represent the opinions of individual parents and do not reflect the views of Lilibelle LLC. We reserve the right to remove reviews that are inappropriate, false, or violate our community standards." },
+            { title:"No Endorsement", body:"Listing a business on The Sign Up Spot does not constitute an endorsement or recommendation by Lilibelle LLC. Parents are encouraged to conduct their own research before enrolling their child in any program." },
+            { title:"Limitation of Liability", body:"Lilibelle LLC is not liable for any damages arising from your use of this site or reliance on any information provided herein." },
+            { title:"Contact", body:"Questions? Email us at LiliBellebiz@gmail.com" },
+          ].map(s => (
+            <div key={s.title}>
+              <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.4rem" }}>{s.title}</h3>
+              <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.75 }}>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === "privacy" && (
+        <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
+          {[
+            { title:"What We Collect", body:"Email address (newsletter signup and account creation), ZIP code (search and newsletter), children ages and names (family profiles stored locally on your device), and usage data (searches, saved activities)." },
+            { title:"How We Use It", body:"To personalize your activity search results, to send our newsletter (you can unsubscribe anytime), to notify you of registration deadlines you have requested. We never sell your data to third parties." },
+            { title:"Cookies", body:"We use minimal cookies necessary to keep you logged in and remember your preferences." },
+            { title:"Contact", body:"Questions about your data? Email us at LiliBellebiz@gmail.com" },
+          ].map(s => (
+            <div key={s.title}>
+              <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.4rem" }}>{s.title}</h3>
+              <p style={{ color:T.textSoft, fontSize:"0.88rem", lineHeight:1.75 }}>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminPage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -2372,6 +2424,7 @@ export default function TheSignUpSpot() {
                                    calendarEvents={calendarEvents} onAddCalendarEvent={addCalendarEvent}/>}
         {page === "businesses" && <BusinessesPage/>}
         {page === "about"      && <AboutPage/>}
+        {page === "legal"      && <LegalPage/>}
         {page === "admin"      && <AdminPage/>}
       </div>
 
@@ -2382,11 +2435,11 @@ export default function TheSignUpSpot() {
               thesignupspot
             </div>
             <div style={{ color:T.textMuted, fontSize:"0.75rem" }}>
-              © 2026 Lilibelle LLC · All their activities. One spot.
+              © 2026 Lilibelle LLC · All their activities. One spot. · <span onClick={() => {}} style={{ textDecoration:"underline", cursor:"pointer" }}>Terms & Privacy</span>
             </div>
           </div>
           <div style={{ display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
-            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"],["Admin","admin"]].map(([l,p]) => (
+            {[["Home","home"],["Browse","browse"],["Businesses","businesses"],["Saved","favorites"],["About","about"],["Terms & Privacy","legal"],["Admin","admin"]].map(([l,p]) => (
               <button key={p} onClick={() => navigate(p)}
                 style={{ background:"none", border:"none", color:T.textSoft, cursor:"pointer", fontSize:"0.8rem", fontFamily:"inherit" }}>{l}</button>
             ))}
