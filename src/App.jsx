@@ -735,6 +735,7 @@ function NewsletterBanner() {
 // ── Auth Modal ────────────────────────────────────────────────────────────────
 function AuthModal({ onClose, onSignIn }) {
   const [mode, setMode] = useState("signin");
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [name, setName] = useState(""); const [email, setEmail] = useState("");
   const [pass, setPass] = useState(""); const [done, setDone] = useState(false);
   const [nl, setNl] = useState(true);
@@ -817,8 +818,14 @@ function AuthModal({ onClose, onSignIn }) {
                 </span>
               </label>
             )}
-            <button onClick={() => { onSignIn(name || email.split("@")[0]); onClose(); }}
-              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", marginBottom:"1.25rem" }}>
+            {mode === "signup" && (
+              <label style={{ display:"flex", alignItems:"flex-start", gap:"0.5rem", cursor:"pointer", marginBottom:"0.75rem" }}>
+                <input type="checkbox" checked={ageConfirmed} onChange={e => setAgeConfirmed(e.target.checked)} style={{ marginTop:"3px", flexShrink:0 }}/>
+                <span style={{ fontSize:"0.75rem", color:T.textSoft, lineHeight:1.5 }}>I confirm I am 18 years or older and agree to the Terms of Use and Privacy Policy</span>
+              </label>
+            )}
+            <button onClick={() => { if(mode==="signup"&&!ageConfirmed){alert("Please confirm you are 18 or older.");return;} onSignIn(name || email.split("@")[0]); onClose(); }}
+              style={{ width:"100%", background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.75rem", fontSize:"0.9rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", marginBottom:"1.25rem", opacity: mode==="signup"&&!ageConfirmed ? 0.6 : 1 }}>
               {mode === "signin" ? "Sign In" : "Create Account"}
             </button>
             <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"1rem" }}>
