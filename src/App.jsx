@@ -2057,12 +2057,14 @@ function LegalPage() {
       {tab === "terms" && (
         <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
           {[
-            { title:"About The Sign Up Spot", body:"The Sign Up Spot is operated by Lilibelle LLC. By using thesignupspot.com you agree to these terms." },
+            { title:"About The Sign Up Spot", body:"The Sign Up Spot is operated by Lilibelle LLC. By using thesignupspot.com you agree to these terms. This service is intended for use by parents and guardians aged 18 and older residing in the United States." },
             { title:"Information Accuracy", body:"Activity listings on The Sign Up Spot are sourced from Google Places and business submissions. We do not guarantee the accuracy, completeness, or timeliness of any listing including hours, prices, availability, or registration dates. Always verify details directly with the business before registering or making payments." },
             { title:"Third Party Links", body:"Our site contains links to third party websites and booking platforms. We are not responsible for the content, accuracy, or practices of any third party site. Clicking Book or Visit Website takes you to an external site governed by their own terms." },
             { title:"Reviews", body:"Reviews submitted by users represent the opinions of individual parents and do not reflect the views of Lilibelle LLC. We reserve the right to remove reviews that are inappropriate, false, or violate our community standards." },
             { title:"No Endorsement", body:"Listing a business on The Sign Up Spot does not constitute an endorsement or recommendation by Lilibelle LLC. Parents are encouraged to conduct their own research before enrolling their child in any program." },
             { title:"Limitation of Liability", body:"Lilibelle LLC is not liable for any damages arising from your use of this site or reliance on any information provided herein." },
+            { title:"Children's Privacy (COPPA)", body:"The Sign Up Spot is intended for use by parents and guardians only. We do not knowingly collect personal information directly from children under 13. Information about children entered into family profiles is stored locally on your device and is not transmitted to our servers. By creating an account you confirm you are at least 18 years old." },
+            { title:"Data Deletion", body:"You may request deletion of your account and associated data at any time by emailing LiliBellebiz@gmail.com. We will process your request within 30 days." },
             { title:"Contact", body:"Questions? Email us at LiliBellebiz@gmail.com" },
           ].map(s => (
             <div key={s.title}>
@@ -2076,9 +2078,10 @@ function LegalPage() {
       {tab === "privacy" && (
         <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
           {[
-            { title:"What We Collect", body:"Email address (newsletter signup and account creation), ZIP code (search and newsletter), children ages and names (family profiles stored locally on your device), and usage data (searches, saved activities)." },
+            { title:"What We Collect", body:"Email address (newsletter signup and account creation), ZIP code (search and newsletter), and usage data (searches, saved activities). Children's names and ages are stored locally on your device only and are never transmitted to our servers." },
             { title:"How We Use It", body:"To personalize your activity search results, to send our newsletter (you can unsubscribe anytime), to notify you of registration deadlines you have requested. We never sell your data to third parties." },
             { title:"Cookies", body:"We use minimal cookies necessary to keep you logged in and remember your preferences." },
+            { title:"Your Rights", body:"You may request access to, correction of, or deletion of your personal data at any time by emailing LiliBellebiz@gmail.com. We will respond within 30 days. This service is intended for US residents aged 18 and older." },
             { title:"Contact", body:"Questions about your data? Email us at LiliBellebiz@gmail.com" },
           ].map(s => (
             <div key={s.title}>
