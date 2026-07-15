@@ -275,6 +275,17 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
   const [newQuestion, setNewQuestion] = useState("");
   const [questionSubmitting, setQuestionSubmitting] = useState(false);
   const [questionDone, setQuestionDone] = useState(false);
+
+  useEffect(() => {
+    const id = place.placeId || place.id;
+    if (!id) return;
+    sbGet("reviews?activity_id=eq." + id + "&order=created_at.desc")
+      .then(data => setReviews(data || []))
+      .catch(() => {});
+    sbGet("qa?activity_id=eq." + id + "&order=created_at.desc")
+      .then(data => setQuestions(data || []))
+      .catch(() => {});
+  }, [place.placeId, place.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const reviewsLoading = false;
 
   function handleSubmitReview() {
