@@ -524,6 +524,76 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
           </div>
         </div>
       </div>
+
+        {/* Q&A Section */}
+        <div style={{ borderTop:"1px solid "+T.border, paddingTop:"1.25rem", marginTop:"0.5rem", padding:"0 1.25rem 1.25rem" }}>
+          <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.85rem" }}>Parent Q&A</h3>
+          {questions.length > 0 && (
+            <div style={{ marginBottom:"1rem" }}>
+              {questions.map((q, i) => (
+                <div key={i} style={{ background:T.bgDeep, borderRadius:"12px", padding:"0.9rem", marginBottom:"0.75rem", border:"1px solid "+T.border }}>
+                  <div style={{ display:"flex", gap:"0.5rem", marginBottom:"0.4rem" }}>
+                    <span style={{ background:T.accent, color:"#fff", borderRadius:"99px", padding:"1px 8px", fontSize:"0.65rem", fontWeight:700, flexShrink:0 }}>Q</span>
+                    <span style={{ color:T.text, fontSize:"0.85rem", fontWeight:600 }}>{q.question}</span>
+                  </div>
+                  <div style={{ fontSize:"0.72rem", color:T.textMuted, marginBottom:q.answer?"0.5rem":"0" }}>Asked by {q.question_author}</div>
+                  {q.answer && (
+                    <div style={{ background:"#f0fdf4", borderRadius:"8px", padding:"0.6rem 0.75rem", borderLeft:"3px solid #16a34a" }}>
+                      <div style={{ display:"flex", gap:"0.5rem", marginBottom:"0.25rem" }}>
+                        <span style={{ background:"#16a34a", color:"#fff", borderRadius:"99px", padding:"1px 8px", fontSize:"0.65rem", fontWeight:700 }}>A</span>
+                        <span style={{ color:"#166534", fontSize:"0.83rem" }}>{q.answer}</span>
+                      </div>
+                      {q.answer_author && <div style={{ fontSize:"0.7rem", color:"#16a34a", marginLeft:"1.5rem" }}>— {q.answer_author}</div>}
+                    </div>
+                  )}
+                  {!q.answer && <div style={{ fontSize:"0.72rem", color:T.textMuted, fontStyle:"italic" }}>No answer yet</div>}
+                </div>
+              ))}
+            </div>
+          )}
+          {questions.length === 0 && <p style={{ color:T.textMuted, fontSize:"0.82rem", marginBottom:"1rem" }}>No questions yet — be the first to ask!</p>}
+          {!questionDone ? (
+            <div style={{ background:T.bgDeep, borderRadius:"14px", padding:"1rem", border:"1px solid "+T.border }}>
+              <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.82rem", marginBottom:"0.65rem" }}>Ask a Question</div>
+              {!user ? (
+                <div style={{ textAlign:"center", padding:"0.5rem 0" }}>
+                  <p style={{ color:T.textSoft, fontSize:"0.83rem", marginBottom:"0.75rem" }}>Sign in to ask a question.</p>
+                  <button onClick={onOpenAuth} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.5rem 1.25rem", fontSize:"0.83rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In</button>
+                </div>
+              ) : (
+                <>
+                <textarea value={newQuestion} onChange={e => setNewQuestion(e.target.value)}
+                  placeholder="e.g. Do you offer trial classes? Is there parking? What should my child wear?"
+                  rows={2}
+                  style={{ width:"100%", background:"#fff", border:"1.5px solid "+T.border, borderRadius:"8px", padding:"0.55rem 0.8rem", fontSize:"0.83rem", color:T.text, resize:"vertical", boxSizing:"border-box", fontFamily:"inherit", marginBottom:"0.65rem", display:"block" }}/>
+                <button onClick={async () => {
+                  if (!newQuestion.trim()) return;
+                  setQuestionSubmitting(true);
+                  try {
+                    await sbPost("qa", {
+                      activity_id: place.placeId || place.id,
+                      activity_name: place.name,
+                      question: newQuestion.trim(),
+                      question_author: user,
+                    });
+                    setQuestions(prev => [{ question:newQuestion.trim(), question_author:user, created_at:new Date().toISOString() }, ...prev]);
+                    setQuestionDone(true);
+                  } catch(e) { console.error(e); }
+                  setQuestionSubmitting(false);
+                }} disabled={!newQuestion.trim() || questionSubmitting}
+                  style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", opacity:!newQuestion.trim()||questionSubmitting?0.5:1 }}>
+                  {questionSubmitting ? "Submitting..." : "Ask Question"}
+                </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div style={{ background:"#f0fdf4", borderRadius:"12px", padding:"1rem", textAlign:"center", border:"1px solid #bbf7d0" }}>
+              <p style={{ color:"#16a34a", fontWeight:700, fontSize:"0.88rem" }}>Your question has been submitted!</p>
+              <p style={{ color:T.textSoft, fontSize:"0.78rem", marginTop:"0.3rem" }}>The business or other parents may answer soon.</p>
+            </div>
+          )}
+        </div>
     </div>
   );
 }
