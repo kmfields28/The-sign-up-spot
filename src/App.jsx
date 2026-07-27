@@ -679,10 +679,10 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
                 <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.7rem", fontSize:"0.7rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
               )}
               <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}></button>
+        
         {/* Q&A Section */}
           <div style={{ borderTop:"1px solid "+T.border, paddingTop:"1.25rem", marginTop:"0.5rem" }}>
             <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.85rem" }}>Parent Q&A</h3>
-
             {questions.length > 0 && (
               <div style={{ marginBottom:"1rem" }}>
                 {questions.map((q, i) => (
@@ -706,10 +706,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
                 ))}
               </div>
             )}
-
             {questions.length === 0 && <p style={{ color:T.textMuted, fontSize:"0.82rem", marginBottom:"1rem" }}>No questions yet — be the first to ask!</p>}
-
-            {/* Ask a question */}
             {!questionDone ? (
               <div style={{ background:T.bgDeep, borderRadius:"14px", padding:"1rem", border:"1px solid "+T.border }}>
                 <div style={{ color:T.textMid, fontWeight:700, fontSize:"0.82rem", marginBottom:"0.65rem" }}>Ask a Question</div>
