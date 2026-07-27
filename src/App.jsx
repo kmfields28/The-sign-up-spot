@@ -559,7 +559,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                   <button onClick={onOpenAuth} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.5rem 1.25rem", fontSize:"0.83rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Sign In</button>
                 </div>
               ) : (
-                <>
+                <div>
                 <textarea value={newQuestion} onChange={e => setNewQuestion(e.target.value)}
                   placeholder="e.g. Do you offer trial classes? Is there parking? What should my child wear?"
                   rows={2}
@@ -582,7 +582,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
                   style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", border:"none", borderRadius:"99px", padding:"0.55rem 1.25rem", fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit", opacity:!newQuestion.trim()||questionSubmitting?0.5:1 }}>
                   {questionSubmitting ? "Submitting..." : "Ask Question"}
                 </button>
-                </>
+                </div>
               )}
             </div>
           ) : (
