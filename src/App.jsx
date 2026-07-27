@@ -522,8 +522,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
               </div>
             )}
           </div>
-        </div>
-      </div>
+
         {/* Q&A Section */}
         <div style={{ borderTop:"1px solid "+T.border, paddingTop:"1.25rem", marginTop:"0.5rem", padding:"0 1.25rem 1.25rem" }}>
           <h3 style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontSize:"1rem", marginBottom:"0.85rem" }}>Parent Q&A</h3>
@@ -592,6 +591,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
               <p style={{ color:T.textSoft, fontSize:"0.78rem", marginTop:"0.3rem" }}>The business or other parents may answer soon.</p>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
