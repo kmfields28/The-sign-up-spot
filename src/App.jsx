@@ -749,8 +749,12 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
                 <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.7rem", fontSize:"0.7rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
               )}
               <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}></button>
-        
-        
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
 // ── Newsletter ────────────────────────────────────────────────────────────────
 function NewsletterBanner() {
