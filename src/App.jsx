@@ -734,7 +734,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
         )}
 
 
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"0.35rem" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
             <Stars rating={place.rating}/>
             <span style={{ color:T.gold, fontWeight:700, fontSize:"0.8rem" }}>
@@ -744,12 +744,12 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
               ({(place.reviewCount||0).toLocaleString()})
             </span>
           </div>
-          <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
-              {place.website && (
-                <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.7rem", fontSize:"0.7rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
-              )}
-              <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}></button>
-            </div>
+          <div style={{ display:"flex", alignItems:"center", gap:"0.35rem" }}>
+            <span style={{ color:T.accent, fontSize:"0.75rem", fontWeight:600 }}>Details →</span>
+            {place.website && (
+              <a href={place.bookingUrl} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{ background:"linear-gradient(135deg,"+T.accent+","+T.accentAlt+")", color:"#fff", borderRadius:"99px", padding:"0.25rem 0.7rem", fontSize:"0.7rem", textDecoration:"none", fontWeight:700 }}>Book →</a>
+            )}
+            <button onClick={e => { e.stopPropagation(); onAddToCalendar && onAddToCalendar(place); }} style={{ background:"#f0fdf4", color:"#16a34a", border:"1px solid #86efac", borderRadius:"99px", padding:"0.25rem 0.6rem", fontSize:"0.7rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}></button>
           </div>
         </div>
       </div>
