@@ -594,6 +594,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
         </div>
       </div>
     </div>
+  </div>
   );
 }
 
