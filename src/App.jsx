@@ -754,7 +754,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
         </div>
       </div>
     );
-  }
+}
 
 // ── Newsletter ────────────────────────────────────────────────────────────────
 function NewsletterBanner() {
