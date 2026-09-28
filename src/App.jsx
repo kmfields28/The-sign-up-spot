@@ -979,8 +979,51 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
       const data = await searchActivitiesWithClaude(z, radius, category, searchKeyword);
       // Add unique IDs if missing
       const normalized = data.map((p, i) => ({ ...p, id: p.id || (p.name + i).replace(/\s/g,"_") }));
-      setResults(normalized);
-      if (normalized.length === 0) setError("No activities found near " + z + ". Try a larger radius.");
+
+      // Merge approved Supabase listings
+      try {
+        const localCat = category || "";
+        const supaQuery = localCat
+          ? "activities?status=eq.approved&category=eq." + encodeURIComponent(localCat) + "&select=*"
+          : "activities?status=eq.approved&select=*";
+        const localListings = await sbGet(supaQuery);
+        const existingNames = new Set(normalized.map(p => p.name.toLowerCase()));
+        const localMapped = (localListings || [])
+          .filter(a => !existingNames.has(a.name.toLowerCase()))
+          .map(a => ({
+            id: a.id,
+            placeId: null,
+            name: a.name,
+            category: a.category || localCat,
+            address: a.address || "",
+            phone: a.phone || "",
+            website: a.website || "",
+            rating: a.rating || null,
+            reviewCount: a.review_count || 0,
+            price: a.price || "",
+            description: a.description || "",
+            hours: a.hours || "",
+            ageRange: a.age_range || (a.age_min && a.age_max ? a.age_min+"-"+a.age_max : ""),
+            age_min: a.age_min,
+            age_max: a.age_max,
+            tags: a.tags || [],
+            photo: a.photo_url || null,
+            reg_open: a.reg_open || null,
+            reg_close: a.reg_close || null,
+            reg_url: a.reg_url || null,
+            googleReviews: [],
+            classes: a.classes || [],
+            bookingUrl: a.website || "",
+            _types: [],
+            lat: null,
+            lng: null,
+          }));
+        setResults([...normalized, ...localMapped]);
+        if (normalized.length === 0 && localMapped.length === 0) setError("No activities found near " + z + ". Try a larger radius.");
+      } catch(e) {
+        setResults(normalized);
+        if (normalized.length === 0) setError("No activities found near " + z + ". Try a larger radius.");
+      }
     } catch(e) {
       setError(e.message || "Search failed. Please try again.");
     }
