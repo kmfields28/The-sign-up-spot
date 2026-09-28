@@ -46,7 +46,6 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
   { label:"Summer Camps", icon:"⛺", color:"#d97706", bg:"#fffbeb" },
   { label:"Daycare & Preschool", icon:"🏫", color:"#0891b2", bg:"#ecfeff" },
-  { label:"Baseball & Softball", icon:"⚾", color:"#b45309", bg:"#fef3c7" },
 ];
 
 
