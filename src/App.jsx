@@ -46,6 +46,7 @@ const CATEGORIES = [
   { label:"Mommy & Me", icon:"🤱", color:"#e11d48", bg:"#fff1f2" },
   { label:"Summer Camps", icon:"⛺", color:"#d97706", bg:"#fffbeb" },
   { label:"Daycare & Preschool", icon:"🏫", color:"#0891b2", bg:"#ecfeff" },
+  { label:"Baseball & Softball", icon:"⚾", color:"#b45309", bg:"#fef3c7" },
 ];
 
 
@@ -321,7 +322,7 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
             </span>
             {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
-            {place.source === "manual" || (!place.placeId && place.id) ? (
+            {!place.placeId ? (
               <span style={{ background:"#fef3c7", color:"#92400e", fontSize:"0.62rem", fontWeight:700, padding:"2px 7px", borderRadius:"99px", border:"1px solid #fde68a", whiteSpace:"nowrap" }}>⭐ Local Pick</span>
             ) : null}
             {place.reg_open && new Date(place.reg_open) > new Date() && (
@@ -724,7 +725,7 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
           <div style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
           {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
-            {place.source === "manual" || (!place.placeId && place.id) ? (
+            {!place.placeId ? (
               <span style={{ background:"#fef3c7", color:"#92400e", fontSize:"0.62rem", fontWeight:700, padding:"2px 7px", borderRadius:"99px", border:"1px solid #fde68a", whiteSpace:"nowrap" }}>⭐ Local Pick</span>
             ) : null}
         </div>
