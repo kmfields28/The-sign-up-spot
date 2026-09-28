@@ -321,6 +321,9 @@ function DetailModal({ place, favorites, onToggleFav, onClose, user, onOpenAuth 
             </span>
             {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
+            {place.source === "manual" || (!place.placeId && place.id) ? (
+              <span style={{ background:"#fef3c7", color:"#92400e", fontSize:"0.62rem", fontWeight:700, padding:"2px 7px", borderRadius:"99px", border:"1px solid #fde68a", whiteSpace:"nowrap" }}>⭐ Local Pick</span>
+            ) : null}
             {place.reg_open && new Date(place.reg_open) > new Date() && (
               <NotifyMeButton place={place} user={user}/>
             )}
@@ -721,6 +724,9 @@ function ActivityCard({ place, favorites, onToggleFav, onSelect, kids, activeKid
           <div style={{ fontFamily:"'Playfair Display',serif", color:T.text, fontWeight:700, fontSize:"0.92rem", lineHeight:1.25 }}>{place.name}</div>
           {place.price && <PriceBadge price={place.price}/>}
             <RegBadge reg_open={place.reg_open} reg_close={place.reg_close} reg_url={place.reg_url}/>
+            {place.source === "manual" || (!place.placeId && place.id) ? (
+              <span style={{ background:"#fef3c7", color:"#92400e", fontSize:"0.62rem", fontWeight:700, padding:"2px 7px", borderRadius:"99px", border:"1px solid #fde68a", whiteSpace:"nowrap" }}>⭐ Local Pick</span>
+            ) : null}
         </div>
 
         <div style={{ color:cat.color, fontSize:"0.7rem", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:"0.4rem" }}>
