@@ -986,9 +986,16 @@ function BrowsePage({ initialCategory, favorites, onToggleFav, kids, activeKidId
           ? "activities?status=eq.approved&category=eq." + encodeURIComponent(localCat) + "&select=*"
           : "activities?status=eq.approved&select=*";
         const localListings = await sbGet(supaQuery);
-        const existingNames = new Set(normalized.map(p => p.name.toLowerCase()));
+        const normalizeForDedup = name => name.toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\b(the|of|at|and|a|an)\b/g,"").trim();
+        const existingNormalized = normalized.map(p => normalizeForDedup(p.name));
         const localMapped = (localListings || [])
-          .filter(a => !existingNames.has(a.name.toLowerCase()))
+          .filter(a => {
+            const localNorm = normalizeForDedup(a.name);
+            const localWords = localNorm.split(" ").filter(Boolean);
+            const firstWord = localWords[0] || "";
+            const lastWord = localWords[localWords.length - 1] || firstWord;
+            return !existingNormalized.some(n => n.includes(firstWord) && (localWords.length < 2 || n.includes(lastWord)));
+          })
           .map(a => ({
             id: a.id,
             placeId: null,
